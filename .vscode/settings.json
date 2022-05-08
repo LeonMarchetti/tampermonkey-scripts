@@ -1,0 +1,6 @@
+{
+    "explorer.fileNesting.patterns": {
+        "*.js": "$(capture)-*",
+        "image-zoom.js": "image-*",
+    },
+}
