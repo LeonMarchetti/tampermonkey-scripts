@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Videos
 // @namespace    http://tampermonkey.net/
-// @version      1.0.1
+// @version      1.1.1
 // @description  Modify playback speed of videos + other functionalities
 // @author       LeonAM
 // @match        *://*/*
@@ -179,7 +179,7 @@
     function forwardVideo(delta_t) {
         const video = getVideo();
 
-        const action = (delta_r > 0) ? `Forward ${delta_t} seconds`
+        const action = (delta_t > 0) ? `Forward ${delta_t} seconds`
             : `Backward ${delta_t * -1} seconds`;
 
         video.prop("currentTime", (idx, oldVal) => oldVal + delta_t);
