@@ -69,4 +69,22 @@
 		],
 		"description": "Description",
 	},
+	"KeyUp" : {
+		"prefix": "keyup",
+		"scope": "javascript",
+		"body": [
+			"document.addEventListener(\"keyup\", e => {",
+			"\tvar alt = e.altKey;",
+			"\tvar ctrl = e.ctrlKey;",
+			"\tvar shift = e.shiftKey;",
+			"",
+			"\tif (ctrl && alt && shift) {",
+			"\t\tswitch (e.code) {",
+			"\t\t\tcase \"Key\": break;",
+			"\t\t}",
+			"\t}",
+			"});"
+		],
+		"description": "Adds a keyup event listener to listen for keystrokes"
+	}
 }
