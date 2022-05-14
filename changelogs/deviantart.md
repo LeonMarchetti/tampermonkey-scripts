@@ -2,6 +2,17 @@
 
 ## [Unreleased]
 
+## [1.7.0] - 14-05-2022
+
+### Agregado
+
+- Agregué a `AddToCollectionHandler` y `addChooseCollectionButton()` para agregar un botón en el diálogo de la lista de colecciones para buscar la colección en lugar de usar la combinación de teclas.
+    - Agregué la referencia a `mutationHandler.js`
+
+### Cambiado
+
+- Saqué la función `run()` de adentro de `clickCollection()` para que pueda ser utilizado por `AddCollectionHandler.handle()`.
+
 ## [1.6.1] - 13-05-2022
 
 ### Arreglado
