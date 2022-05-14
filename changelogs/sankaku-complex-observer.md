@@ -1,8 +1,12 @@
 # Changelog
 
-## [Unreleased] - 07-05-2022
+## [Unreleased]
 
-- Mover código del observer a su propio archivo y crear una referencia a este script y a `sankaku-complex-observer.js`.
+## [0.3.0] - 13-05-2022
+
+## Agregado
+
+- Moví el código del observer a su propio archivo `.js` y agregué un `@require` para que se asocie a ese archivo y poder crear clases hijas de `MutationHandler`.
 
 ## [0.2.3] - 28-09-2021
 

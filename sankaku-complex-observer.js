@@ -1,11 +1,12 @@
 // ==UserScript==
 // @name         Chan Sankaku Complex Observer
 // @namespace    http://tampermonkey.net/
-// @version      0.2.3
+// @version      0.3.0
 // @description  Runs code as new elements appear on the page
 // @author       LeonAM
 // @match        https://chan.sankakucomplex.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=sankakucomplex.com
+// @require      file://<PATH>/lib/mutationHandler.js
 // @require      file://<PATH>/sankaku-complex-observer.js
 // @grant        GM_addStyle
 // @grant        GM_info
@@ -20,35 +21,6 @@
     const esPost = url.includes("post/show");
     const esPool = url.includes("pool/show");
     const esBusq = !esPost && !esPool;
-
-    /** Class that defines a task to execute over the observed nodes. */
-    class MutationHandler {
-        constructor(targetClassList) {
-            if (this.constructor == MutationHandler) {
-                throw new Error("This class can't be instantiated");
-            }
-
-            this.targetClassList = targetClassList;
-        }
-
-        /**
-         * Executes the task of this MutationHandler over the child elements of
-         * the target node `node`.
-         *
-         * If you want to work only over the target node, overwrite this method
-         * to skip the `forEach` if desired.
-         */
-        handle(node) {
-            if (node.nodeType == Node.TEXT_NODE) return; // Text node
-
-            node.querySelectorAll(this.targetClassList).forEach(e => this.work(e));
-        }
-
-        /** Executes a task over a node affected by this MutationHandler. */
-        work(e) {
-            throw new Error("Missing implementation");
-        }
-    }
 
     /**
      * MutationHandler implementation adds one or more icons over the posts'
@@ -216,39 +188,7 @@
         }
     }
 
-    /** Class which objects manage a list of MutationHandler objects. */
-    class MutationHandlerContainer {
-        constructor() {
-            this.handlerList = [];
-        }
-
-        /** Adds a MuttionHandler object to this container. */
-        addHandler(mutationHandler) {
-            this.handlerList.push(mutationHandler);
-        }
-
-        /** Adds the node to the handler of all MutationHandler objects of this container. */
-        handle(node) {
-            this.handlerList.forEach(handler => handler.handle(node));
-        }
-    }
-
-    /**
-     * Starts an observer over the `targetNode`, whose callback adds the nodes
-     * to each of the MutationHandler objects in `mutationHandlerList`.
-     */
-    function mutationObserve(targetNode, mutationHandlerContainer) {
-        mutationHandlerContainer.handle(targetNode);
-
-        const observer = new MutationObserver(function (mutationsList, observer) {
-            mutationsList.forEach(m => {
-                m.addedNodes.forEach(node => mutationHandlerContainer.handle(node));
-            });
-        });
-        observer.observe(targetNode, { childList: true, subtree: true });
-    }
-
-    const mutationHandlerList = new MutationHandlerList();
+    const mutationHandlerList = new MutationHandlerContainer();
     mutationHandlerList.addHandler(new IconAdder("span.thumb"));
     // mutationHandlerList.addHandler(new ElementRemover(".blacklisted,.scad-i,.scad-i,.scad"));
     if (esBusq) {
