@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+## [1.6.1] - 13-05-2022
+
+### Arreglado
+
+- Cuando no se ingresaba texto, `searchCache` se setteba en `null`, ahora le asigno `""` explícitamente.
+- Faltaba comprobar que el texto ingresado no esté vacío y no tratar de buscar la colección en ese caso.
+- Faltaba pedirle al usuario ingresar el nombre de la colección a buscar cuando, en una página de un post, no estaba la lista de colecciones abierta.
+
 ## [1.6.0] - 20-04-2022
 
 ### Cambiado

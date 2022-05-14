@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DeviantArt
 // @namespace    http://tampermonkey.net/
-// @version      1.6.0
+// @version      1.6.1
 // @description  Funcionalidades para deviantart.com
 // @author       LeonAM
 // @match        https://www.deviantart.com/*
@@ -39,10 +39,14 @@
         return null;
     }
 
-    /** Prompts the user to input the collection name to search. Stores text for next search. */
+    /**
+     * Prompts the user to input the collection name to search. Stores text for
+     * next search
+     */
     function inputText() {
-        const text = prompt("Input collection name", searchCache);
+        var text = prompt("Input collection name", searchCache);
         if (!text) {
+            text = "";
             console.error("Text missing");
         }
         searchCache = text;
@@ -91,7 +95,9 @@
 
         if (featuredCollection) {
             const text = inputText();
-            run(featuredCollection.parentElement, text);
+            if (text) {
+                run(featuredCollection.parentElement, text);
+            }
 
         } else {
             if (isPost) {
@@ -103,7 +109,11 @@
                     featuredCollection = searchCollection("Featured");
                     if (featuredCollection) {
                         clearInterval(interval1);
-                        run(featuredCollection.parentElement, text);
+
+                        const text = inputText();
+                        if (text) {
+                            run(featuredCollection.parentElement, text);
+                        }
                     }
                 }, 500);
 
