@@ -1,6 +1,10 @@
 # Changelog
 
-## [Unreleased]
+## [Deleted] - 15-05-2022
+
+### Borrado
+
+- Borré el script, porque moví todo el código a `deviantart.js`, ya que tuve que poner a `AddToCollectionHandler` allí así que voy a poner todos los handlers de DeviantArt en el mismo script.
 
 ## [1.1.0] - 13-05-2022
 

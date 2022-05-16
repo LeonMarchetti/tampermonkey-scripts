@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+## [1.8.0] - 15-05-2022
+
+### Agregado
+
+- Agregué a `ChangeCollectionHandler` desde `deviantart-observer.js`, para poner todo el código de DeviantArt en un mismo script.
+
 ## [1.7.0] - 14-05-2022
 
 ### Agregado

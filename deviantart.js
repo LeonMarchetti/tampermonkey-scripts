@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DeviantArt
 // @namespace    http://tampermonkey.net/
-// @version      1.7.0
+// @version      1.8.0
 // @description  Funcionalidades para deviantart.com
 // @author       LeonAM
 // @match        https://www.deviantart.com/*
@@ -144,6 +144,39 @@
     }
 
     /**
+     * MutationHandler implementation that detects the "Added to Featured |
+     * Change Collection" dialog and clicks the "Change Collection"
+     * link/button
+     */
+    class ChangeCollectionHandler extends MutationHandler {
+        /**
+         * Text to search to identify the button that opens the collections'
+         * list
+         */
+        label = "Change Collection";
+
+        /**
+         * Checks if `element` is the favorited post dialog and if it has a
+         * "Change Collection" button, which it then triggers a click to open
+         * the collections list
+         *
+         * @param {Element} element
+         */
+        handle(element) {
+            if (element.nodeName !== "DIV" || !element.textContent.includes(this.label))
+                return;
+
+            const button = Array.from(element.querySelectorAll("button")).reduce(
+                (prev, curr) => curr.textContent === this.label ? curr : prev
+            );
+
+            if (button) {
+                button.click();
+            }
+        }
+    }
+
+    /**
      * Searches the collection with a name input by the user in the user's
      * collections list, and triggers a click to assign the current post to
      * the selected collection. If the collection doesn't exist, it triggers
@@ -195,6 +228,7 @@
 
     const mutationHandlerContainer = new MutationHandlerContainer();
     mutationHandlerContainer.addHandler(new AddToCollectionHandler("h2,h3"));
+    mutationHandlerContainer.addHandler(new ChangeCollectionHandler("div"));
     mutationObserve(document.body, mutationHandlerContainer);
 
     document.addEventListener("keyup", e => {
