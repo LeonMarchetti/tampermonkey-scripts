@@ -2,6 +2,16 @@
 
 ## [Unreleased]
 
+## [1.9.0] - 05-06-2022
+
+### Agregado
+
+- Uso de `GM_getValue` y `GM_setValue` para conservar el texto de búsqueda entre páginas.
+
+### Arreglado
+
+- En el callback del botón "Choose Collection" agregué la condición que el texto no sea vacío para continuar con la búsqueda de la colección.
+
 ## [1.8.0] - 15-05-2022
 
 ### Agregado

@@ -1,15 +1,16 @@
 // ==UserScript==
 // @name         DeviantArt
 // @namespace    http://tampermonkey.net/
-// @version      1.8.0
+// @version      1.9.0
 // @description  Funcionalidades para deviantart.com
 // @author       LeonAM
 // @match        https://www.deviantart.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=deviantart.com
 // @require      file://<PATH>/lib/mutationHandler.js
 // @require      file://<PATH>/deviantart.js
-// @grant        GM_addStyle
 // @grant        GM_info
+// @grant        GM_getValue
+// @grant        GM_setValue
 // ==/UserScript==
 
 (function () {
@@ -19,9 +20,6 @@
 
     /** If the current page is a DeviantArt post. Otherwise, a collection or search results page. */
     const isPost = window.location.href.includes("/art/");
-
-    /** Store last search name. */
-    var searchCache = "";
 
     /**
      * Searchs for the collection named `name` (case insensitive), searching
@@ -40,17 +38,14 @@
         return null;
     }
 
-    /**
-     * Prompts the user to input the collection name to search. Stores text for
-     * next search
-     */
+    /** Prompts the user to input the collection name to search. Stores text for next search. */
     function inputText() {
-        var text = prompt("Input collection name", searchCache);
+        const text = prompt("Input collection name", GM_getValue("deviantart-search"));
         if (!text) {
-            text = "";
             console.error("Text missing");
+        } else {
+            GM_setValue("deviantart-search", text);
         }
-        searchCache = text;
         return text;
     }
 
@@ -136,8 +131,10 @@
         work(element) {
             if (element.textContent.includes("Add to Collection")) {
                 addChooseCollectionButton(element, () => {
-                    run(searchCollection("Featured").parentElement,
-                        inputText());
+                    const text = inputText();
+                    if (text) {
+                        run(searchCollection("Featured").parentElement, text);
+                    }
                 });
             }
         }
