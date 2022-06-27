@@ -4,6 +4,14 @@
 
 - Cambiar JQuery por vanilla Javascript.
 
+## [1.2.0] - 27-06-2022
+
+### Modificado
+
+- Convertí el código para ser usado en Mozilla Firefox.
+    - Agregué una constante para determinar si el navegador actual es Firefox.
+    - Si el navegador es Firefox el script establece **C-n°** para cambiar la velocidad del video, sino **C-S-n°**
+
 ## [1.1.1] - 08-05-2022
 
 ### Arreglado
