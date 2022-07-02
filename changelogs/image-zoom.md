@@ -2,6 +2,19 @@
 
 ## [Unreleased]
 
+## [1.6.1] - 02-07-2022
+
+### Arreglado
+
+- Cuando se determinaba si una imagen era reducida por el navegador, en el caso de Firefox tuve que cambiar la condición para comprobar los nombres de clases de la imagen en el caso de que Firefox le metiera otras clases, ahora uso `img.classList.contains()`.
+
+### Cambiado
+
+- Uso la función `GM_addStyle` para agregar los estilos necesarios con notación CSS.
+- Si una imagen es zoomeable ahora hago las tranformaciones sobre el elemento `<body>`.
+- Al usar `fillHeight()` o `fillWidth()` llamo a una función `removeTransform()` para quitar las transformaciones.
+- Armé una clase CSS para la imagen de acuerdo al navegador actual.
+
 ## [1.6.0] - 30-06-2022
 
 ### Cambiado
