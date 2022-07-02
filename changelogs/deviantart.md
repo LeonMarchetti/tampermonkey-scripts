@@ -2,6 +2,23 @@
 
 ## [Unreleased]
 
+## [1.10.0] - 02-07-2022
+
+### Agregado
+
+- Botones para abrir una imagen en la misma o en una nueva pestaña y para buscar una colección de favoritos.
+    - Hice la función `buildPostButtons` para reunir el código para crear los botones, que por ahora son elementos `<span>`.
+- Llamada a `GM_addStyle()` para agregar reglas de CSS.
+
+### Notas
+
+- Para obtener la imagen del post como referencia utilizo el query `document.querySelector("div[draggable] img")`.
+- Copié los estilos para los botones del texto COMMENTS, que está en el tope de la sección de comentarios.
+
+### TODO
+
+- Cambiar los botones con texto por íconos.
+
 ## [1.9.0] - 05-06-2022
 
 ### Agregado

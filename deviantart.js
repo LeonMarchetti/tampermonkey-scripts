@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DeviantArt
 // @namespace    http://tampermonkey.net/
-// @version      1.9.0
+// @version      1.10.0
 // @description  Funcionalidades para deviantart.com
 // @author       LeonAM
 // @match        https://www.deviantart.com/*
@@ -9,8 +9,11 @@
 // @require      file://<PATH>/lib/mutationHandler.js
 // @require      file://<PATH>/deviantart.js
 // @grant        GM_info
+// @grant        GM_addStyle
 // @grant        GM_getValue
+// @grant        GM_openInTab
 // @grant        GM_setValue
+// @run-at       document-end
 // ==/UserScript==
 
 (function () {
@@ -20,6 +23,19 @@
 
     /** If the current page is a DeviantArt post. Otherwise, a collection or search results page. */
     const isPost = window.location.href.includes("/art/");
+
+    GM_addStyle(`
+        .deviantart-postButtons {
+            cursor: pointer;
+            color: var(--L8);
+            font-weight: 400;
+            font-size: 14px;
+            letter-spacing: .3px;
+            font-family: devioussans02bold,Helvetica Neue,Helvetica,Arial,メイリオ, meiryo,ヒラギノ角ゴ pro w3,hiragino kaku gothic pro,sans-serif;
+            line-height: 20px;
+            margin: 0 5px 0 5px;
+        }
+    `.trim());
 
     /**
      * Searchs for the collection named `name` (case insensitive), searching
@@ -218,9 +234,27 @@
         }
     }
 
-    /** Test */
-    function test() {
-        console.log("test()");
+    /** Returns the current's post image element */
+    function getPostImage() {
+        return document.querySelector('div[draggable] img');
+    }
+
+    /** Builds a new button for placing along side the post's image */
+    function buildPostButtons(label, listener) {
+        const button = document.createElement("span");
+        button.innerHTML = label;
+        button.classList.add("deviantart-postButtons");
+        button.addEventListener("click", listener);
+
+        // Container div of the post's image
+        document.querySelector("div[draggable]")
+            .append(button);
+    }
+
+    if (isPost) {
+        buildPostButtons("Same Tab", () => { window.location.href = getPostImage().src; });
+        buildPostButtons("New Tab", () => { GM_openInTab(getPostImage().src); });
+        buildPostButtons("Choose Collection", () => { clickCollection(); });
     }
 
     const mutationHandlerContainer = new MutationHandlerContainer();
@@ -236,7 +270,6 @@
         if (ctrl && !alt && shift) {
             switch (e.code) {
                 case "KeyF": clickCollection(); break;
-                // case "KeyF": test(); break;
             }
         }
     });
