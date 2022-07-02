@@ -2,6 +2,25 @@
 
 ## [Unreleased]
 
+## [1.6.0] - 30-06-2022
+
+### Cambiado
+
+- Modifiqué el código para usarlo en Firefox (constantes `isChrome` y `isFirefox`).
+- Arreglé la comprobación de si la imágen es reducida por el navegador (constante `isZoomable`).
+- Ahora `fillHeight()` no funciona en imágenes que son reducidas por el navegador.
+
+### Notas
+
+- Comprobar si la imagen es más grande que la pantalla:
+    - **Chrome**: `["zoom-in", "zoom-out"].includes(img.style.cursor)`
+    - **Firefox**: `["shrinkToFit", "overflowingVertical"].includes(img.className)`
+- El script tarda en modificar la imagen, sin importar el valor de `@run-at`.
+
+### TODO
+
+- Falta arreglar la modificación del zoom con `transform()`.
+
 ## [1.5.0] - 07-05-2022
 
 ### Agregado

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Image Zoom
 // @namespace    http://tampermonkey.net/
-// @version      1.4.1
+// @version      1.6.0
 // @description  Scripts for manipulating images in their own tabs
 // @author       LeonAM
 // @match        *://*/*
@@ -20,13 +20,20 @@
         return;
     }
 
+    /** Checks if current browser is Mozilla Firefox */
+    const isFirefox = window.navigator.userAgent.includes("Firefox");
+    /** Checks if current browser is Google Chrome */
+    const isChrome = window.navigator.userAgent.includes("Chrome");
+
     console.log(`Running UserScript "${GM_info.script.name}"`);
 
     /** Image element of the page. Supposed to be the only image */
     const img = document.body.childNodes[0];
 
     /** True if the image originally has a height and/or width higher than the browser's */
-    const isZoomable = img.style.cursor == "zoom-in";
+    const isZoomable =
+        (isChrome) ? ["zoom-in", "zoom-out"].includes(img.style.cursor)
+        : (isFirefox) ? ["shrinkToFit", "overflowingVertical"].includes(img.className) : null;
 
     /** Zoom level of the image */
     var scale = 1;
@@ -42,8 +49,10 @@
 
     /** Makes the image to fill the browser's height */
     function fillHeight(img) {
-        img.style.height = "100vh";
-        img.style.width = "auto";
+        if (!isZoomable) {
+            img.style.height = "100vh";
+            img.style.width = "auto";
+        }
     }
 
     /** Changes the image's zoom by `delta` units */
