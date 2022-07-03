@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DeviantArt
 // @namespace    http://tampermonkey.net/
-// @version      1.10.0
+// @version      1.11.0
 // @description  Funcionalidades para deviantart.com
 // @author       LeonAM
 // @match        https://www.deviantart.com/*
@@ -27,15 +27,31 @@
     GM_addStyle(`
         .deviantart-postButtons {
             cursor: pointer;
-            color: var(--L8);
-            font-weight: 400;
-            font-size: 14px;
-            letter-spacing: .3px;
-            font-family: devioussans02bold,Helvetica Neue,Helvetica,Arial,メイリオ, meiryo,ヒラギノ角ゴ pro w3,hiragino kaku gothic pro,sans-serif;
-            line-height: 20px;
-            margin: 0 5px 0 5px;
+            pointer-events: fill;
+            display: inline-flex;
+            align-items: center;
+            position: relative;
+
+            margin: 0;
+            background: none;
+            border: none;
+            box-shadow: none;
+            font: inherit;
+            min-width: 32px;
+            min-height: 32px;
+            padding: 0 4px;
+            justify-content: center;
+            color: var(--off-default);
+
+            box-sizing: border-box;
+
+            user-select: none;
         }
     `.trim());
+
+    // Adds Font Awesome Icons
+    document.head.innerHTML += `<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />`
+        + `<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/fontawesome.min.css" integrity="sha512-xX2rYBFJSj86W54Fyv1de80DWBq7zYLn2z0I9bIhQG+rxIF6XVJUpdGnsNHWRa6AvP89vtFupEPDP8eZAtu9qA==" crossorigin="anonymous" referrerpolicy="no-referrer" />`;
 
     /**
      * Searchs for the collection named `name` (case insensitive), searching
@@ -240,10 +256,10 @@
     }
 
     /** Builds a new button for placing along side the post's image */
-    function buildPostButtons(label, listener) {
-        const button = document.createElement("span");
-        button.innerHTML = label;
-        button.classList.add("deviantart-postButtons");
+    function buildPostButtons(label, iconClass, listener) {
+        const button = document.createElement("button");
+        button.title = label;
+        button.classList.add("deviantart-postButtons", "fa-solid", iconClass);
         button.addEventListener("click", listener);
 
         // Container div of the post's image
@@ -252,9 +268,9 @@
     }
 
     if (isPost) {
-        buildPostButtons("Same Tab", () => { window.location.href = getPostImage().src; });
-        buildPostButtons("New Tab", () => { GM_openInTab(getPostImage().src); });
-        buildPostButtons("Choose Collection", () => { clickCollection(); });
+        buildPostButtons("Same tab", "fa-arrows-down-to-line", () => { window.location.href = getPostImage().src; });
+        buildPostButtons("New tab", "fa-arrow-up-right-from-square", () => { GM_openInTab(getPostImage().src); });
+        buildPostButtons("Choose collection", "fa-list-ul", () => { clickCollection(); });
     }
 
     const mutationHandlerContainer = new MutationHandlerContainer();

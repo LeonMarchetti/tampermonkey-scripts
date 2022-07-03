@@ -2,6 +2,17 @@
 
 ## [Unreleased]
 
+## [1.11.0] - 03-07-2022
+
+### Cambiado
+
+- Cambié los botones con texto por botones con íconos, usando Font Awesome.
+
+## Notas
+
+- Saqué de Cloudflare la fuente de los ícons de Font Awesome: https://cdnjs.com/libraries/font-awesome
+- Copié los estilos de los botones de la barra inferior a la imagen del post.
+
 ## [1.10.0] - 02-07-2022
 
 ### Agregado
