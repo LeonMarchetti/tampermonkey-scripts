@@ -4,6 +4,16 @@
 
 - Cambiar JQuery por vanilla Javascript.
 
+## [1.2.1] - 15-07-2022
+
+### Arreglado
+
+- En el intervalo se estaba tratando de modificar la velocidad del video aún si no existía ya que comprobaba si la propiedad del video `playbackRate` era distinto que `currentPlaybackRate` pero si el video no estaba entonces siempre daba distinto que `null`.
+
+### Modificado
+
+- Modifiqué el intervalo para que logée el cambio de velocidad de un video al valor actual de `currentPlaybackRate`.
+
 ## [1.2.0] - 27-06-2022
 
 ### Modificado

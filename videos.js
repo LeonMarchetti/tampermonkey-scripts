@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Videos
 // @namespace    http://tampermonkey.net/
-// @version      1.2.0
+// @version      1.2.1
 // @description  Modify playback speed of videos + other functionalities
 // @author       LeonAM
 // @match        *://*/*
@@ -160,19 +160,23 @@
         screenshotName = prompt("Insert new filename for screenshots");
     }
 
-    /** Interval that controls the appearance of the toast */
+    /*
+     * Interval that controls the appearance of the toast and modifies the
+     * video playbackRate if it is not equal from the script's playbackRate
+     * variable
+     */
     setInterval(() => {
         const video = getVideo();
-        if (video.prop("playbackRate") !== currentPlaybackRate) {
-            video.prop("playbackRate", currentPlaybackRate);
-        }
-
         if (video.length > 0 && video.isInViewport()) {
-            showToast(
-                // video.prop("playbackRate"),
-                currentPlaybackRate,
-                video.prop("loop")
-            );
+            const videoPlaybackRate = video.prop("playbackRate");
+            if (videoPlaybackRate !== currentPlaybackRate) {
+                const videoId = window.location.href
+                    .match(/(?:https?:\/{2})?(?:w{3}\.)?youtu(?:be)?\.(?:com|be)(?:\/watch\?v=|\/)([^\s&]+)/)
+                    [1];
+                video.prop("playbackRate", currentPlaybackRate);
+                console.log(`[${videoId}] Set video's playback rate to ${currentPlaybackRate}x from ${videoPlaybackRate}x`);
+            }
+            showToast(currentPlaybackRate, video.prop("loop"));
         } else {
             $.toast().reset("all");
             toast = null;
