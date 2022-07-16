@@ -2,6 +2,18 @@
 
 ## [Unreleased]
 
+## [1.7.0] - 16-07-2022
+
+### Agregado
+
+- Agregué estilos para el body y la imagen para cuando el zoom de la imágen sea incrementando, para hacer que la imagen se centre horizontalmente cuando se reduce el zoom.
+
+### Cambiado
+
+- La comprobación de cuál navegador se está usando ahora se hace a través de la variable string `browser` que toma el valor `"firefox"` o `"chrome"`.
+- Ahora los estilos según navegador se determinan al principio y usan el mismo nombre.
+    - En este caso se quitaron los estilos particulares porque ahora no son necesarios.
+
 ## [1.6.1] - 02-07-2022
 
 ### Arreglado

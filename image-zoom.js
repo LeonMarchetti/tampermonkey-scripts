@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Image Zoom
 // @namespace    http://tampermonkey.net/
-// @version      1.6.1
+// @version      1.7.0
 // @description  Scripts for manipulating images in their own tabs
 // @author       LeonAM
 // @match        *://*/*
@@ -22,16 +22,24 @@
 
     console.log(`Running UserScript "${GM_info.script.name}"`);
 
-    /** Checks if current browser is Mozilla Firefox */
-    const isFirefox = window.navigator.userAgent.includes("Firefox");
-    /** Checks if current browser is Google Chrome */
-    const isChrome = window.navigator.userAgent.includes("Chrome");
+    /** Current browser, for editing styles */
+    const browser =
+        window.navigator.userAgent.includes("Chrome") ? "chrome" :
+        window.navigator.userAgent.includes("Firefox") ? "firefox" : "";
 
-    /** Custom CSS styles for the `<img>` and `<body>` elements */
+    /** Image element of the page. Supposed to be the only image */
+    const img = document.body.childNodes[0];
+
+    // Custom styles, browser-independent
     GM_addStyle(`
         .imageZoom-body {
-            width: fit-content;
             height: fit-content !important;
+        }
+        .imageZoom-body-imgIncreased {
+            width: fit-content;
+        }
+        .imageZoom-img-imgIncreased {
+            position: absolute;
         }
         .imageZoom-fillHeight {
             height: 100vh;
@@ -39,37 +47,46 @@
         .imageZoom-fillWidth {
             width: 100vw;
         }
-        .imageZoom-img-chrome {
-            position: absolute;
-            top: 0;
-            left: 0;
-        }
-        .imageZoom-img-firefox {
-        }
     `.trim());
 
-    /** Image element of the page. Supposed to be the only image */
-    const img = document.body.childNodes[0];
+    document.body.classList.add("imageZoom-body");
+    img.classList.add("imageZoom-img");
 
     /** True if the image originally has a height and/or width higher than the browser's */
-    const isZoomable =
-        (isChrome) ? ["zoom-in", "zoom-out"].includes(img.style.cursor) :
-        (isFirefox) ? img.classList.contains("shrinkToFit") || img.classList.contains("overflowingVertical") :
-        null;
+    var isZoomable;
+    switch (browser) {
+        case "chrome":
+            isZoomable = ["zoom-in", "zoom-out"].includes(img.style.cursor);
+            break;
+        case "firefox":
+            isZoomable = img.classList.contains("shrinkToFit") || img.classList.contains("overflowingVertical");
+            break;
+    }
 
     /** Zoom level of the image */
     var scale = 1;
 
     /**
-     * Applies transformation to the image
+     * Applies a scale transformation to the image
      *
-     * @param scale Zoom (100% => 1.0)
+     * If the image is increased, it modifies the body's style to allow the
+     * image to be scrolled horizontally
+     *
+     * @param {number} scale Zoom (100% => 1.0)
      */
     function transform(scale) {
         if (isZoomable) {
             document.body.style.transform = `scale(${scale})`;
         } else {
             img.style.transform = `scale(${scale})`;
+        }
+
+        if (scale > 1) {
+            document.body.classList.add("imageZoom-body-imgIncreased");
+            img.classList.add("imageZoom-img-imgIncreased");
+        } else {
+            document.body.classList.remove("imageZoom-body-imgIncreased");
+            img.classList.remove("imageZoom-img-imgIncreased");
         }
     }
 
@@ -104,14 +121,6 @@
         img.classList.add("imageZoom-fillWidth");
         removeTransform();
     }
-
-    // Custom styles
-    document.body.classList.add("imageZoom-body");
-    img.classList.add(
-        (isChrome) ? "imageZoom-img-chrome" :
-        (isFirefox) ? "imageZoom-img-firefox" :
-        ""
-    );
 
     if (!isZoomable) {
         fillHeight(img);
