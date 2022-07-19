@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DeviantArt
 // @namespace    http://tampermonkey.net/
-// @version      1.11.1
+// @version      1.11.2
 // @description  Funcionalidades para deviantart.com
 // @author       LeonAM
 // @match        https://www.deviantart.com/*
@@ -46,6 +46,9 @@
             box-sizing: border-box;
 
             user-select: none;
+        }
+        .deviantart-postButtons:hover {
+            color: var(--green5);
         }
     `.trim());
 

@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+## [1.11.2] - 19-07-2022
+
+### Agregado
+
+- Agregué el estilo `deviantart-postButtons:hover` para cambiar el color de los botones del post al pasar el mouse encima.
+
 ## [1.11.1] - 19-07-2022
 
 ### Arreglado
