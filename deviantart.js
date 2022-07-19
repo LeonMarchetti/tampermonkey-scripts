@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DeviantArt
 // @namespace    http://tampermonkey.net/
-// @version      1.11.0
+// @version      1.11.1
 // @description  Funcionalidades para deviantart.com
 // @author       LeonAM
 // @match        https://www.deviantart.com/*
@@ -255,22 +255,45 @@
         return document.querySelector('div[draggable] img');
     }
 
-    /** Builds a new button for placing along side the post's image */
-    function buildPostButtons(label, iconClass, listener) {
+    /**
+     * Builds a new button for placing along side the post's image
+     *
+     * @param {string} label Text for button's tooltip
+     * @param {string} iconClass Classname of Font Awesome icon
+     * @param {*} listener Event listener of button's click
+     * @param {Element} container Container element
+     */
+    function buildPostButtons(label, iconClass, listener, container) {
         const button = document.createElement("button");
         button.title = label;
         button.classList.add("deviantart-postButtons", "fa-solid", iconClass);
         button.addEventListener("click", listener);
 
         // Container div of the post's image
-        document.querySelector("div[draggable]")
-            .append(button);
+        container.append(button);
     }
 
     if (isPost) {
-        buildPostButtons("Same tab", "fa-arrows-down-to-line", () => { window.location.href = getPostImage().src; });
-        buildPostButtons("New tab", "fa-arrow-up-right-from-square", () => { GM_openInTab(getPostImage().src); });
-        buildPostButtons("Choose collection", "fa-list-ul", () => { clickCollection(); });
+        /* Builds a container for the post buttons on the post image's container
+         * first by waiting until the container appears. */
+        const intervalDivDraggable = setInterval(() => {
+            const divDraggable = document.querySelector("div[draggable]");
+
+            if (divDraggable) {
+                clearInterval(intervalDivDraggable);
+
+                const postButtonsContainer = document.createElement("div");
+                postButtonsContainer.classList.add("deviantart-postButtonsContainer");
+                divDraggable.prepend(postButtonsContainer);
+
+                buildPostButtons("Same tab", "fa-arrows-down-to-line",
+                    () => { window.location.href = getPostImage().src; }, postButtonsContainer);
+                buildPostButtons("New tab", "fa-arrow-up-right-from-square",
+                    () => { GM_openInTab(getPostImage().src); }, postButtonsContainer);
+                buildPostButtons("Choose collection", "fa-list-ul",
+                    () => { clickCollection(); }, postButtonsContainer);
+            }
+        }, 100);
     }
 
     const mutationHandlerContainer = new MutationHandlerContainer();

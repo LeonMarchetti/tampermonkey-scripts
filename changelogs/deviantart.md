@@ -2,6 +2,16 @@
 
 ## [Unreleased]
 
+## [1.11.1] - 19-07-2022
+
+### Arreglado
+
+- Issue #1: El script fallaba porque se ejecutaba antes que apareciera el elemento div[draggable=true], ahora uso un intervalo para esperar hasta que aparezca.
+
+### Cambiado
+
+- La función `buildPostButtons` ahora recibe al contenedor donde van a ir los botones como parámetro. El contenedor se inicializa afuera y se coloca como primer elemento del contenedor de la imagen del post.
+
 ## [1.11.0] - 03-07-2022
 
 ### Cambiado
