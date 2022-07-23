@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DeviantArt
 // @namespace    http://tampermonkey.net/
-// @version      1.11.2
+// @version      1.12.0
 // @description  Funcionalidades para deviantart.com
 // @author       LeonAM
 // @match        https://www.deviantart.com/*
@@ -125,7 +125,7 @@
      * Adds the "Choose collection" button to the collections' list dialog
      *
      * @param {Element} element Element to add the button next
-     * @param {() => void} clickEventHandler Click handler of the button
+     * @param {(e: MouseEvent) => void} clickEventHandler Click handler of the button
      */
     function addChooseCollectionButton(element, clickEventHandler) {
         if (document.getElementById("choose-collection")) {
@@ -142,6 +142,7 @@
         chooseCollectionButton.classList = doneButton.classList;
         chooseCollectionButton.id = "choose-collection";
         chooseCollectionButton.innerHTML = "Choose collection";
+        chooseCollectionButton.title = GM_getValue("deviantart-search");
         chooseCollectionButton.addEventListener("click", clickEventHandler);
 
         const buttonContainer = document.createElement("div");
@@ -165,8 +166,10 @@
          */
         work(element) {
             if (element.textContent.includes("Add to Collection")) {
-                addChooseCollectionButton(element, () => {
-                    const text = inputText();
+                addChooseCollectionButton(element, e => {
+                    const text = e.shiftKey ?
+                        GM_getValue("deviantart-search") :
+                        inputText();
                     if (text) {
                         run(searchCollection("Featured").parentElement, text);
                     }

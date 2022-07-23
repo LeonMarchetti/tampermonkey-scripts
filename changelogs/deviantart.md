@@ -2,6 +2,16 @@
 
 ## [Unreleased]
 
+## [1.12.0] - 23-07-2022
+
+### Agregado
+
+- Agregué el tooltip con la última búsqueda en caché al botón "Choose Collection".
+
+### Modificado
+
+- Modifiqué el evento del botón "Choose Collection" para que si se mantiene apretado la tecla Shift al hacer clic sobre el botón entonces no pregunte por el nombre de la colección y use el nombre en el caché.
+
 ## [1.11.2] - 19-07-2022
 
 ### Agregado
