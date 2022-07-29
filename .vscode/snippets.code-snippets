@@ -45,9 +45,9 @@
 		"prefix": "changelog",
 		"scope": "markdown",
 		"body": [
-			"## [$1] - $2",
+			"## [$1] - ${CURRENT_DATE}-${CURRENT_MONTH}-${CURRENT_YEAR}",
 			"",
-			"### $3",
+			"### $2",
 			"",
 			"- $0",
 		],
