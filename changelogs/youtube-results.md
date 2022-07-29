@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+## [1.3.1] - 29-07-2022
+
+### Arreglado
+
+- En `getVideoSummary()` cambié el query para buscar el elemento con el nombre del canal del video.
+    - El query pasa a ser `"#upload-info.ytd-video-owner-renderer .yt-formatted-string"`.
+    - Antes el query hacía coincidir con múltiples elementos con nombres de otros canales y mostraba uno que no era el del video en reproducción.
+
 ## [1.3.0] - 28-10-2021
 
 ### Cambiado

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         YouTube Results
 // @namespace    http://tampermonkey.net/
-// @version      1.3.0
+// @version      1.3.1
 // @description  Utilities to use in YouTube
 // @author       LeonAM
 // @match        https://www.youtube.com/*
@@ -68,8 +68,9 @@
      * Result format: `<channel name>,<video id>,<video title>`
      */
     function getVideoSummary() {
-        const channelName = document.querySelector(".ytd-channel-name")
-            .children[0].textContent.trim();
+        const channelName = document
+            .querySelector("#upload-info.ytd-video-owner-renderer .yt-formatted-string")
+            .textContent;
         const videoId = window.location.href
             .match(/(?:https?:\/{2})?(?:w{3}\.)?youtu(?:be)?\.(?:com|be)(?:\/watch\?v=|\/)([^\s&]+)/)
             [1];
@@ -77,7 +78,9 @@
             .querySelector("h1.ytd-video-primary-info-renderer")
             .textContent;
 
-        alert(`${channelName},${videoId},${videoTitle}`);
+        const result = `${channelName},${videoId},${videoTitle}`;
+        console.log(result);
+        alert(result);
     }
 
     document.addEventListener("keyup", e => {
