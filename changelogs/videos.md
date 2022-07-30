@@ -4,6 +4,12 @@
 
 - Cambiar JQuery por vanilla Javascript.
 
+## [1.2.2] - 30-07-2022
+
+### Arreglado
+
+- En la parte del interval que cambia la velocidad del video a la velocidad establecida en el script quité el código que extrae el Id de YouTube por si se utiliza el script afuera de los videos clásicos de YouTube. Ahora se cambia la velocidad cuando se navega en los shorts.
+
 ## [1.2.1] - 15-07-2022
 
 ### Arreglado

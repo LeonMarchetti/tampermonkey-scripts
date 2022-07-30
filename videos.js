@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Videos
 // @namespace    http://tampermonkey.net/
-// @version      1.2.1
+// @version      1.2.2
 // @description  Modify playback speed of videos + other functionalities
 // @author       LeonAM
 // @match        *://*/*
@@ -170,11 +170,8 @@
         if (video.length > 0 && video.isInViewport()) {
             const videoPlaybackRate = video.prop("playbackRate");
             if (videoPlaybackRate !== currentPlaybackRate) {
-                const videoId = window.location.href
-                    .match(/(?:https?:\/{2})?(?:w{3}\.)?youtu(?:be)?\.(?:com|be)(?:\/watch\?v=|\/)([^\s&]+)/)
-                    [1];
                 video.prop("playbackRate", currentPlaybackRate);
-                console.log(`[${videoId}] Set video's playback rate to ${currentPlaybackRate}x from ${videoPlaybackRate}x`);
+                console.log(`Set video's playback rate to ${currentPlaybackRate}x from ${videoPlaybackRate}x`);
             }
             showToast(currentPlaybackRate, video.prop("loop"));
         } else {
