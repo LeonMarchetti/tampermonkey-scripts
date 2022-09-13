@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Videos
 // @namespace    http://tampermonkey.net/
-// @version      1.2.2
+// @version      1.3.0
 // @description  Modify playback speed of videos + other functionalities
 // @author       LeonAM
 // @match        *://*/*
@@ -53,7 +53,12 @@
 
     /** Gets the video/s of the current page to work on */
     function getVideo() {
-        return $("video");
+        for (let video of document.getElementsByTagName("video")) {
+            if (video.style.length > 0) {
+                return video;
+            }
+        }
+        return null;
     }
 
     /** Injects a CSS style sheet to the page */
@@ -66,15 +71,22 @@
     // Inject Font Awesome icons:
     injectStylesheet("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css");
 
-    $.fn.isInViewport = function () {
-        // https://stackoverflow.com/questions/41416863/changing-color-when-specific-div-is-visible/41417072#41417072
-        var elementTop = $(this).offset().top;
-        var elementBottom = elementTop + $(this).outerHeight();
-        var viewportTop = $(window).scrollTop();
-        var viewportBottom = viewportTop + $(window).height();
-
-        return (elementBottom > viewportTop) && (elementTop < viewportBottom);
-    };
+    /**
+     * Checks if an element is visible in the viewport
+     *
+     * Source: https://www.javascripttutorial.net/dom/css/check-if-an-element-is-visible-in-the-viewport/
+     *
+     * @param {Element} element DOM element
+     */
+    function isInViewport(element) {
+        const rect = element.getBoundingClientRect();
+        return (
+            rect.top >= 0 &&
+            rect.left >= 0 &&
+            rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+            rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+        );
+    }
 
     /**
      * Shows the toast. Updates the toast if created already.
@@ -120,7 +132,7 @@
      * The semicolon ":" appears as a dash "-" in `GM_download`.
      */
     function getYoutubeTimestamp() {
-        const time = getVideo().prop("currentTime");
+        const time = getVideo().currentTime;
         const mins = String(Math.floor(time / 60)).padStart(2, "0");
         const secs = String(Math.floor(time - mins * 60)).padStart(2, "0");
 
@@ -129,9 +141,9 @@
 
     /** Captures the current frame and downloads it as a image */
     function takeScreenshot() {
-        var video = document.getElementsByTagName("video")[0];
-        var width = video.videoWidth;
-        var height = video.videoHeight;
+        const video = getVideo();
+        const width = video.videoWidth;
+        const height = video.videoHeight;
         /** Canvas element to store the snapshot */
         const canvas = document.createElement("canvas");
 
@@ -167,55 +179,52 @@
      */
     setInterval(() => {
         const video = getVideo();
-        if (video.length > 0 && video.isInViewport()) {
-            const videoPlaybackRate = video.prop("playbackRate");
+        if (video != null && isInViewport(video)) {
+            const videoPlaybackRate = video.playbackRate;
             if (videoPlaybackRate !== currentPlaybackRate) {
-                video.prop("playbackRate", currentPlaybackRate);
+                video.playbackRate = currentPlaybackRate;
                 console.log(`Set video's playback rate to ${currentPlaybackRate}x from ${videoPlaybackRate}x`);
             }
-            showToast(currentPlaybackRate, video.prop("loop"));
+            showToast(currentPlaybackRate, video.loop);
         } else {
             $.toast().reset("all");
             toast = null;
         }
     }, 500);
 
-    /** Forward or backward the video by `delta_t` seconds */
+    /**
+     * Forward or backward the video by `delta_t` seconds
+     *
+     * @param {number} delta_t
+     */
     function forwardVideo(delta_t) {
         const video = getVideo();
 
         const action = (delta_t > 0) ? `Forward ${delta_t} seconds`
             : `Backward ${delta_t * -1} seconds`;
 
-        video.prop("currentTime", (idx, oldVal) => oldVal + delta_t);
-        console.log(`${action} - currentTime = ${video.prop("currentTime")}`);
+        video.currentTime += delta_t;
+        console.log(`${action} - currentTime = ${video.currentTime}`);
     }
 
     /**
      * Changes the playback speed or `playbackRate` of the video. Updates the
      * combobox with the new value.
+     *
+     * @param {number} newRate
      */
     function changeVideoPlaybackSpeed(newRate) {
         currentPlaybackRate = newRate;
-        getVideo().prop("playbackRate", currentPlaybackRate);
+        getVideo().playbackRate = currentPlaybackRate;
     }
 
     /** Toggles the loop state of the video */
     function toggleLoop() {
-        getVideo().prop("loop", (idx, oldVal) => !oldVal);
-    }
-
-    /** Test */
-    function test() {
-        const time = getVideo().prop("currentTime");
-        const mins = String(Math.floor(time / 60)).padStart(2, "0");
-        const secs = String(Math.floor(time - mins * 60)).padStart(2, "0");
-        console.log(`time = ${time}`);
-        console.log(`time = ${mins}:${secs}`);
+        getVideo().loop = !getVideo().loop;
     }
 
     $(document).keyup(e => {
-        if (getVideo().length > 0 && e.target.tagName !== "INPUT") {
+        if (getVideo() && e.target.tagName !== "INPUT") {
             const ctrl = e.ctrlKey;
             const alt = e.altKey;
             const shift = e.shiftKey;

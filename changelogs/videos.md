@@ -4,6 +4,23 @@
 
 - Cambiar JQuery por vanilla Javascript.
 
+## [1.3.0] - 13-09-2022
+
+### Arreglado
+
+- Con la nueva implementación de `getVideo()` el script debería poder mantener la misma velocidad entre cambios de videos tanto en modo normal como en Shorts.
+
+### Modificado
+
+- Cambié las referencias del elemento `<video>` para usar Javascript común.
+    - Velocidad del video: `video.playbackRate`
+    - Bucle: `video.loop`
+    - Tiempo: `video.currentTime`
+    - Estilo: `video.style`
+- La función `getVideo()` ahora busca todos los elementos `<video>` y devuelve el video con atributos de estilos que debe ser el video en reproducción de la página.
+- Ahora la función `isInViewport()` funciona con un elemento DOM en lugar de JQuery. Saqué el código de: [https://www.javascripttutorial.net/dom/css/check-if-an-element-is-visible-in-the-viewport/](https://www.javascripttutorial.net/dom/css/check-if-an-element-is-visible-in-the-viewport/)
+
+
 ## [1.2.2] - 30-07-2022
 
 ### Arreglado
