@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Videos
 // @namespace    http://tampermonkey.net/
-// @version      1.3.0
+// @version      1.3.1
 // @description  Modify playback speed of videos + other functionalities
 // @author       LeonAM
 // @match        *://*/*
@@ -63,7 +63,7 @@
 
     /** Injects a CSS style sheet to the page */
     function injectStylesheet(url) {
-        $('head').append(`<link rel="stylesheet" href="${url}" type="text/css" />`);
+        document.head.innerHTML += `<link rel="stylesheet" href="${url}" type="text/css" />`;
     }
 
     // Inject toast styles:
@@ -91,8 +91,8 @@
     /**
      * Shows the toast. Updates the toast if created already.
      *
-     * @param playbackRate Video playback speed
-     * @param isLooping If the video is looping
+     * @param {number} playbackRate Video playback speed
+     * @param {boolean} isLooping If the video is looping
      */
     function showToast(playbackRate, isLooping) {
         if (!toast) {
@@ -107,18 +107,30 @@
                 textColor: '#eeeeee',
             });
 
-            GM_addStyle(".jq-toast-single { font-size: medium }");
-            GM_addStyle("#btnCaptura { cursor: pointer }");
-            GM_addStyle("#toastContent > i { margin-left: 5px; margin-right: 1px; }");
-            GM_addStyle("#comboVelocidad { color: #444444; }");
+            // Add styles for toast elements
+            GM_addStyle(`
+                .jq-toast-single {
+                    font-size: medium;
+                }
+                #btnCaptura {
+                    cursor: pointer;
+                }
+                #toastContent > i {
+                    margin-left: 5px;
+                    margin-right: 1px;
+                }
+                #comboVelocidad {
+                    color: #444444;
+                }
+            `.trim());
 
-            $("#comboVelocidad").change(comboSpeedChange);
-            $("#checkBucle").change(toggleLoop);
-            $("#btnCaptura").click(takeScreenshot);
+            document.getElementById("comboVelocidad").addEventListener("change", comboSpeedChange);
+            document.getElementById("checkBucle").addEventListener("change", toggleLoop);
+            document.getElementById("btnCaptura").addEventListener("change", takeScreenshot);
         }
 
-        $("#comboVelocidad").val(playbackRate);
-        $("#checkBucle").prop("checked", isLooping);
+        document.getElementById("comboVelocidad").value = playbackRate;
+        document.getElementById("checkBucle").checked = isLooping;
     }
 
     /** Speed combobox handler */
@@ -223,7 +235,7 @@
         getVideo().loop = !getVideo().loop;
     }
 
-    $(document).keyup(e => {
+    document.addEventListener("keyup", e => {
         if (getVideo() && e.target.tagName !== "INPUT") {
             const ctrl = e.ctrlKey;
             const alt = e.altKey;
@@ -262,5 +274,5 @@
                 }
             }
         }
-    })
+    });
 })();

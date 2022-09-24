@@ -4,6 +4,12 @@
 
 - Cambiar JQuery por vanilla Javascript.
 
+## [1.3.1] - 15-09-2022
+
+### Modificado
+
+- Cambié las llamadas de JQuery que faltaban a funciones del DOM.
+
 ## [1.3.0] - 13-09-2022
 
 ### Arreglado
