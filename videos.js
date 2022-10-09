@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Videos
 // @namespace    http://tampermonkey.net/
-// @version      1.3.1
+// @version      1.3.2
 // @description  Modify playback speed of videos + other functionalities
 // @author       LeonAM
 // @match        *://*/*
@@ -59,6 +59,41 @@
             }
         }
         return null;
+    }
+
+    /** Gets an array of all `<video>` elements in the page */
+    function getVideos() {
+        return Array.from(document.getElementsByTagName("video"));
+    }
+
+    /** Returns the loop state of all `<video>` elements */
+    function getLoop() {
+        return getVideos()[0].loop;
+    }
+
+    /** Toggles the loop state of all `<video>` elements */
+    function setLoop() {
+        const videos = getVideos();
+        const newLoopState = !videos[0].loop;
+        for (let video of videos) {
+            video.loop = newLoopState;
+        }
+    }
+
+    /**
+     * Sets the playback rate of all `<video>` elements
+     *
+     * @param {number} newRate
+     */
+    function setPlaybackRate(newRate) {
+        for (let video of getVideos()) {
+            video.playbackRate = newRate;
+        }
+    }
+
+    /** Checks if there is any `<video>` element in the viewport */
+    function anyInViewport() {
+        return getVideos().some(v => isInViewport(v));
     }
 
     /** Injects a CSS style sheet to the page */
@@ -191,13 +226,9 @@
      */
     setInterval(() => {
         const video = getVideo();
-        if (video != null && isInViewport(video)) {
-            const videoPlaybackRate = video.playbackRate;
-            if (videoPlaybackRate !== currentPlaybackRate) {
-                video.playbackRate = currentPlaybackRate;
-                console.log(`Set video's playback rate to ${currentPlaybackRate}x from ${videoPlaybackRate}x`);
-            }
-            showToast(currentPlaybackRate, video.loop);
+        if (video != null && anyInViewport()) {
+            setPlaybackRate(currentPlaybackRate);
+            showToast(currentPlaybackRate, getLoop());
         } else {
             $.toast().reset("all");
             toast = null;
@@ -227,12 +258,12 @@
      */
     function changeVideoPlaybackSpeed(newRate) {
         currentPlaybackRate = newRate;
-        getVideo().playbackRate = currentPlaybackRate;
+        setPlaybackRate(currentPlaybackRate);
     }
 
     /** Toggles the loop state of the video */
     function toggleLoop() {
-        getVideo().loop = !getVideo().loop;
+        setLoop();
     }
 
     document.addEventListener("keyup", e => {

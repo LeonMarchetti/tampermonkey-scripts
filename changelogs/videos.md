@@ -2,7 +2,26 @@
 
 ## [TODO]
 
-- Cambiar JQuery por vanilla Javascript.
+- [x] Cambiar JQuery por vanilla Javascript.
+- [ ] Reemplazar JQuery Toast por algo que no use JQuery.
+
+## [1.3.2] - 06-10-2022
+
+### Agregado
+
+- Función `anyInViewport()` que aplica la función `isInViewport()` a todos los videos.
+- Función `getLoop()` que obtiene el valor de `video.loop` del primer video.
+- Función `getVideos()` que obtiene un arreglo con todos los videos.
+- Función `setLoop()` que obtiene el valor de `.loop` del primer video y establece ese atributo al valor opuesto en todos los videos.
+- Función `setPlaybackRate()` que establece la velocidad de todos los videos a un valor determinado.
+
+### Arreglado
+
+- Nueva implementación para asegurarme que el video actual conserve la misma velocidad que el video anterior, al cambiar la velocidad de todos los elementos `<video>`.
+
+### Eliminado
+
+- Eliminé el mensaje por consola de cambio automático de la velocidad, ya que quité la comprobación del cambio de velocidad.
 
 ## [1.3.1] - 15-09-2022
 
