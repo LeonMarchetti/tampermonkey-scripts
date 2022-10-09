@@ -61,6 +61,10 @@
 			"- $0",
 		]
 	},
+	"Element":{
+		"prefix": "element",
+		"body": "`<${TM_SELECTED_TEXT:$1}>`$0",
+	},
 	"KeyUp" : {
 		"prefix": "keyup",
 		"scope": "javascript",
