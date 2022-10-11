@@ -2,6 +2,21 @@
 
 ## [Unreleased]
 
+## [1.4.0] - 10-10-2022
+
+### Agregado
+
+- Función `download()` para descargar un string como archivo.
+
+### Modificado
+
+- Modifiqué la función `printVideos()` para construir un archivo CSV con la lista de videos y descargarlo.
+    - Primero armo la lista como un arreglo de objetos con los atributos `Canal`, `ID` y `Nombre`.
+
+### Notas
+
+- La función `GM_download()` no funcionó.
+
 ## [1.3.1] - 29-07-2022
 
 ### Arreglado

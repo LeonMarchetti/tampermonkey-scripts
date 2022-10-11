@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         YouTube Results
 // @namespace    http://tampermonkey.net/
-// @version      1.3.1
+// @version      1.4.0
 // @description  Utilities to use in YouTube
 // @author       LeonAM
 // @match        https://www.youtube.com/*
@@ -30,6 +30,19 @@
     };
 
     /**
+     * Downloads text into a file
+     *
+     * @param {string} content Text to download
+     * @param {string} filename Filename
+     */
+    function download(content, filename) {
+        let a = document.createElement("a");
+        a.href = URL.createObjectURL(new Blob(["\ufeff", content]));
+        a.download = filename;
+        a.click();
+    }
+
+    /**
      * Changes the sort order criteria of the search, setting the parameter in
      * the URL and redirecting automatically.
      *
@@ -43,22 +56,33 @@
 
     /** Logs in console the video list of the current playlist */
     function printVideos() {
-        let msg = [];
+        let videoList = [];
 
         document
             .querySelectorAll("ytd-playlist-video-renderer")
             .forEach(video => {
-                let videoTitle = video.querySelector("#video-title").title;
-                let videoLink = video.querySelector("#video-title").href;
-                let channelName = video.querySelector("a.yt-simple-endpoint.style-scope.yt-formatted-string").text;
-
-                msg.push(`${channelName};${videoLink.match(/v=([^&]*)&/)[1]};${videoTitle}`);
+                videoList.push({
+                    Canal: video.querySelector("a.yt-simple-endpoint.style-scope.yt-formatted-string")
+                        .text,
+                    ID: video.querySelector("#video-title")
+                        .href
+                        .match(/v=([^&]*)&/)[1],
+                    Nombre: video.querySelector("#video-title").title,
+                });
             });
 
-        if (msg.length > 0) {
-            console.log(msg.join("\n"));
+        if (videoList.length > 0) {
+            console.log(`${videoList.length} videos found`);
+
+            let csvOutput = "Canal;ID;Nombre\n";
+            videoList.forEach(object => {
+                csvOutput += `${object.Canal};${object.ID};${object.Nombre}\n`;
+            });
+
+            download(csvOutput, "playlists.csv");
+
         } else {
-            console.log("No videos found");
+            console.error("No videos found");
         }
     }
 
