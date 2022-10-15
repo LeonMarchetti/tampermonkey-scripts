@@ -2,6 +2,13 @@
 
 ## [Unreleased]
 
+## [1.5.0] - 15-10-2022
+
+### Agregado
+
+- Agregué items del menú de contexto de Tampermonkey para ejecutar las funciones del script con `GM_registerMenuCommand()`.
+- Agregué las funciones `changeSortOrder_fecsub` y `changeSortOrder_numvis` para ejecutar la función `changeSortOrder` con el criterio de orden respectivo con el menú y los atajos del teclado.
+
 ## [1.4.0] - 10-10-2022
 
 ### Agregado

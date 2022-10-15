@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         YouTube Results
 // @namespace    http://tampermonkey.net/
-// @version      1.4.0
+// @version      1.5.0
 // @description  Utilities to use in YouTube
 // @author       LeonAM
 // @match        https://www.youtube.com/*
@@ -54,8 +54,30 @@
         window.location.href = decodeURIComponent(params);
     }
 
-    /** Logs in console the video list of the current playlist */
-    function printVideos() {
+    /**
+     * Changes the sort order criteria of the search to their upload dates,
+     * setting the parameter in the URL and redirecting automatically.
+     */
+    function changeSortOrder_fecsub() {
+        changeSortOrder("FECSUB");
+    }
+
+    /**
+     * Changes the sort order criteria of the search to their views numbers,
+     * setting the parameter in the URL and redirecting automatically.
+     */
+    function changeSortOrder_numvis() {
+        changeSortOrder("NUMVIS");
+    }
+
+    /**
+     * Compiles a list of the videos of the current playlist into a CSV dataset
+     * and downloads it as a file
+     *
+     * Video row format: `<Channel name>;<Video ID>;<Video title>`. Uses
+     * semicolons `;` in the case video titles have commas `,`.
+     */
+    function getVideosList() {
         let videoList = [];
 
         document
@@ -107,6 +129,12 @@
         alert(result);
     }
 
+    // Tampermonkey popup menu commands
+    GM_registerMenuCommand("Change sort order (upload date)", changeSortOrder_fecsub);
+    GM_registerMenuCommand("Change sort order (views number)", changeSortOrder_numvis);
+    GM_registerMenuCommand("Get video list", getVideosList);
+    GM_registerMenuCommand("Video summary", getVideoSummary);
+
     document.addEventListener("keyup", e => {
         if (e.target.tagName === "INPUT") return;
 
@@ -121,10 +149,10 @@
                 switch (e.code) {
                     case "Numpad1":
                     case "Digit1":
-                        changeSortOrder("FECSUB"); break; // Upload date
+                        changeSortOrder_fecsub(); break; // Upload date
                     case "Numpad2":
                     case "Digit2":
-                        changeSortOrder("NUMVIS"); break; // Amount of visits
+                        changeSortOrder_numvis(); break; // Amount of visits
                 }
             }
         }
@@ -136,7 +164,7 @@
                 switch (e.code) {
                     case "Numpad1":
                     case "Digit1":
-                        printVideos(); break;
+                        getVideosList(); break;
                 }
             }
         }
