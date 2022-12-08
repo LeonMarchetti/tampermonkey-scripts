@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Videos
 // @namespace    http://tampermonkey.net/
-// @version      1.4.0
+// @version      1.4.1
 // @description  Modify playback speed of videos + other functionalities
 // @author       LeonAM
 // @match        *://*/*
@@ -277,35 +277,36 @@
             const shift = e.shiftKey;
 
             if (!ctrl && !alt && !shift) {
-                switch (e.which) {
-                    case 71: forwardVideo(-0.05); break;
-                    case 72: forwardVideo(0.05); break;
-                    // case 80: test(); break;
+                switch (e.key) {
+                    case "g": forwardVideo(-0.05); break;
+                    case "h": forwardVideo(0.05); break;
                 }
             }
+
             // CTRL + SHIFT
             // Chrome no permite sobreescribir los atajos Ctrl+n
             const videoPlaybackCondition = isFirefox ? (ctrl & !alt & !shift) : (ctrl && !alt && shift);
             if (videoPlaybackCondition) {
-                switch (e.which) {
-                    case 49: changeVideoPlaybackSpeed(1); break;
-                    case 50: changeVideoPlaybackSpeed(2); break;
-                    case 51: changeVideoPlaybackSpeed(3); break;
-                    case 52: changeVideoPlaybackSpeed(4); break;
-                    case 53: toggleLoop(); break;
+                switch (e.key) {
+                    case "1": changeVideoPlaybackSpeed(1); break;
+                    case "2": changeVideoPlaybackSpeed(2); break;
+                    case "3": changeVideoPlaybackSpeed(3); break;
+                    case "4": changeVideoPlaybackSpeed(4); break;
+                    case "5": toggleLoop(); break;
                 }
             }
 
             // ALT
             if (!ctrl && alt && !shift) {
-                switch (e.which) {
-                    case 67: takeScreenshot(); break; // Alt+C
+                switch (e.key) {
+                    case "c": takeScreenshot(); break;
                 }
             }
+
             // ALT+SHIFT
             if (!ctrl && alt && shift) {
-                switch (e.which) {
-                    case 67: changeScreenshotName(); break; // Alt+Shift+C
+                switch (e.key) {
+                    case "c": changeScreenshotName(); break;
                 }
             }
         }

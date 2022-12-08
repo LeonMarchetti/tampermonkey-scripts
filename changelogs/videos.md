@@ -5,6 +5,12 @@
 - [x] Cambiar JQuery por vanilla Javascript.
 - [ ] Reemplazar JQuery Toast por algo que no use JQuery.
 
+## [1.4.1] - 08-12-2022
+
+### Arreglado
+
+- Cambié `e.which` por `e.key` porque el primero muestra mensaje de deprecado. Las teclas se representan como `a-z0-9`.
+
 ## [1.4.0] - 08-12-2022
 
 ### Arreglado
