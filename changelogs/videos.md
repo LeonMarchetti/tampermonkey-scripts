@@ -5,6 +5,22 @@
 - [x] Cambiar JQuery por vanilla Javascript.
 - [ ] Reemplazar JQuery Toast por algo que no use JQuery.
 
+## [1.4.0] - 08-12-2022
+
+### Arreglado
+
+- Ahora se puede ejecutar en videos de Reddit, como en `https://external-preview.redd.it/...`.
+
+### Eliminado
+
+- Eliminé la función `anyInViewport()` ya que voy a usar la función singular para controlar la aparición del toast.
+
+### Modificado
+
+- `getVideo()` ahora regresa el primer resultado de `getVideos()` por si el único video que aparece no tiene estilos cargados.
+- Moví el código para controlar la aparición del toast a su propia función `controlToast()` para que muestre su documentación.
+- En `controlToast()` volví a usar `isInViewport()` para ver si hay un video en la pantalla y asi mostrar el toast.
+
 ## [1.3.2] - 06-10-2022
 
 ### Agregado

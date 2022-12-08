@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Videos
 // @namespace    http://tampermonkey.net/
-// @version      1.3.2
+// @version      1.4.0
 // @description  Modify playback speed of videos + other functionalities
 // @author       LeonAM
 // @match        *://*/*
@@ -53,12 +53,16 @@
 
     /** Gets the video/s of the current page to work on */
     function getVideo() {
-        for (let video of document.getElementsByTagName("video")) {
+        const videos = getVideos();
+
+        if (videos.length == 0) return null;
+
+        for (let video of videos) {
             if (video.style.length > 0) {
                 return video;
             }
         }
-        return null;
+        return videos[0];
     }
 
     /** Gets an array of all `<video>` elements in the page */
@@ -68,7 +72,7 @@
 
     /** Returns the loop state of all `<video>` elements */
     function getLoop() {
-        return getVideos()[0].loop;
+        return getVideo().loop;
     }
 
     /** Toggles the loop state of all `<video>` elements */
@@ -91,12 +95,11 @@
         }
     }
 
-    /** Checks if there is any `<video>` element in the viewport */
-    function anyInViewport() {
-        return getVideos().some(v => isInViewport(v));
-    }
-
-    /** Injects a CSS style sheet to the page */
+    /**
+     * Injects a CSS style sheet to the page
+     *
+     * @param {string} url URL of the CSS file
+     */
     function injectStylesheet(url) {
         document.head.innerHTML += `<link rel="stylesheet" href="${url}" type="text/css" />`;
     }
@@ -219,21 +222,22 @@
         screenshotName = prompt("Insert new filename for screenshots");
     }
 
-    /*
-     * Interval that controls the appearance of the toast and modifies the
-     * video playbackRate if it is not equal from the script's playbackRate
-     * variable
+    /**
+     * Controls the appearance of the toast and modifies the video playbackRate
+     * if it is not equal from the script's playbackRate variable
      */
-    setInterval(() => {
+    function controlToast() {
         const video = getVideo();
-        if (video != null && anyInViewport()) {
+        if (video != null && isInViewport(video)) {
             setPlaybackRate(currentPlaybackRate);
             showToast(currentPlaybackRate, getLoop());
         } else {
             $.toast().reset("all");
             toast = null;
         }
-    }, 500);
+    }
+
+    setInterval(controlToast, 500);
 
     /**
      * Forward or backward the video by `delta_t` seconds
