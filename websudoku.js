@@ -1,4 +1,4 @@
-// ==UserScript==
+s// ==UserScript==
 // @name         Web Sudoku
 // @namespace    http://tampermonkey.net/
 // @version      1.0
@@ -34,7 +34,7 @@
         console.error(`[${GM_info.script.name}] Buttons not found`);
     }
 
-    document.addEventListener("keyup", e => {
+    document.addEventListener("keypress", e => {
         if (e.code == "KeyP") {
             togglePauseGame();
         }
