@@ -1,4 +1,4 @@
-s// ==UserScript==
+// ==UserScript==
 // @name         Web Sudoku
 // @namespace    http://tampermonkey.net/
 // @version      1.0
