@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Web Sudoku
 // @namespace    http://tampermonkey.net/
-// @version      1.2
+// @version      1.3
 // @description  Script for Web Sudoku
 // @author       LeonAM
 // @match        *://*.websudoku.com/
@@ -50,20 +50,20 @@
             let deletedNumbers = [];
 
             // Traverse row
-            row.childNodes.forEach(td => {
-                let cell = td.firstChild;
-                if (cell != input && cell.value.length == 1) {
-                    if (values.includes(cell.value)) {
-                        values.splice(values.indexOf(cell.value), 1);
-                        deletedNumbers.push(cell.value);
-                    }
-                }
-            });
+            let cells = Array
+                .from(row.childNodes)
+                .map(td => td.firstChild);
 
             // Traverse column
-            let rows = input.parentElement.offsetParent.firstChild.childNodes;
-            rows.forEach(row => {
-                let cell = row.childNodes[colNo].firstChild;
+            let colCells = Array
+                .from(input.parentElement.offsetParent.firstChild.childNodes)
+                .map(row => row.childNodes[colNo].firstChild);
+
+            cells.push(...colCells);
+
+            // TODO Traverse box
+
+            cells.forEach(cell => {
                 if (cell != input && cell.value.length == 1) {
                     if (values.includes(cell.value)) {
                         values.splice(values.indexOf(cell.value), 1);
@@ -71,8 +71,6 @@
                     }
                 }
             });
-
-            // TODO Traverse box
 
             // Set content
             input.value = values.join("");
