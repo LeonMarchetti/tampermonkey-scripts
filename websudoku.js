@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Web Sudoku
 // @namespace    http://tampermonkey.net/
-// @version      1.4
+// @version      1.4.1
 // @description  Script for Web Sudoku
 // @author       LeonAM
 // @match        *://*.websudoku.com/
@@ -12,9 +12,14 @@
 (function() {
     'use strict';
 
-    // The site loads a frame, with this line I show the current URL of the frame it's running on.
+    // The site loads a frame, with this line I show the current URL of the frame it's running on
     console.info(`Running UserScript "${GM_info.script.name} at "${window.location.href}"`);
 
+    /**
+     * Prints message in console preppending the script's name
+     *
+     * @param {string} text
+     */
     function log(text) {
         console.log(`[${GM_info.script.name}] ${text}`);
     }
@@ -38,7 +43,11 @@
         console.error(`[${GM_info.script.name}] Buttons not found`);
     }
 
-        /** Automatically removes a number which conflicts on the cell's row, column or box. */
+    /**
+     * Automatically removes a number which conflicts on the cell's row, column or box.
+     *
+     * @param {Element} input
+     */
     function clearRepeatedNumber(input) {
         let currValue = input.value;
 
