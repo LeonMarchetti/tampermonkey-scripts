@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Web Sudoku
 // @namespace    http://tampermonkey.net/
-// @version      1.3
+// @version      1.4
 // @description  Script for Web Sudoku
 // @author       LeonAM
 // @match        *://*.websudoku.com/
@@ -38,39 +38,45 @@
         console.error(`[${GM_info.script.name}] Buttons not found`);
     }
 
-    /** Automatically removes a number which conflicts on the cell's row, column or box. */
+        /** Automatically removes a number which conflicts on the cell's row, column or box. */
     function clearRepeatedNumber(input) {
         let currValue = input.value;
 
         if (currValue.length > 0) {
-            let row = input.parentElement.parentElement; // <tr>
+            let rows = input.parentElement.offsetParent.firstChild.childNodes;
+            let row = input.parentElement.parentElement;
             let values = currValue.split("");
             let rowNo = row.rowIndex;
             let colNo = input.parentElement.cellIndex;
             let deletedNumbers = [];
 
-            // Traverse row
-            let cells = Array
-                .from(row.childNodes)
-                .map(td => td.firstChild);
+            // Traverse box
+            let boxCells = [];
+            let boxCornerRow = ~~(rowNo / 3) * 3;
+            let boxCornerCol = ~~(colNo / 3) * 3;
+            for (let x = boxCornerRow; x < 3 + boxCornerRow; x++) {
+                for (let y = boxCornerCol; y < 3 + boxCornerCol; y++) {
+                    boxCells.push(rows[x]
+                        .childNodes[y]
+                        .firstChild);
+                }
+            }
 
-            // Traverse column
-            let colCells = Array
-                .from(input.parentElement.offsetParent.firstChild.childNodes)
-                .map(row => row.childNodes[colNo].firstChild);
-
-            cells.push(...colCells);
-
-            // TODO Traverse box
-
-            cells.forEach(cell => {
-                if (cell != input && cell.value.length == 1) {
-                    if (values.includes(cell.value)) {
+            // Traverse row, column and box
+            Array.from(row.childNodes)
+                .map(td => td.firstChild)
+                .concat(Array.from(rows)
+                    .map(row => row.childNodes[colNo].firstChild))
+                .concat(boxCells)
+                .forEach(cell => {
+                    if (cell != input
+                        && cell.value.length == 1
+                        && values.includes(cell.value))
+                    {
                         values.splice(values.indexOf(cell.value), 1);
                         deletedNumbers.push(cell.value);
                     }
-                }
-            });
+                });
 
             // Set content
             input.value = values.join("");
