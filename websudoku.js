@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Web Sudoku
 // @namespace    http://tampermonkey.net/
-// @version      1.4.1
+// @version      1.4.2
 // @description  Script for Web Sudoku
 // @author       LeonAM
 // @match        *://*.websudoku.com/
@@ -18,10 +18,12 @@
     /**
      * Prints message in console preppending the script's name
      *
-     * @param {string} text
+     * @param {string} text Message content
+     * @param {boolean} error If output to error stream
      */
-    function log(text) {
-        console.log(`[${GM_info.script.name}] ${text}`);
+    function log(text, error = false) {
+        let logFunction = error ? console.error : console.log;
+        logFunction(`[${GM_info.script.name}] ${text}`);
     }
 
     /** Pauses or resumes the game by simulating a click on the "Pause" or "Resume puzzle" button */
@@ -40,52 +42,72 @@
             return;
         }
 
-        console.error(`[${GM_info.script.name}] Buttons not found`);
+        log("Buttons not found", true);
+    }
+
+    /**
+     * Returns an array with all the cells which restrict the selected cell's value
+     *
+     * @param {number} rowNo Cell's row number, 0-based
+     * @param {number} colNo Cell's column number, 0-based
+     *
+     * @returns {ChildNode[]} Value
+     */
+    function getRestrictionCells(rowNo, colNo) {
+        let table = document.getElementById("puzzle_grid");
+        if (!table) {
+            log("No table#puzzle_grid element");
+            return null;
+        }
+
+        let rows = table.firstChild.childNodes;
+
+        // Traverse box
+        let boxCells = [];
+        let boxCornerRow = ~~(rowNo / 3) * 3;
+        let boxCornerCol = ~~(colNo / 3) * 3;
+        for (let x = boxCornerRow; x < 3 + boxCornerRow; x++) {
+            for (let y = boxCornerCol; y < 3 + boxCornerCol; y++) {
+                boxCells.push(rows[x]
+                    .childNodes[y]
+                    .firstChild);
+            }
+        }
+
+        // Traverse row, column and box
+        return Array.from(rows[rowNo].childNodes)
+            .map(td => td.firstChild)
+            .concat(Array.from(rows)
+                .map(row => row.childNodes[colNo].firstChild))
+            .concat(boxCells);
     }
 
     /**
      * Automatically removes a number which conflicts on the cell's row, column or box.
      *
-     * @param {Element} input
+     * @param {HTMLInputElement} input
      */
     function clearRepeatedNumber(input) {
         let currValue = input.value;
 
         if (currValue.length > 0) {
-            let rows = input.parentElement.offsetParent.firstChild.childNodes;
-            let row = input.parentElement.parentElement;
             let values = currValue.split("");
+            let row = input.parentElement.parentElement;
             let rowNo = row.rowIndex;
             let colNo = input.parentElement.cellIndex;
             let deletedNumbers = [];
 
-            // Traverse box
-            let boxCells = [];
-            let boxCornerRow = ~~(rowNo / 3) * 3;
-            let boxCornerCol = ~~(colNo / 3) * 3;
-            for (let x = boxCornerRow; x < 3 + boxCornerRow; x++) {
-                for (let y = boxCornerCol; y < 3 + boxCornerCol; y++) {
-                    boxCells.push(rows[x]
-                        .childNodes[y]
-                        .firstChild);
-                }
-            }
-
             // Traverse row, column and box
-            Array.from(row.childNodes)
-                .map(td => td.firstChild)
-                .concat(Array.from(rows)
-                    .map(row => row.childNodes[colNo].firstChild))
-                .concat(boxCells)
-                .forEach(cell => {
-                    if (cell != input
-                        && cell.value.length == 1
-                        && values.includes(cell.value))
-                    {
-                        values.splice(values.indexOf(cell.value), 1);
-                        deletedNumbers.push(cell.value);
-                    }
-                });
+            getRestrictionCells(rowNo, colNo).forEach(cell => {
+                if (cell
+                    && cell != input
+                    && cell.value.length == 1
+                    && values.includes(cell.value))
+                {
+                    values.splice(values.indexOf(cell.value), 1);
+                    deletedNumbers.push(cell.value);
+                }
+            });
 
             // Set content
             input.value = values.join("");
@@ -95,9 +117,19 @@
         }
     }
 
+    /** Test function */
+    function test() {
+        // TODO
+    }
+
     document.addEventListener("keypress", e => {
         if (e.code == "KeyP") {
             togglePauseGame();
+            e.preventDefault();
+        }
+
+        if (e.code == "KeyT") {
+            test();
             e.preventDefault();
         }
     });
