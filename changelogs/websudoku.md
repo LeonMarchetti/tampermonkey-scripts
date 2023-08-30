@@ -29,3 +29,67 @@ tecla pasando el objeto `e.target`.
 ### Borrado
 
 - Borré la función `getRestrictionCells()` porque ya no era necesaria.
+
+## [1.4.2] - 26-08-2023
+
+### Agregado
+
+- Función `getRestrictionCells()`, que toma los números de fila y columna de una celda y devuelve
+  una lista con todas las celdas de las mismas filas, columnas y caja que esta.
+- Función `test()`, la voy a dejar para después poner el código de prueba. Se ejecuta al presionar
+  la tecla `t`.
+
+### Modificado
+
+- A la función `log()` le agregué el parámetro `error` para indicar si el mensaje tiene que ser
+  mostrado en el stream de errores del navegador. Según ese parámetro se usa la función
+  `console.log` o `console.error`.
+
+## [1.4.1] - 25-08-2023
+
+### Agregado
+
+- Agregué el docstring para las funciones `log()` y `clearRepeatedNumber()`.
+
+## [1.4] - 25-08-2023
+
+### Modificado
+
+- En la función `clearRepeatedNumber()` cambié el código para juntar las listas de las celdas en la
+  misma fila y columna por las llamadas a `.concat()`.
+- Agregué el proceso para armar la lista de celdas de la misma caja de la celda seleccionada.
+
+## [1.3] - 25-08-2023
+
+### Modificado
+
+- En la función `clearRepeatedNumber()` cambié el código para armar las listas de las celdas en la
+  misma fila y columna por las llamadas a `.map()`.
+
+## [1.2] - 25-08-2023
+
+### Agregado
+
+- Función `log()`, que imprime un mensaje por consola agregando el nombre del script al principio.
+- Función `clearRepeatedNumber()` que borra de la celda seleccionada los valores que ya aparecen en
+  la misma fila y columna. Se ejecuta al presionar una tecla numérica sobre la celda seleccionada.
+
+### Modificado
+
+- En el evento de presión de la tecla de pausa/resumen agrego la llamada a `e.preventDefault()` para
+  que no escriba la letra `p` en la celda seleccionada.
+
+## [1.1] - 25-08-2023
+
+### Arreglado
+
+- Al principio del script borré una `s` que agregué por accidente.
+
+## [1.0] - 24-08-2023
+
+Creación del script.
+
+### Agregado
+
+- Función `togglePause()`, que pausa o resume un juego al presionar la tecla `p`, simulando el clic
+  al botón de pausa.
