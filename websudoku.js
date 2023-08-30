@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Web Sudoku
 // @namespace    http://tampermonkey.net/
-// @version      1.5.0
+// @version      1.5.1
 // @description  Script for Web Sudoku
 // @author       LeonAM
 // @match        *://*.websudoku.com/
@@ -24,6 +24,17 @@
     function log(text, error = false) {
         let logFunction = error ? console.error : console.log;
         logFunction(`[${GM_info.script.name}] ${text}`);
+    }
+
+    /**
+     * Returns the box number of the selected cell, given its row and column number
+     *
+     * @param {number} rowNo
+     * @param {number} colNo
+     * @returns {number} Box index
+     */
+    function getBoxIndex(rowNo, colNo) {
+        return ~~(rowNo / 3) * 3 + ~~(colNo / 3);
     }
 
     /**
@@ -55,7 +66,7 @@
                 .from(rows[rowNo].childNodes)
                 .forEach(td => {
                     let colNo = td.cellIndex;
-                    let boxIndex = ~~(rowNo / 3) * 3 + ~~(colNo / 3);
+                    let boxIndex = getBoxIndex(rowNo, colNo);
                     boxes[boxIndex].push(td.firstChild);
                 });
         });
@@ -69,17 +80,6 @@
                     .map(row => row.childNodes[colNo].firstChild)),
             boxes: boxes,
             /**
-             * Returns the list of cells in the box of the cell given its row and column number
-             *
-             * Only used privately by this object
-             *
-             * @param {number} rowNo
-             * @param {number} colNo
-             */
-            getBox: function (rowNo, colNo) {
-                return this.boxes[rowNo % 3 * 3 + colNo % 3];
-            },
-            /**
              * Returns the restriction cells of a cell given its row and column number
              *
              * @param {number} rowNo
@@ -88,7 +88,7 @@
             getCells: function (rowNo, colNo) {
                 return this.rows[rowNo]
                     .concat(this.columns[colNo])
-                    .concat(this.getBox(rowNo, colNo));
+                    .concat(this.boxes[getBoxIndex(rowNo, colNo)]);
             },
         };
     }
@@ -162,6 +162,27 @@
         // TODO
         log("TEST");
         log("cell");
+        console.log(cell);
+        log("store");
+        console.log(store);
+        let row = cell.parentElement.parentElement;
+        let rowNo = row.rowIndex;
+        let colNo = cell.parentElement.cellIndex;
+        let storeCells = store.getCells(rowNo, colNo);
+        console.log(storeCells);
+        let values = [];
+        storeCells.forEach(cell => {
+            if (cell.value.length == 1) {
+                values.push(cell.value);
+            }
+        });
+
+        let box = store.getBox(rowNo, colNo);
+        log("box");
+        console.log(box);
+
+        log(`boxIndex: ${rowNo % 3 * 3 + colNo % 3}`);
+        console.log(`Values: ${values.join(" ")}`);
     }
 
     var store = makeCellsListStore();

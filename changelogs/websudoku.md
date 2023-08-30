@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.5.1] - 30-08-2023
+
+### Agregado
+
+- Función `getBoxIndex()` para calcular el índice de la caja de una celda según su número fila y de
+  columna.
+
+### Arreglado
+
+- En `makeCellsListStore()` estaba calculando mal el índice de la caja, así que hice una función
+  para que se calcule igual que cuando se arme la lista de cajas.
+
+### Borrado
+
+- Borré la función `getBox()` del objeto store porque queda redundante.
+
 ## [1.5.0] - 29-08-2023
 
 ### Agregado
