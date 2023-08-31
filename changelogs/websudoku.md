@@ -2,8 +2,15 @@
 
 ## TODO
 
-- Hacer que cuando se reemplacen las celdas automáticamente y quede un solo valor se vuelva a
-  recorrer el tablero para seguir borrando pistas.
+- Hacer una función que devuelva un objeto con el número de fila, columna y caja de una celda y
+  reemplazar todos los lugares donde se calcula.
+
+## [1.6.1] - 31-08-2023
+
+### Modificado
+
+- En `clearClues()`, cuando se determina que una celda va a modificarse se llama de vuelta a
+  `clearClues()` sobre la celda modificada para borrar las pistas incorrectas recursivamente.
 
 ## [1.6.0] - 30-08-2023
 

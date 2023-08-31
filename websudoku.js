@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Web Sudoku
 // @namespace    http://tampermonkey.net/
-// @version      1.6.0
+// @version      1.6.1
 // @description  Script for Web Sudoku
 // @author       LeonAM
 // @match        *://*.websudoku.com/
@@ -163,10 +163,15 @@
                 if (cell
                     && cell != input
                     && cell.value.length >= 1
+                    && cell.value.includes(currValue)
                 ) {
                     cell.value = cell.value.replaceAll(currValue, "");
+                    let cellRowNo = row.rowIndex;
+                    let cellColNo = input.parentElement.cellIndex;
+                    log(`Cell [${cellRowNo}, ${cellColNo}] deleted clue: ${currValue}`);
                     if (cell.value.length == 1 && cell.className != "s0") {
                         cell.className = "d0";
+                        clearClues(cell);
                     }
                 }
             });
