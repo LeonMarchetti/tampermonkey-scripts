@@ -1,5 +1,24 @@
 # Changelog
 
+## TODO
+
+- Hacer que cuando se reemplacen las celdas automáticamente y quede un solo valor se vuelva a
+  recorrer el tablero para seguir borrando pistas.
+
+## [1.6.0] - 30-08-2023
+
+### Agregado
+
+- Función `clearClues()` para borrar automáticamente las pistas de las celdas relacionadas cuando
+  la celda seleccionada se llena con un número. Requiere que se cambie la clase CSS de la celda
+  modificada para mostrar el número grande. Para ejecutarse hice que se produzca un delay al apretar
+  las teclas por si se quiere ingresar pistas.
+
+### Modificado
+
+- En la función `test()` agregué una llamada a `console.table` para mostrar en una tabla todas las
+  variables que se ingresen en un objeto.
+
 ## [1.5.1] - 30-08-2023
 
 ### Agregado

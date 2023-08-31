@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Web Sudoku
 // @namespace    http://tampermonkey.net/
-// @version      1.5.1
+// @version      1.6.0
 // @description  Script for Web Sudoku
 // @author       LeonAM
 // @match        *://*.websudoku.com/
@@ -148,6 +148,32 @@
     }
 
     /**
+     * Removes the clues from the related cells which match the selected cell's value
+     *
+     * @param {HTMLInputElement} input
+     */
+    function clearClues(input) {
+        let currValue = input.value;
+        if (currValue.length == 1) {
+            let row = input.parentElement.parentElement;
+            let rowNo = row.rowIndex;
+            let colNo = input.parentElement.cellIndex;
+
+            store.getCells(rowNo, colNo).forEach(cell => {
+                if (cell
+                    && cell != input
+                    && cell.value.length >= 1
+                ) {
+                    cell.value = cell.value.replaceAll(currValue, "");
+                    if (cell.value.length == 1 && cell.className != "s0") {
+                        cell.className = "d0";
+                    }
+                }
+            });
+        }
+    }
+
+    /**
      * Test function
      *
      * Usage:
@@ -168,8 +194,16 @@
         let row = cell.parentElement.parentElement;
         let rowNo = row.rowIndex;
         let colNo = cell.parentElement.cellIndex;
+        let boxNo = getBoxIndex(rowNo, colNo);
+
         let storeCells = store.getCells(rowNo, colNo);
+        log(`store.getCells(${rowNo}, ${colNo})`);
         console.log(storeCells);
+
+        let box = store.boxes[boxNo];
+        log("box");
+        console.log(box);
+
         let values = [];
         storeCells.forEach(cell => {
             if (cell.value.length == 1) {
@@ -177,12 +211,13 @@
             }
         });
 
-        let box = store.getBox(rowNo, colNo);
-        log("box");
-        console.log(box);
-
-        log(`boxIndex: ${rowNo % 3 * 3 + colNo % 3}`);
-        console.log(`Values: ${values.join(" ")}`);
+        console.table({
+            "rowNo": rowNo,
+            "colNo": colNo,
+            "boxNo": boxNo,
+            "values": values.join(", "),
+            "values (unique)": [...new Set(values)].sort().join(", "),
+        });
     }
 
     var store = makeCellsListStore();
@@ -199,10 +234,13 @@
         }
     });
 
+    var cellInputKeypressTimeoutId = 0;
     document.querySelectorAll("input.d0").forEach(input => {
         input.addEventListener("keyup", e => {
             if (e.key >= 0 && e.key <= 9) {
                 clearRepeatedNumber(e.target);
+                clearTimeout(cellInputKeypressTimeoutId);
+                cellInputKeypressTimeoutId = setTimeout(clearClues(e.target), 500);
             }
         });
     });
