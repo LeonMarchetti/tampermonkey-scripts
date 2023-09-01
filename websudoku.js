@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Web Sudoku
 // @namespace    http://tampermonkey.net/
-// @version      1.6.1
+// @version      1.6.2
 // @description  Script for Web Sudoku
 // @author       LeonAM
 // @match        *://*.websudoku.com/
@@ -35,6 +35,22 @@
      */
     function getBoxIndex(rowNo, colNo) {
         return ~~(rowNo / 3) * 3 + ~~(colNo / 3);
+    }
+
+    /**
+     * Get object with row, column and box's index of a selected cell
+     *
+     * @param {HTMLInputElement} cell Selected cell
+     * @returns {{"row": number, "column": number, "box": number}}
+     */
+    function getCellLocation(cell) {
+        let row = cell.parentElement.parentElement.rowIndex;
+        let column = cell.parentElement.cellIndex;
+        return {
+            row: row,
+            column: column,
+            box: getBoxIndex(row, column)
+        }
     }
 
     /**
@@ -122,13 +138,11 @@
 
         if (currValue.length > 0) {
             let values = currValue.split("");
-            let row = input.parentElement.parentElement;
-            let rowNo = row.rowIndex;
-            let colNo = input.parentElement.cellIndex;
+            let inputLocation = getCellLocation(input);
             let deletedNumbers = [];
 
             // Traverse row, column and box
-            store.getCells(rowNo, colNo).forEach(cell => {
+            store.getCells(inputLocation.row, inputLocation.column).forEach(cell => {
                 if (cell
                     && cell != input
                     && cell.value.length == 1
@@ -142,7 +156,7 @@
             // Set content
             input.value = values.join("");
             if (deletedNumbers.length > 0) {
-                log(`Cell [${rowNo + 1},${colNo + 1}] deleted: ${deletedNumbers.join(", ")}`);
+                log(`Cell [${inputLocation.row + 1},${inputLocation.column + 1}] deleted: ${deletedNumbers.join(", ")}`);
             }
         }
     }
@@ -155,20 +169,17 @@
     function clearClues(input) {
         let currValue = input.value;
         if (currValue.length == 1) {
-            let row = input.parentElement.parentElement;
-            let rowNo = row.rowIndex;
-            let colNo = input.parentElement.cellIndex;
+            let inputLocation = getCellLocation(input);
 
-            store.getCells(rowNo, colNo).forEach(cell => {
+            store.getCells(inputLocation.row, inputLocation.column).forEach(cell => {
                 if (cell
                     && cell != input
                     && cell.value.length >= 1
                     && cell.value.includes(currValue)
                 ) {
                     cell.value = cell.value.replaceAll(currValue, "");
-                    let cellRowNo = row.rowIndex;
-                    let cellColNo = input.parentElement.cellIndex;
-                    log(`Cell [${cellRowNo}, ${cellColNo}] deleted clue: ${currValue}`);
+                    let cellLocation = getCellLocation(cell);
+                    log(`Cell [${cellLocation.row}, ${cellLocation.column}] deleted clue: ${currValue}`);
                     if (cell.value.length == 1 && cell.className != "s0") {
                         cell.className = "d0";
                         clearClues(cell);
@@ -196,16 +207,14 @@
         console.log(cell);
         log("store");
         console.log(store);
-        let row = cell.parentElement.parentElement;
-        let rowNo = row.rowIndex;
-        let colNo = cell.parentElement.cellIndex;
-        let boxNo = getBoxIndex(rowNo, colNo);
 
-        let storeCells = store.getCells(rowNo, colNo);
-        log(`store.getCells(${rowNo}, ${colNo})`);
+        let cellLocation = getCellLocation(cell);
+
+        let storeCells = store.getCells(cellLocation.row, cellLocation.column);
+        log(`store.getCells(${cellLocation.row}, ${cellLocation.column})`);
         console.log(storeCells);
 
-        let box = store.boxes[boxNo];
+        let box = store.boxes[cellLocation.box];
         log("box");
         console.log(box);
 
@@ -217,9 +226,9 @@
         });
 
         console.table({
-            "rowNo": rowNo,
-            "colNo": colNo,
-            "boxNo": boxNo,
+            "rowNo": cellLocation.row,
+            "colNo": cellLocation.column,
+            "boxNo": cellLocation.box,
             "values": values.join(", "),
             "values (unique)": [...new Set(values)].sort().join(", "),
         });

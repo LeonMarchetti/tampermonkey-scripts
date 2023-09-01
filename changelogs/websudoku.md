@@ -1,9 +1,11 @@
 # Changelog
 
-## TODO
+## [1.6.2] - 01-09-2023
 
-- Hacer una función que devuelva un objeto con el número de fila, columna y caja de una celda y
-  reemplazar todos los lugares donde se calcula.
+### Agregado
+
+- Función `getCellLocation()` que devuelve un objeto con el número de fila, columna y caja de una
+  celda.
 
 ## [1.6.1] - 31-08-2023
 
