@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         YouTube Results
 // @namespace    http://tampermonkey.net/
-// @version      1.5.0
+// @version      1.6.0
 // @description  Utilities to use in YouTube
 // @author       LeonAM
 // @match        https://www.youtube.com/*
@@ -15,6 +15,15 @@
     'use strict';
 
     console.info(`Running UserScript "${GM_info.script.name}"`);
+
+    /*
+     * Since now Youtube won't show recommendations without history enabled, the script will
+     * automatically change to the Subscritions' feed
+     */
+    if (window.location.href == "https://www.youtube.com/") {
+        window.location.href = "https://www.youtube.com/feed/subscriptions";
+        return;
+    }
 
     /**
      * Results ordering criteria.

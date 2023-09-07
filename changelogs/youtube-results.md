@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+## [1.6.0] - 07-09-2023
+
+### Agregado
+
+- Agregué código para detectar si se está en la página principal de Youtube se mueva automáticamente
+  a la página de suscripciones. Esto es porque Youtube dejó de mostrar recomendaciones de videos si
+  no se activa el historial de reproducciones.
+
 ## [1.5.0] - 15-10-2022
 
 ### Agregado
