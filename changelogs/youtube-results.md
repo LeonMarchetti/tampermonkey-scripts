@@ -2,6 +2,13 @@
 
 ## [Unreleased]
 
+## [1.7.0] - 09-09-2023
+
+### Agregado
+
+- Función `changeToVideo()` para redirigir desde un video de Shorts a una página común. Para usar
+  desde el menú contextual de Tampermonkey.
+
 ## [1.6.0] - 07-09-2023
 
 ### Agregado

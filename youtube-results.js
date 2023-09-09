@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         YouTube Results
 // @namespace    http://tampermonkey.net/
-// @version      1.6.0
+// @version      1.7.0
 // @description  Utilities to use in YouTube
 // @author       LeonAM
 // @match        https://www.youtube.com/*
@@ -138,11 +138,26 @@
         alert(result);
     }
 
+    /**
+     * If currently on a Shorts video, it changes the page to its normal version.
+     *
+     * Ej.: https://www.youtube.com/shorts/{ID} to https://www.youtube.com/watch?v={ID}
+     */
+    function changeToVideo() {
+        if (window.location.href.match("/shorts/")) {
+            var videoId = window.location.href.match("\\w*$");
+            window.location.href = `https://www.youtube.com/watch?v=${videoId}`;
+        } else {
+            console.error("Not a Shorts page");
+        }
+    }
+
     // Tampermonkey popup menu commands
     GM_registerMenuCommand("Change sort order (upload date)", changeSortOrder_fecsub);
     GM_registerMenuCommand("Change sort order (views number)", changeSortOrder_numvis);
     GM_registerMenuCommand("Get video list", getVideosList);
     GM_registerMenuCommand("Video summary", getVideoSummary);
+    GM_registerMenuCommand("Change to video", changeToVideo);
 
     document.addEventListener("keyup", e => {
         if (e.target.tagName === "INPUT") return;
