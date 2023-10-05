@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Web Sudoku
 // @namespace    http://tampermonkey.net/
-// @version      1.6.2
+// @version      1.7.0
 // @description  Script for Web Sudoku
 // @author       LeonAM
 // @match        *://*.websudoku.com/
@@ -16,14 +16,26 @@
     console.info(`Running UserScript "${GM_info.script.name} at "${window.location.href}"`);
 
     /**
+     * Returns the Sudoku table element, with id `puzzle_grid`. Raises exception if not found.
+     *
+     * @returns {HTMLTableElement} Table HTML element
+     */
+    function getTable() {
+        let table = document.getElementById("puzzle_grid");
+        if (!table) {
+            throw new DOMException("No table#puzzle_grid element");
+        }
+        return table;
+    }
+
+    /**
      * Prints message in console preppending the script's name
      *
      * @param {string} text Message content
      * @param {boolean} error If output to error stream
      */
-    function log(text, error = false) {
-        let logFunction = error ? console.error : console.log;
-        logFunction(`[${GM_info.script.name}] ${text}`);
+    function log(text) {
+        console.log(`[${GM_info.script.name}] ${text}`);
     }
 
     /**
@@ -68,11 +80,7 @@
      * @returns {{rows: HTMLInputElement[][], columns: HTMLInputElement[][], boxes: HTMLInputElement[][]}}
      */
     function makeCellsListStore() {
-        let table = document.getElementById("puzzle_grid");
-        if (!table) {
-            log("No table#puzzle_grid element", true);
-            return null;
-        }
+        let table = getTable();
 
         let rows = table.firstChild.childNodes;
         let boxes = Array.from(Array(9)).map(_ => []);
@@ -125,7 +133,7 @@
             return;
         }
 
-        log("Buttons not found", true);
+        throw new DOMException("Buttons not found");
     }
 
     /**
@@ -234,7 +242,11 @@
         });
     }
 
-    var store = makeCellsListStore();
+    try {
+        var store = makeCellsListStore();
+    } catch (error) {
+        // Do nothing
+    }
 
     document.addEventListener("keypress", e => {
         if (e.code == "KeyP") {

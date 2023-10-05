@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.7.0] - 05-10-2023
+
+### Agregado
+
+- Función `getTable()` para buscar el elemento HTML de la tabla del tablero de Sudocu, y tirar una
+  excepción si no existe.
+
+### Modificado
+
+- Ahora voy a tratar de usar `throw new Error(mensaje)` en lugar de `console.error()` para los
+  errores.
+- La función `log()` ahora solo recibe al mensaje como parámetro y no imprime mensajes al stream
+  de errores.
+- Agregué un bloque try-catch en la llamada a `makeCellsListStore()` para que no haga nada si al
+  tratar de obtener la tabla en la página de juego pausado falla.
+
 ## [1.6.2] - 01-09-2023
 
 ### Agregado
