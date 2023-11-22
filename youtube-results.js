@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         YouTube Results
 // @namespace    http://tampermonkey.net/
-// @version      1.7.0
+// @version      1.7.1
 // @description  Utilities to use in YouTube
 // @author       LeonAM
 // @match        https://www.youtube.com/*
@@ -80,41 +80,48 @@
     }
 
     /**
+     * Gets a list of videos from a playlist page
+     *
+     * @returns {{Canal: string, ID: string, Nombre: string}[]}
+     */
+    function getVideosList() {
+        return Array.from(document.querySelectorAll("ytd-playlist-video-renderer.ytd-playlist-video-list-renderer"))
+            .map(video => ({
+                Canal: video.querySelector(".yt-simple-endpoint.yt-formatted-string").text,
+                ID: (new URLSearchParams(
+                    new URL(
+                        video.querySelector("#video-title").href
+                    ).search
+                )).get("v"),
+                Nombre: video.querySelector("#video-title").title,
+            }));
+    }
+
+    /**
      * Compiles a list of the videos of the current playlist into a CSV dataset
      * and downloads it as a file
      *
      * Video row format: `<Channel name>;<Video ID>;<Video title>`. Uses
      * semicolons `;` in the case video titles have commas `,`.
+     *
+     * @returns {string} Video list in CSV format
      */
-    function getVideosList() {
-        let videoList = [];
-
-        document
-            .querySelectorAll("ytd-playlist-video-renderer")
-            .forEach(video => {
-                videoList.push({
-                    Canal: video.querySelector("a.yt-simple-endpoint.style-scope.yt-formatted-string")
-                        .text,
-                    ID: video.querySelector("#video-title")
-                        .href
-                        .match(/v=([^&]*)&/)[1],
-                    Nombre: video.querySelector("#video-title").title,
-                });
-            });
-
-        if (videoList.length > 0) {
-            console.log(`${videoList.length} videos found`);
-
-            let csvOutput = "Canal;ID;Nombre\n";
-            videoList.forEach(object => {
-                csvOutput += `${object.Canal};${object.ID};${object.Nombre}\n`;
-            });
-
-            download(csvOutput, "playlists.csv");
-
-        } else {
-            console.error("No videos found");
+    function downloadPlaylistVideoList() {
+        const videoList = getVideosList();
+        if (videoList.length <= 0) {
+            alert("No videos found");
+            throw "No videos found";
         }
+
+        console.log(`${videoList.length} videos found`);
+
+        let csvOutput = "Canal;ID;Nombre\n";
+        videoList.forEach(object => {
+            csvOutput += `${object.Canal};${object.ID};${object.Nombre}\n`;
+        });
+
+        download(csvOutput, "playlists.csv");
+        return csvOutput;
     }
 
     /**
@@ -155,7 +162,7 @@
     // Tampermonkey popup menu commands
     GM_registerMenuCommand("Change sort order (upload date)", changeSortOrder_fecsub);
     GM_registerMenuCommand("Change sort order (views number)", changeSortOrder_numvis);
-    GM_registerMenuCommand("Get video list", getVideosList);
+    GM_registerMenuCommand("Get video list", downloadPlaylistVideoList);
     GM_registerMenuCommand("Video summary", getVideoSummary);
     GM_registerMenuCommand("Change to video", changeToVideo);
 
@@ -188,7 +195,7 @@
                 switch (e.code) {
                     case "Numpad1":
                     case "Digit1":
-                        getVideosList(); break;
+                        downloadPlaylistVideoList(); break;
                 }
             }
         }

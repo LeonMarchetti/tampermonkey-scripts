@@ -2,6 +2,26 @@
 
 ## [Unreleased]
 
+## [1.7.1] - 21-11-2023
+
+### Agregado
+
+- Función `downloadPlaylistVideoList()`, para armar el archivo en formato CSV y descargarlo.
+
+### Arreglado
+
+- En `getVideosList()`, había un error al obtener el ID de los videos de la playlist, ya que el
+  script tambien recoge las sugerencias que aparecen debajo de la lista que no pertenecen al
+  playlist y por lo tanto no coincidia el regex anterior. Ahora uso la API de `UrlSearchParams` para
+  obtener el parámetro `v` de cada elemento y ahora uso la query
+  `ytd-playlist-video-renderer.ytd-playlist-video-list-renderer` para obtener la lista de elementos
+  de la playlist.
+
+### Modificado
+
+- A la función `getVideosList()` le dejé solo el código para armar la lista de objetos con los datos
+  de los videos y dejar la descarga en otro lado.
+
 ## [1.7.0] - 09-09-2023
 
 ### Agregado
