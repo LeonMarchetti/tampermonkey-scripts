@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Web Sudoku
 // @namespace    http://tampermonkey.net/
-// @version      1.7.1
+// @version      1.8.0
 // @description  Script for Web Sudoku
 // @author       LeonAM
 // @match        *://*.websudoku.com/
@@ -48,7 +48,7 @@
                 break;
         }
         logFunction(`[${GM_info.script.name}] ${text}`);
-  }
+    }
 
     /**
      * Returns the box number of the selected cell, given its row and column number
@@ -209,6 +209,70 @@
         }
     }
 
+    /** Class that handles the undo/redo behavior */
+    class Undoer {
+        /**
+         * Saved states of the board
+         *
+         * @type {{value: string, location: {row: number, column: number, box: number}}[][]}
+         */
+        state;
+
+        constructor() {
+            this.state = [];
+        }
+
+        /** Saves the current state of the board for undoing */
+        save() {
+            let table = getTable();
+            let currentState = [];
+
+            let rows = table.firstChild.childNodes;
+            rows.forEach(row => {
+                let rowNo = row.rowIndex;
+                Array
+                    .from(rows[rowNo].childNodes)
+                    .forEach(td => {
+                        let cell = td.firstChild;
+                        if (cell.value && cell.className != "s0") {
+                            currentState.push({
+                                value: cell.value,
+                                location: getCellLocation(cell)
+                            });
+                        }
+                    });
+            });
+            this.state.push(currentState);
+        }
+
+        /**
+         * Loads a saved state and updates the board with the old values
+         *
+         * Throws and exception if the state is empty
+         */
+        load() {
+            if (this.state.length == 0) {
+                throw new Error("There is no saved state");
+            }
+
+            try {
+                var loadedState = this.state.pop();
+                log("loadedState");
+                console.log(loadedState);
+                for (let cellState of loadedState) {
+                    let rowNo = cellState.location.row;
+                    let colNo = cellState.location.column;
+                    let cell = store.rows[rowNo][colNo]
+                    cell.value = cellState.value;
+                }
+            } catch (error) {
+                // On error catch error's message and push popped state back to list
+                log(error.message, "error");
+                this.state.push(loadedState);
+            }
+        }
+    }
+
     /**
      * Test function
      *
@@ -222,7 +286,7 @@
      */
     function test(cell = null) {
         // TODO
-        log("TEST");
+        /* log("TEST");
         log("cell");
         console.log(cell);
         log("store");
@@ -251,24 +315,48 @@
             "boxNo": cellLocation.box,
             "values": values.join(", "),
             "values (unique)": [...new Set(values)].sort().join(", "),
-        });
+        }); */
+
+        // undoer.save();
+        log("State after", "debug");
+        console.debug(undoer.state);
+        try {
+            undoer.load();
+        } catch (error) {
+            log(error.message, "error");
+        } finally {
+            log("State after", "debug");
+            console.debug(undoer.state);
+        }
     }
 
     try {
         var store = makeCellsListStore();
+        var undoer = new Undoer();
     } catch (error) {
         // Do nothing
     }
 
     document.addEventListener("keypress", e => {
-        if (e.code == "KeyP") {
-            togglePauseGame();
-            e.preventDefault();
-        }
+        switch (e.code) {
+            case "KeyP": // Pause
+                togglePauseGame();
+                e.preventDefault();
+                break;
 
-        if (e.code == "KeyT") {
-            test(e.target);
-            e.preventDefault();
+            case "KeyT": // Test
+                test(e.target);
+                e.preventDefault();
+                break;
+
+            case "KeyZ": // Undo
+                try {
+                    undoer.load();
+                } catch (error) {
+                    log(error.message, "error");
+                }
+                e.preventDefault();
+                break;
         }
     });
 
@@ -278,7 +366,10 @@
             if (e.key >= 0 && e.key <= 9) {
                 clearRepeatedNumber(e.target);
                 clearTimeout(cellInputKeypressTimeoutId);
-                cellInputKeypressTimeoutId = setTimeout(clearClues(e.target), 500);
+                cellInputKeypressTimeoutId = setTimeout(() => {
+                    undoer.save();
+                    clearClues(e.target);
+                }, 500);
             }
         });
     });

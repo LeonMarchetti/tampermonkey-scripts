@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.8.0] - 05-10-2023
+
+### Agregado
+
+- Funciones para guardar estado del tablero y poder deshacer movimientos.
+
 ## [1.7.1] - 21-12-2023
 
 ### Modificado
