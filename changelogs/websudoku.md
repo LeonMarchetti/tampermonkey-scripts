@@ -4,7 +4,13 @@
 
 ### Agregado
 
-- Funciones para guardar estado del tablero y poder deshacer movimientos.
+- Clase `Undoer` para guardar estado del tablero y poder deshacer movimientos.
+- `Undoer.state` es una lista que guarda listas de estados de celdas en forma de pila.
+- `Undoer.save()` guarda el estado actual de todas las celdas editables, incluidas las vacías, de
+  forma `{ value: cell.value, location: getCellLocation(cell) }`.
+  `Undoer.load()` Saca el último estado e itera toda la grilla para poner los valores antiguos.
+- Evento `keydown`, para guardar el estado anterior de la celda ya que `undoer.save()` guardaría el
+  estado después de editar la celda al estar en `keyup`.
 
 ## [1.7.1] - 21-12-2023
 

@@ -222,8 +222,14 @@
             this.state = [];
         }
 
-        /** Saves the current state of the board for undoing */
-        save() {
+        /**
+         * Saves the current state of the board for undoing. Receives the location and previous
+         * value of the edited cell
+         *
+         * @param {string} prevValue Edited cell's last value
+         * @param {object} location Edited cell's location
+         */
+        save(prevValue, location) {
             let table = getTable();
             let currentState = [];
 
@@ -234,13 +240,21 @@
                     .from(rows[rowNo].childNodes)
                     .forEach(td => {
                         let cell = td.firstChild;
-                        if (cell.value && cell.className != "s0") {
+                        if (cell.className != "s0") {
                             currentState.push({
                                 value: cell.value,
                                 location: getCellLocation(cell)
                             });
                         }
                     });
+            });
+            /* Push the previous value of the edited cell to be processed last (overwrites state
+             * from last step)
+             * Otherwise the "keyup" event grabs the cell's value after editing
+             */
+            currentState.push({
+                value: prevValue,
+                location: location
             });
             this.state.push(currentState);
         }
@@ -257,8 +271,6 @@
 
             try {
                 var loadedState = this.state.pop();
-                log("loadedState");
-                console.log(loadedState);
                 for (let cellState of loadedState) {
                     let rowNo = cellState.location.row;
                     let colNo = cellState.location.column;
@@ -317,16 +329,14 @@
             "values (unique)": [...new Set(values)].sort().join(", "),
         }); */
 
-        // undoer.save();
-        log("State after", "debug");
-        console.debug(undoer.state);
-        try {
-            undoer.load();
-        } catch (error) {
-            log(error.message, "error");
-        } finally {
-            log("State after", "debug");
+        if (undoer.state.length) {
+            log(`undoer.state.length = ${undoer.state.length}`);
             console.debug(undoer.state);
+            console.debug(undoer.state.map(
+                s => s.filter(
+                    z => z.value != "")));
+        } else {
+            log("Empty state");
         }
     }
 
@@ -362,14 +372,21 @@
 
     var cellInputKeypressTimeoutId = 0;
     document.querySelectorAll("input.d0").forEach(input => {
+        input.addEventListener("keydown", e => {
+            e.target.dataset.prev = e.target.value;
+            e.target.dataset.location = JSON.stringify(getCellLocation(e.target));
+        });
         input.addEventListener("keyup", e => {
             if (e.key >= 0 && e.key <= 9) {
+                let cell = e.target;
                 clearRepeatedNumber(e.target);
-                clearTimeout(cellInputKeypressTimeoutId);
-                cellInputKeypressTimeoutId = setTimeout(() => {
-                    undoer.save();
-                    clearClues(e.target);
-                }, 500);
+                if (cell.value) {
+                    clearTimeout(cellInputKeypressTimeoutId);
+                    cellInputKeypressTimeoutId = setTimeout(() => {
+                        undoer.save(cell.dataset.prev, JSON.parse(cell.dataset.location));
+                        clearClues(cell);
+                    }, 500);
+                }
             }
         });
     });
