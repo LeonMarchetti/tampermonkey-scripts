@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.1] - 21-12-2023
+
+### Modificado
+
+- La función `log` para que acepte un parámetro para indicar el nivel del log, usando las funciones
+  del objeto `console`.
+
 ## [1.7.0] - 05-10-2023
 
 ### Agregado

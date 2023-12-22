@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Web Sudoku
 // @namespace    http://tampermonkey.net/
-// @version      1.7.0
+// @version      1.7.1
 // @description  Script for Web Sudoku
 // @author       LeonAM
 // @match        *://*.websudoku.com/
@@ -32,11 +32,23 @@
      * Prints message in console preppending the script's name
      *
      * @param {string} text Message content
-     * @param {boolean} error If output to error stream
+     * @param {boolean} loglevel Log level
      */
-    function log(text) {
-        console.log(`[${GM_info.script.name}] ${text}`);
-    }
+    function log(text, logLevel = "debug") {
+        var logFunction = console.log;
+        switch (logLevel) {
+            case "debug":
+            case "D":
+                logFunction = console.debug;
+                break;
+
+            case "error":
+            case "E":
+                logFunction = console.error;
+                break;
+        }
+        logFunction(`[${GM_info.script.name}] ${text}`);
+  }
 
     /**
      * Returns the box number of the selected cell, given its row and column number
