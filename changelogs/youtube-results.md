@@ -2,6 +2,16 @@
 
 ## [Unreleased]
 
+## [1.7.2] - 31-01-2024
+
+### Arreglado
+
+- En `changeToVideo()` cambié la expresión regular a `[^/]*$` porque extraía mal el ID de video cuando éste tenía símbolos como los guiones.
+
+### Eliminado
+
+- La referencia al archivo en disco.
+
 ## [1.7.1] - 21-11-2023
 
 ### Agregado

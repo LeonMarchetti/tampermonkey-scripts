@@ -1,12 +1,11 @@
 // ==UserScript==
 // @name         YouTube Results
 // @namespace    http://tampermonkey.net/
-// @version      1.7.1
+// @version      1.7.2
 // @description  Utilities to use in YouTube
 // @author       LeonAM
 // @match        https://www.youtube.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
-// @require      file://<PATH>/youtube-results.js
 // @grant        GM_info
 // @grant        GM_registerMenuCommand
 // ==/UserScript==
@@ -151,12 +150,14 @@
      * Ej.: https://www.youtube.com/shorts/{ID} to https://www.youtube.com/watch?v={ID}
      */
     function changeToVideo() {
-        if (window.location.href.match("/shorts/")) {
-            var videoId = window.location.href.match("\\w*$");
-            window.location.href = `https://www.youtube.com/watch?v=${videoId}`;
-        } else {
+        if (! window.location.href.match("/shorts/")) {
             console.error("Not a Shorts page");
+            alert("Not a Shorts page");
+            return;
         }
+
+        var videoId = window.location.href.match("[^/]*$");
+        window.location.href = `https://www.youtube.com/watch?v=${videoId}`;
     }
 
     // Tampermonkey popup menu commands
