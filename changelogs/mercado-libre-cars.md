@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.0.1] - 02-02-2024
+
+### Agregado
+
+- Agregué el listener de teclado para activar el script con Ctrl+E, y un item en el menú de contexto.
+- Agregué la dirección `listado.mercadolibre.com.ar`.
+
+### Arreglado
+
+- Arreglé la selección de los `<span>` a modificar, porque usaba los índices incorrectos.
+
 ## [1.0.0] - 03-09-2023
 
 Creación del script

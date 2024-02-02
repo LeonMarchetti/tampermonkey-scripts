@@ -1,13 +1,15 @@
 // ==UserScript==
 // @name         Mercado Libre Cars
 // @namespace    http://tampermonkey.net/
-// @version      1.0.0
+// @version      1.0.1
 // @description  To use in searches of cars in Mercado Libre
 // @author       LeonAM
 // @match        https://autos.mercadolibre.com.ar/*
+// @match        https://listado.mercadolibre.com.ar/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=mercadolibre.com.ar
 // @grant        GM_info
 // @grant        GM_addStyle
+// @grant        GM_registerMenuCommand
 // ==/UserScript==
 
 (function() {
@@ -54,9 +56,9 @@
      * @param {number} dollarValue
      */
     function swapCurrency(span, dollarValue) {
-        let currencySpan = span.childNodes[1];
+        let currencySpan = span.childNodes[0];
 		if (currencySpan.textContent == CURRENCY_PESO_SYMBOL) {
-            let amountSpan = span.childNodes[2];
+            let amountSpan = span.childNodes[1];
             let amount = Number(amountSpan.textContent.replaceAll(".", ""));
             let dollarAmount = Math.round(amount / dollarValue);
 
@@ -80,4 +82,12 @@
     }
 
     getDollarValue(startSwapCurrency);
+
+    document.addEventListener("keyup", e => {
+        if (e.ctrlKey && e.key == "e") {
+            getDollarValue(startSwapCurrency);
+        }
+    });
+
+    GM_registerMenuCommand("Swap currency", () => getDollarValue(startSwapCurrency));
 })();
