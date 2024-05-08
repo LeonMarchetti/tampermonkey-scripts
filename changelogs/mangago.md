@@ -1,10 +1,19 @@
 # Changelog
 
+## [1.2.0] - 08-05-2024
+
+### Agregado
+
+- Función `checkMangaPage` que comprueba si se está en una página de un Manga y devuelve el arreglo
+  de match de regex con el índice de la página.
+- Función `openImage` para abrir la imagen de una página.
+- Atajo `Ctrl+Alt+I` y en menú contextual para `openImage.`
+
 ## [1.1.0] - 08-05-2024
 
 ### Agregado
 
-- Atajo de teclado `Ctrl+Alt+T` para `togglePageHeight`.
+- Atajo de teclado `Ctrl+Alt+T` y en menú contextual para `togglePageHeight`.
 - La función `setFullPageHeight` recibe un booleano y agrega el CSS para cambiar la altura de las
   páginas o elimina el bloque.
 

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Mangago
 // @namespace    http://tampermonkey.net/
-// @version      1.1.0
+// @version      1.2.0
 // @description  Utilities for Mangago
 // @author       LeonAM
 // @match        https://www.mangago.me/*
@@ -23,17 +23,34 @@
     var fullPageHeightStyle = null;
 
     /**
-     * Checks if currently on a manga chapter's page
+     * Checks if currently on a manga chapter
      *
      * @throws Exception
      */
-    function checkMangaChapterPage(throwException = true) {
+    function checkMangaChapter(throwException = true) {
         if (!window.location.href.match(/mangago\.me\/read-manga\//)) {
             if (throwException)
                 throw "Not at a manga chapter";
             return false;
         }
         return true;
+    }
+
+    /**
+     * Checks if currently on a manga page. Returns a regex match with the page's index extracted
+     * from the URL.
+     *
+     * @throws Exception
+     * @returns Regex match
+     */
+    function checkMangaPage(throwException = true) {
+        let locationMatch = window.location.href.match(/mangago\.me\/read-manga\/.*\/pg-(\d+)/);
+        if (!locationMatch) {
+            if (throwException)
+                throw "Not at a manga page";
+            return null;
+        }
+        return locationMatch;
     }
 
     /** Sets the pages' height to the window's height */
@@ -49,7 +66,7 @@
      * @param {boolean} active
      */
     function setFullPageHeight(active) {
-        checkMangaChapterPage();
+        checkMangaChapter();
 
         if (active) {
             fullPageHeightStyle = GM_addStyle(`${PAGE_SELECTOR} {
@@ -62,15 +79,24 @@
         }
     }
 
-    if (checkMangaChapterPage(false)) {
+    /** Opens the image's source of a manga page */
+    function openImage() {
+        let pageIndex = checkMangaPage()[1];
+
+        window.location.href = document.querySelector(`img#page${pageIndex}`).src;
+    }
+
+    if (checkMangaChapter(false)) {
         setFullPageHeight(GM_getValue(FULL_PAGE_HEIGHT_KEY, false));
     }
 
+    GM_registerMenuCommand("Open Image", openImage);
     GM_registerMenuCommand("Toggle full height", togglePageHeight);
 
     document.addEventListener("keyup", e => {
         if (e.altKey && e.ctrlKey && !e.shiftKey) {
             switch (e.code) {
+                case "KeyI": openImage(); break;
                 case "KeyT": togglePageHeight(); break;
             }
         }
