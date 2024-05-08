@@ -1,67 +1,78 @@
 // ==UserScript==
 // @name         Mangago
 // @namespace    http://tampermonkey.net/
-// @version      1.0.0
-// @description  try to take over the world!
-// @author       You
+// @version      1.1.0
+// @description  Utilities for Mangago
+// @author       LeonAM
 // @match        https://www.mangago.me/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=mangago.me
-// @require      https://code.jquery.com/jquery-3.7.1.min.js
 // @grant        GM_info
 // @grant        GM_addStyle
 // @grant        GM_getValue
 // @grant        GM_setValue
 // @grant        GM_registerMenuCommand
 // ==/UserScript==
-/* globals $ */
 
 (function() {
     'use strict';
 
     console.info(`Running UserScript "${GM_info.script.name}"`);
 
-    const NEW_CLASS = "new_page_class";
     const PAGE_SELECTOR = "[id^=page]:not(#page-mainer,#pagenavigation)";
+    const FULL_PAGE_HEIGHT_KEY = "fullPageHeight";
+    var fullPageHeightStyle = null;
 
     /**
      * Checks if currently on a manga chapter's page
      *
      * @throws Exception
      */
-    function checkMangaChapterPage() {
+    function checkMangaChapterPage(throwException = true) {
         if (!window.location.href.match(/mangago\.me\/read-manga\//)) {
-            throw "Not at a manga chapter";
+            if (throwException)
+                throw "Not at a manga chapter";
+            return false;
         }
+        return true;
     }
 
     /** Sets the pages' height to the window's height */
-    function setPageHeight() {
-        checkMangaChapterPage();
-
-        GM_addStyle(
-            `${PAGE_SELECTOR} { height: 100em; min-width: auto; }\n` +
-            `.${NEW_CLASS} { height: auto !important; }`
-        );
+    function togglePageHeight() {
+        let active = !GM_getValue(FULL_PAGE_HEIGHT_KEY, false);
+        setFullPageHeight(active);
+        GM_setValue(FULL_PAGE_HEIGHT_KEY, active);
     }
 
-    /** Resets the height of the manga pages */
-    function resetHeight() {
+    /**
+     * Sets or unsets the chapter's pages' height to full screen
+     *
+     * @param {boolean} active
+     */
+    function setFullPageHeight(active) {
         checkMangaChapterPage();
 
-        let active = GM_getValue("active", true);
         if (active) {
-            document.querySelectorAll(PAGE_SELECTOR).forEach(p => {
-                p.className += ' ' + NEW_CLASS;
-            });
-        } else {
-            let regexp = new RegExp("\\s?" + NEW_CLASS, "g");
-            document.querySelectorAll(PAGE_SELECTOR).forEach(p => {
-                p.className = p.className.replace(regexp, '').trim();
-            });
+            fullPageHeightStyle = GM_addStyle(`${PAGE_SELECTOR} {
+                height: 100em;
+                min-width: auto;
+            }\n`);
+        } else if (fullPageHeightStyle) {
+            fullPageHeightStyle.remove();
+            fullPageHeightStyle = null;
         }
-        GM_setValue("active", !active);
     }
 
-    GM_registerMenuCommand("Set full height", setPageHeight);
-    GM_registerMenuCommand("Reset height", resetHeight);
+    if (checkMangaChapterPage(false)) {
+        setFullPageHeight(GM_getValue(FULL_PAGE_HEIGHT_KEY, false));
+    }
+
+    GM_registerMenuCommand("Toggle full height", togglePageHeight);
+
+    document.addEventListener("keyup", e => {
+        if (e.altKey && e.ctrlKey && !e.shiftKey) {
+            switch (e.code) {
+                case "KeyT": togglePageHeight(); break;
+            }
+        }
+    });
 })();
