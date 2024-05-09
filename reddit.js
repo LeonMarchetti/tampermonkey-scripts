@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Reddit
 // @namespace    http://tampermonkey.net/
-// @version      1.1.0
+// @version      1.2.0
 // @description  Utilities for Reddit.com
 // @author       LeonAM
 // @match        https://www.reddit.com/*
@@ -16,18 +16,22 @@
     const COMMUNITY = "";
 
     /**
-     * Switches the community posts' sort order.
+     * Switches the community or search result's posts sort order
      *
      * @param {string} order Post's order criteria
      */
-    function switchCommunitySortOrder(order) {
-        let locationMatch = window.location.href.match(/reddit\.com\/r\/\w+\/(?:\w+\/)?$/);
-        if (!locationMatch) {
-            console.error("Not in a Reddit community");
+    function switchSortOrder(order) {
+        if (window.location.href.match(/reddit\.com\/r\/\w+\/(?:\w+\/)?$/)) {
+            window.location.href = window.location.href + order + "/";
             return;
         }
 
-        window.location.href = window.location.href + order + "/";
+        if (window.location.href.match(/reddit\.com\/r\/\w+\/search\//)) {
+            window.location.href = window.location.href + "&sort=" + order;
+            return;
+        }
+
+        throw "Wrong page for ordering posts";
     }
 
     /**
@@ -46,13 +50,13 @@
     }
 
     GM_registerMenuCommand("Start Crosspost", StartCrosspost);
-    GM_registerMenuCommand("Sort by New", () => switchCommunitySortOrder("new"));
+    GM_registerMenuCommand("Sort by New", () => switchSortOrder("new"));
 
     document.addEventListener("keyup", e => {
         if (e.altKey && !e.ctrlKey && !e.shiftKey) {
             switch(e.code) {
                 case "KeyC": StartCrosspost(); break;
-                case "KeyN": switchCommunitySortOrder("new"); break;
+                case "KeyN": switchSortOrder("new"); break;
             }
         }
     });

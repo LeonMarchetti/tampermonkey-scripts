@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0] - 09-05-2024
+
+### Modificado
+
+- Se cambió el nombre de la función `switchCommunitySortOrder` a `switchSortOrder`.
+- Ahora `switchSortOrder` también cambia el orden de los resultados de la búsqueda de posts.
+
 ## [1.1.0] - 07-05-2024
 
 ### Agregado
