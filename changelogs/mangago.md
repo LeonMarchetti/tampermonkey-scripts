@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.2.1] - 09-05-2024
+
+### Arreglado
+
+- Arreglé el regex de `checkMangaPage` porque había páginas que tenían el número de página tipo `/4/` al final sin usar el string `pg-`.
+
 ## [1.2.0] - 08-05-2024
 
 ### Agregado

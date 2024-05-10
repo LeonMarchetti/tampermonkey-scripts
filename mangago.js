@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Mangago
 // @namespace    http://tampermonkey.net/
-// @version      1.2.0
+// @version      1.2.1
 // @description  Utilities for Mangago
 // @author       LeonAM
 // @match        https://www.mangago.me/*
@@ -44,7 +44,7 @@
      * @returns Regex match
      */
     function checkMangaPage(throwException = true) {
-        let locationMatch = window.location.href.match(/mangago\.me\/read-manga\/.*\/pg-(\d+)/);
+        let locationMatch = window.location.href.match(/mangago\.me\/read-manga\/.*\/(?:pg-)?(\d+)/);
         if (!locationMatch) {
             if (throwException)
                 throw "Not at a manga page";
