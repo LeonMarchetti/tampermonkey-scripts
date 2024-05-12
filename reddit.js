@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Reddit
 // @namespace    http://tampermonkey.net/
-// @version      1.2.0
+// @version      1.3.0
 // @description  Utilities for Reddit.com
 // @author       LeonAM
 // @match        https://www.reddit.com/*
@@ -14,6 +14,17 @@
 
     /** TODO Put community name to crosspost post to */
     const COMMUNITY = "";
+
+    /**
+     * Shows an alert and throws an Exception
+     *
+     * @param {string} message Error message
+     * @throws Exception
+     */
+    function showError(message) {
+        alert(message);
+        throw message;
+    }
 
     /**
      * Switches the community or search result's posts sort order
@@ -31,7 +42,7 @@
             return;
         }
 
-        throw "Wrong page for ordering posts";
+        showError("Wrong page for ordering posts");
     }
 
     /**
@@ -40,8 +51,7 @@
     function StartCrosspost() {
         let locationMatch = window.location.href.match(/reddit\.com\/r\/\w+\/comments\/(\w*)/);
         if (! locationMatch) {
-            console.error("Not in Reddit post");
-            return;
+            showError("Not in Reddit post");
         }
 
         let postId = locationMatch[1];

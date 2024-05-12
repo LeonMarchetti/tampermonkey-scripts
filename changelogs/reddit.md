@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.0] - 12-05-2024
+
+### Agregado
+
+- Función `showError` para mostrar un mensaje de error en una alerta y tirar una excepción.
+
+
 ## [1.2.0] - 09-05-2024
 
 ### Modificado
