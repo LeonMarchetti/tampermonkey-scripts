@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.0] - 20-05-2024
+
+### Agregado
+
+- Función `selectCrosspostTarget` para configurar el nombre de la comunidad a la que hacer
+  crosspost y guardarla en storage con la API de GM, reemplazando la constante glolba `COMMUNITY`.
+
 ## [1.4.0] - 19-05-2024
 
 ### Agregado
