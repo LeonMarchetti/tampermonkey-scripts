@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.4.0] - 19-05-2024
+
+### Agregado
+
+- Función `switchSubreddit` para cambiar el subreddit de una búsqueda. Atajo `Alt+R` y en menú contextual.
+
 ## [1.3.0] - 12-05-2024
 
 ### Agregado

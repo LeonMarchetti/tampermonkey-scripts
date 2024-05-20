@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Reddit
 // @namespace    http://tampermonkey.net/
-// @version      1.3.0
+// @version      1.4.0
 // @description  Utilities for Reddit.com
 // @author       LeonAM
 // @match        https://www.reddit.com/*
@@ -59,14 +59,42 @@
         window.location.href = newLocation;
     }
 
+    /**
+     * Switches current post search page's subreddit, keeping current search's parameters
+     *
+     * @param {string} name Destiny subreddit's name
+     */
+    function switchSubreddit(name) {
+        let subredditSearchMatch = window.location.href.match(/reddit\.com\/r\/\w+\/search\/(.*)/);
+        let searchQuery = subredditSearchMatch[1];
+        window.location.href = `https://reddit.com/r/${name}/search/${searchQuery}`;
+    }
+
+    /** Prompts for a subreddit name to switch to */
+    function StartSwitchSubreddit() {
+        if (!window.location.href.match(/reddit\.com\/r\/\w+\/search\//)) {
+            showError("Not at a subreddit's post search page");
+        }
+
+        let subreddit = prompt("Input destiny subreddit's name", null);
+
+        if (!subreddit) {
+            showError("Not valid subreddit name");
+        }
+
+        switchSubreddit(subreddit);
+    }
+
     GM_registerMenuCommand("Start Crosspost", StartCrosspost);
     GM_registerMenuCommand("Sort by New", () => switchSortOrder("new"));
+    GM_registerMenuCommand("Switch Subreddit", StartSwitchSubreddit);
 
     document.addEventListener("keyup", e => {
         if (e.altKey && !e.ctrlKey && !e.shiftKey) {
             switch(e.code) {
                 case "KeyC": StartCrosspost(); break;
                 case "KeyN": switchSortOrder("new"); break;
+                case "KeyR": StartSwitchSubreddit(); break;
             }
         }
     });
