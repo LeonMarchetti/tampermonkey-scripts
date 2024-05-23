@@ -5,6 +5,17 @@
 - [x] Cambiar JQuery por vanilla Javascript.
 - [ ] Reemplazar JQuery Toast por algo que no use JQuery.
 
+## [1.4.2] - 23-05-2024
+
+## Agregado
+
+- Puse el ícono de Youtube.
+
+### Arreglado
+
+- Arreglé la captura de imagen de un video. Ahora abre la captura en otra pestaña en lugar de
+  descargarla, y toma el ancho y altura de constantes.
+
 ## [1.4.1] - 08-12-2022
 
 ### Arreglado

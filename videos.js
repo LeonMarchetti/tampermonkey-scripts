@@ -1,10 +1,11 @@
 // ==UserScript==
 // @name         Videos
 // @namespace    http://tampermonkey.net/
-// @version      1.4.1
+// @version      1.4.2
 // @description  Modify playback speed of videos + other functionalities
 // @author       LeonAM
 // @match        *://*/*
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @require      https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js
 // @require      https://raw.githubusercontent.com/kamranahmedse/jquery-toast-plugin/master/dist/jquery.toast.min.js
 // @require      file://<PATH>/videos.js
@@ -164,7 +165,7 @@
 
             document.getElementById("comboVelocidad").addEventListener("change", comboSpeedChange);
             document.getElementById("checkBucle").addEventListener("change", toggleLoop);
-            document.getElementById("btnCaptura").addEventListener("change", takeScreenshot);
+            document.getElementById("btnCaptura").addEventListener("click", takeScreenshot);
         }
 
         document.getElementById("comboVelocidad").value = playbackRate;
@@ -199,17 +200,16 @@
 
         // Wait until the video's metadata load to get the video's size
         if (width && height) {
-            canvas.width = width;
-            canvas.height = height;
+            canvas.width = 1920; // width;
+            canvas.height = 1080; // height;
 
             canvas
                 .getContext("2d")
                 .drawImage(video, 0, 0, canvas.width, canvas.height);
+            const imgURL = canvas.toDataURL("image/png");
+            console.log(`imgURL = "${imgURL}"`);
+            window.open(imgURL, '_blank').focus();
 
-            GM_download({
-                url: canvas.toDataURL("image/png"),
-                name: `${screenshotName}-${getYoutubeTimestamp()}.png`,
-            });
         } else {
             let msg = "Videos: tomarCaptura: El ancho y la altura del video todavía no están cargados";
             alert(msg);
