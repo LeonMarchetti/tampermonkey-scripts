@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Videos
 // @namespace    http://tampermonkey.net/
-// @version      1.5.0
+// @version      1.5.1
 // @description  Modify playback speed of videos + other functionalities
 // @author       LeonAM
 // @match        *://*/*
@@ -28,9 +28,6 @@
     GM_addStyle(GM_getResourceText("RES_FONT_AWESOME"));
 
     // Constants
-    /** Checks if current browser is Mozilla Firefox */
-    const isFirefox = window.navigator.userAgent.includes("Firefox");
-
     /** Combobox that controls the video's playback rate */
     const comboSpeed = `
         <select id="comboVelocidad">
@@ -278,7 +275,7 @@
 
             // CTRL + SHIFT
             // Chrome no permite sobreescribir los atajos Ctrl+n
-            const videoPlaybackCondition = isFirefox ? (ctrl & !alt & !shift) : (ctrl && !alt && shift);
+            const videoPlaybackCondition = (ctrl & !alt & !shift);
             if (videoPlaybackCondition) {
                 switch (e.key) {
                     case "1": changeVideoPlaybackSpeed(1); break;

@@ -5,6 +5,12 @@
 - [x] Cambiar JQuery por vanilla Javascript.
 - [ ] Reemplazar JQuery Toast por algo que no use JQuery.
 
+## [1.5.1] - 23-05-2024
+
+### Eliminado
+
+- Eliminé comprobación del navegador para los atajos de teclado.
+
 ## [1.5.0] - 23-05-2024
 
 ### Arreglado
