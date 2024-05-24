@@ -1,17 +1,20 @@
 // ==UserScript==
 // @name         Videos
 // @namespace    http://tampermonkey.net/
-// @version      1.4.2
+// @version      1.5.0
 // @description  Modify playback speed of videos + other functionalities
 // @author       LeonAM
 // @match        *://*/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @require      https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js
 // @require      https://raw.githubusercontent.com/kamranahmedse/jquery-toast-plugin/master/dist/jquery.toast.min.js
-// @require      file://<PATH>/videos.js
+// @require      https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/js/all.min.js
+// @resource     RES_JQUERY_TOAST https://cdn.rawgit.com/kamranahmedse/jquery-toast-plugin/bd761d335919369ed5a27d1899e306df81de44b8/dist/jquery.toast.min.css
+// @resource     RES_FONT_AWESOME https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css
 // @grant        GM_addStyle
 // @grant        GM_download
 // @grant        GM_info
+// @grant        GM_getResourceText
 // ==/UserScript==
 /* globals $ */
 
@@ -19,6 +22,10 @@
     'use strict';
 
     console.log(`Running UserScript "${GM_info.script.name}"`);
+
+    // Inject CSS files
+    GM_addStyle(GM_getResourceText("RES_JQUERY_TOAST"));
+    GM_addStyle(GM_getResourceText("RES_FONT_AWESOME"));
 
     // Constants
     /** Checks if current browser is Mozilla Firefox */
@@ -95,20 +102,6 @@
             video.playbackRate = newRate;
         }
     }
-
-    /**
-     * Injects a CSS style sheet to the page
-     *
-     * @param {string} url URL of the CSS file
-     */
-    function injectStylesheet(url) {
-        document.head.innerHTML += `<link rel="stylesheet" href="${url}" type="text/css" />`;
-    }
-
-    // Inject toast styles:
-    injectStylesheet("https://cdn.rawgit.com/kamranahmedse/jquery-toast-plugin/bd761d335919369ed5a27d1899e306df81de44b8/dist/jquery.toast.min.css");
-    // Inject Font Awesome icons:
-    injectStylesheet("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css");
 
     /**
      * Checks if an element is visible in the viewport

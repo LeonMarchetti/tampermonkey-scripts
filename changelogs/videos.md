@@ -5,6 +5,13 @@
 - [x] Cambiar JQuery por vanilla Javascript.
 - [ ] Reemplazar JQuery Toast por algo que no use JQuery.
 
+## [1.5.0] - 23-05-2024
+
+### Arreglado
+
+- Arreglé el error que hacía que se rompan algunas páginas, al cambiar la forma en que se importan
+  las librerías CSS, ahora usa la sentencia `@resource` del bloque de metadatos.
+
 ## [1.4.2] - 23-05-2024
 
 ## Agregado
