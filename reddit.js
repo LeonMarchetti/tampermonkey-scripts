@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Reddit
 // @namespace    http://tampermonkey.net/
-// @version      1.5.0
+// @version      1.5.1
 // @description  Utilities for Reddit.com
 // @author       LeonAM
 // @match        https://www.reddit.com/*
@@ -31,13 +31,19 @@
      * @param {string} order Post's order criteria
      */
     function switchSortOrder(order) {
+        let url = new URL(window.location.href);
+
         if (window.location.href.match(/reddit\.com\/r\/\w+\/(?:\w+\/)?$/)) {
             window.location.href = window.location.href + order + "/";
             return;
         }
 
-        if (window.location.href.match(/reddit\.com\/r\/\w+\/search\//)) {
-            window.location.href = window.location.href + "&sort=" + order;
+        if (url.pathname.match(/\/search\//)) {
+            if (url.searchParams.has("sort", order)) {
+                throw "Search is already sorted by new";
+            }
+            url.searchParams.set("sort", order);
+            window.location.href = url.href;
             return;
         }
 

@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.1] - 25-05-2024
+
+### Arreglado
+
+- Ahora se puede ordernar las búsquedas sin indicar el subreddit. Uso las APIs de URL y
+  UrlSearchParams.
+
 ## [1.5.0] - 20-05-2024
 
 ### Agregado
