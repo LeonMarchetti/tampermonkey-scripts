@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.5.2] - 06-06-2024
+
+### Modificado
+
+- Ahora el regex de `StartCrosspost` detecta si se está en un post publicado bajo un usuario.
+
 ## [1.5.1] - 25-05-2024
 
 ### Arreglado

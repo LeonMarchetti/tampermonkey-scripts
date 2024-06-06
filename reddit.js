@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Reddit
 // @namespace    http://tampermonkey.net/
-// @version      1.5.1
+// @version      1.5.2
 // @description  Utilities for Reddit.com
 // @author       LeonAM
 // @match        https://www.reddit.com/*
@@ -54,7 +54,7 @@
      * Redirects from a post page to the crosspost to a community
      */
     function StartCrosspost() {
-        let locationMatch = window.location.href.match(/reddit\.com\/r\/\w+\/comments\/(\w*)/);
+        let locationMatch = window.location.href.match(/reddit\.com\/(?:r|user)\/\w+\/comments\/(\w*)/);
         if (!locationMatch) {
             showError("Not in Reddit post");
         }
