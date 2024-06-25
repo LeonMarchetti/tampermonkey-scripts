@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.3] - 25-06-2024
+
+### Modificado
+
+- Ahora en `StartSwitchSubreddit` pongo el nombre del subreddit actual como valor por defecto del prompt para cambiar el nombre.
+- Ahora no tira error al presionar en "Cancelar".
+
 ## [1.5.2] - 06-06-2024
 
 ### Modificado

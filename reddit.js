@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Reddit
 // @namespace    http://tampermonkey.net/
-// @version      1.5.2
+// @version      1.5.3
 // @description  Utilities for Reddit.com
 // @author       LeonAM
 // @match        https://www.reddit.com/*
@@ -81,17 +81,15 @@
 
     /** Prompts for a subreddit name to switch to */
     function StartSwitchSubreddit() {
-        if (!window.location.href.match(/reddit\.com\/r\/\w+\/search\//)) {
+        let subredditSearchMatch = window.location.href.match(/reddit\.com\/r\/(\w+)\/search\//);
+        if (!subredditSearchMatch) {
             showError("Not at a subreddit's post search page");
         }
 
-        let subreddit = prompt("Input destiny subreddit's name", null);
-
-        if (!subreddit) {
-            showError("Not valid subreddit name");
+        let subreddit = prompt("Input destiny subreddit's name", subredditSearchMatch[1]);
+        if (subreddit) {
+            switchSubreddit(subreddit);
         }
-
-        switchSubreddit(subreddit);
     }
 
     /**
