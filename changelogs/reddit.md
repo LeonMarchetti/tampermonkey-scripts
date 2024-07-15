@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.5.4] - 15-07-2024
+
+### Agregado
+
+- Agregué la búsqueda de posts por orden de "nuevos".
+
 ## [1.5.3] - 25-06-2024
 
 ### Modificado

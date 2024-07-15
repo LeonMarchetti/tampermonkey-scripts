@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Reddit
 // @namespace    http://tampermonkey.net/
-// @version      1.5.3
+// @version      1.5.4
 // @description  Utilities for Reddit.com
 // @author       LeonAM
 // @match        https://www.reddit.com/*
@@ -110,10 +110,40 @@
         return crosspostTarget;
     }
 
+    /**
+     * Starts a search with the results' order as "New"
+     */
+    function searchNew() {
+        let url = new URL(window.location.href);
+        let path = url.pathname.split("/");
+        let defaultQuery = url.searchParams.get("q") ?? "";
+
+        // In subreddit or user
+        if (["r", "user"].includes(path[1])) {
+            let searchQuery = prompt("Search", defaultQuery);
+            if (searchQuery) {
+                window.location.href = `https://reddit.com/${path[1]}/${path[2]}/search/?q=${searchQuery}&sort=new`;
+            }
+            return;
+        }
+
+        // In global search
+        if (path[1] == "search") {
+            let searchQuery = prompt("Search", defaultQuery);
+            if (searchQuery) {
+                window.location.href = `https://reddit.com/search/?q=${searchQuery}&sort=new`;
+            }
+            return;
+        }
+
+        showError("Not in Reddit site");
+    }
+
     GM_registerMenuCommand("Start Crosspost", StartCrosspost);
     GM_registerMenuCommand("Sort by New", () => switchSortOrder("new"));
     GM_registerMenuCommand("Switch Subreddit", StartSwitchSubreddit);
     GM_registerMenuCommand("Select crosspost target", selectCrosspostTarget);
+    GM_registerMenuCommand("Search by new", searchNew);
 
     document.addEventListener("keyup", e => {
         if (e.altKey && !e.ctrlKey && !e.shiftKey) {
@@ -121,6 +151,7 @@
                 case "KeyC": StartCrosspost(); break;
                 case "KeyN": switchSortOrder("new"); break;
                 case "KeyR": StartSwitchSubreddit(); break;
+                case "KeyS": searchNew(); break;
             }
         }
     });
