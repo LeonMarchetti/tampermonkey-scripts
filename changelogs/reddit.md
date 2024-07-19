@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.0] - 18-07-2024
+
+### Agregado
+
+- Al presionar la tecla "H" con el cursor sobre un post del feed de inicio de Reddit se da la orden
+  al sitio de no seguir mostrando posts del mismo subreddit.
+
 ## [1.5.4] - 15-07-2024
 
 ### Agregado

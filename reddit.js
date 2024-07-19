@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Reddit
 // @namespace    http://tampermonkey.net/
-// @version      1.5.4
+// @version      1.6.0
 // @description  Utilities for Reddit.com
 // @author       LeonAM
 // @match        https://www.reddit.com/*
@@ -139,6 +139,17 @@
         showError("Not in Reddit site");
     }
 
+    /**
+     * Triggers the "Hide posts like this" in Reddit's home feed when cursor is hovering a post
+     */
+    function HidePostsLikeThis() {
+        let menu = document.querySelector("article:hover shreddit-post-overflow-menu");
+        let hideButton = menu.shadowRoot.querySelector(`li`).children[0];
+        if (hideButton.innerText.includes("Mostrar menos publicaciones como esta")) {
+            hideButton.click();
+        }
+    }
+
     GM_registerMenuCommand("Start Crosspost", StartCrosspost);
     GM_registerMenuCommand("Sort by New", () => switchSortOrder("new"));
     GM_registerMenuCommand("Switch Subreddit", StartSwitchSubreddit);
@@ -146,6 +157,12 @@
     GM_registerMenuCommand("Search by new", searchNew);
 
     document.addEventListener("keyup", e => {
+        if (!e.altKey && !e.ctrlKey && !e.shiftKey && e.originalTarget.tagName !== "INPUT") {
+            switch (e.code) {
+                case "KeyH": HidePostsLikeThis(); break;
+            }
+        }
+
         if (e.altKey && !e.ctrlKey && !e.shiftKey) {
             switch(e.code) {
                 case "KeyC": StartCrosspost(); break;
