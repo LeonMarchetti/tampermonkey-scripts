@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Reddit
 // @namespace    http://tampermonkey.net/
-// @version      1.6.0
+// @version      1.6.1
 // @description  Utilities for Reddit.com
 // @author       LeonAM
 // @match        https://www.reddit.com/*
@@ -142,11 +142,33 @@
     /**
      * Triggers the "Hide posts like this" in Reddit's home feed when cursor is hovering a post
      */
-    function HidePostsLikeThis() {
+    function hidePostsLikeThis() {
         let menu = document.querySelector("article:hover shreddit-post-overflow-menu");
         let hideButton = menu.shadowRoot.querySelector(`li`).children[0];
         if (hideButton.innerText.includes("Mostrar menos publicaciones como esta")) {
             hideButton.click();
+        }
+    }
+
+    /**
+     * Hides comment thread under mouse cursor
+     */
+    function hideCommentSubthread() {
+        let hoverComments = document.querySelectorAll('shreddit-comment:hover')
+        let comment = Array.from(hoverComments).pop();
+        let toggleButton = comment.shadowRoot.querySelector('[aria-label^="Toggle"]');
+        toggleButton.click();
+    }
+
+    /**
+     * Implements functions for hiding elements with hotkey
+     */
+    function HideCommand() {
+        let url = new URL(window.location.href);
+        if (url.pathname === "/") {
+            hidePostsLikeThis();
+        } else if (url.pathname.includes("/comments/")) {
+            hideCommentSubthread();
         }
     }
 
@@ -159,7 +181,7 @@
     document.addEventListener("keyup", e => {
         if (!e.altKey && !e.ctrlKey && !e.shiftKey && e.originalTarget.tagName !== "INPUT") {
             switch (e.code) {
-                case "KeyH": HidePostsLikeThis(); break;
+                case "KeyH": HideCommand(); break;
             }
         }
 

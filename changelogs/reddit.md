@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.6.1] - 23-07-2024
+
+### Agregado
+
+- Función `hideCommentSubthread` para ocultar los comentarios hijos de un comentario padre en la
+  página de un post.
+
+### Modificado
+
+- El listener para la tecla `H` ahora usa la función `HideCommand` para ver si se está en la página
+  principal o en la página de un post y ejecutar `hidePostsLikeThis` o `hideCommentSubthread`
+  respectivamente.
+
 ## [1.6.0] - 18-07-2024
 
 ### Agregado
