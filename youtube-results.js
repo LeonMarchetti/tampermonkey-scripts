@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         YouTube Results
 // @namespace    http://tampermonkey.net/
-// @version      1.8.0
+// @version      1.8.1
 // @description  Utilities to use in YouTube
 // @author       LeonAM
 // @match        https://www.youtube.com/*
@@ -162,9 +162,10 @@
 
     /**
      * Adds current video under cursor to queue
+     *
+     * @param {Element?} hoverVideo Video to add to queue
      */
-    function AddToQueue() {
-        let hoverVideo = document.querySelector("ytd-rich-item-renderer:hover")
+    function AddToQueue(hoverVideo) {
         if (hoverVideo) {
             hoverVideo.querySelector("#button").click();
 
@@ -191,7 +192,13 @@
         var shift = e.shiftKey;
 
         // Hotkeys for video search results pages
-        if (window.location.href.includes("results")) {
+        if (url.pathname === "/results") {
+            if (!ctrl && !alt && !shift) {
+                switch (e.code) {
+                    case "KeyQ": AddToQueue(document.querySelector("ytd-video-renderer:hover")); break;
+                }
+            }
+
             // CTRL + ALT
             if (ctrl && alt && !shift) {
                 switch (e.code) {
@@ -233,7 +240,7 @@
         if (url.pathname === "/feed/subscriptions") {
             if (!ctrl && !alt && !shift) {
                 switch (e.code) {
-                    case "KeyQ": AddToQueue(); break;
+                    case "KeyQ": AddToQueue(document.querySelector("ytd-rich-item-renderer:hover")); break;
                 }
             }
         }

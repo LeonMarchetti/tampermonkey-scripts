@@ -1,6 +1,13 @@
 # Changelog
 
-## [Unreleased]
+## [1.8.1] - 24-07-2024
+
+### Modificado
+
+- Ahora `AddToQueue` recibe el elemento que representa al video a agregar a la cola como parámetro,
+  permitiendo que se use un selector distinto correspondiente a la página de YouTube:
+  - `ytd-video-renderer:hover` para la página de búsqueda.
+  - `ytd-rich-item-renderer:hover` para el feed de suscripciones de usuario.
 
 ## [1.8.0] - 24-07-2024
 
