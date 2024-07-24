@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.7.0] - 24-07-2024
+
+### Agregado
+
+- Modificación de estilos para quitar la difuminación de las previstas en una búsqueda de posts con
+  spoiler. No se puede en la lista de posts de un subreddit por estar manejado por un elemento de
+  Reddit.
+
 ## [1.6.1] - 23-07-2024
 
 ### Agregado

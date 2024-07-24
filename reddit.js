@@ -1,18 +1,26 @@
 // ==UserScript==
 // @name         Reddit
 // @namespace    http://tampermonkey.net/
-// @version      1.6.1
+// @version      1.7.0
 // @description  Utilities for Reddit.com
 // @author       LeonAM
 // @match        https://www.reddit.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=reddit.com
 // @grant        GM_registerMenuCommand
+// @grant        GM_addStyle
 // @grant        GM_getValue
 // @grant        GM_setValue
 // ==/UserScript==
 
 (function() {
     'use strict';
+
+    // Remove blurring from spoiler posts' search
+    GM_addStyle(`
+        .thumbnail-blur {
+            filter: none !important;
+        }
+    `.trim());
 
     /**
      * Shows an alert and throws an Exception
