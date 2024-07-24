@@ -2,6 +2,13 @@
 
 ## [Unreleased]
 
+## [1.8.0] - 24-07-2024
+
+### Agregado
+
+- Función `AddToQueue` para agregar un video de la lista de suscripciones a la cola, apretando la
+  tecla `H`.
+
 ## [1.7.2] - 31-01-2024
 
 ### Arreglado

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         YouTube Results
 // @namespace    http://tampermonkey.net/
-// @version      1.7.2
+// @version      1.8.0
 // @description  Utilities to use in YouTube
 // @author       LeonAM
 // @match        https://www.youtube.com/*
@@ -160,6 +160,20 @@
         window.location.href = `https://www.youtube.com/watch?v=${videoId}`;
     }
 
+    /**
+     * Adds current video under cursor to queue
+     */
+    function AddToQueue() {
+        let hoverVideo = document.querySelector("ytd-rich-item-renderer:hover")
+        if (hoverVideo) {
+            hoverVideo.querySelector("#button").click();
+
+            setTimeout(() => {
+                document.querySelector("ytd-menu-service-item-renderer").click();
+            }, 100);
+        }
+    }
+
     // Tampermonkey popup menu commands
     GM_registerMenuCommand("Change sort order (upload date)", changeSortOrder_fecsub);
     GM_registerMenuCommand("Change sort order (views number)", changeSortOrder_numvis);
@@ -169,6 +183,8 @@
 
     document.addEventListener("keyup", e => {
         if (e.target.tagName === "INPUT") return;
+
+        let url = new URL(window.location.href);
 
         var ctrl = e.ctrlKey;
         var alt = e.altKey;
@@ -209,6 +225,15 @@
                     case "Numpad1":
                     case "Digit1":
                         getVideoSummary(); break;
+                }
+            }
+        }
+
+        // Hotkeys for subscription feed
+        if (url.pathname === "/feed/subscriptions") {
+            if (!ctrl && !alt && !shift) {
+                switch (e.code) {
+                    case "KeyQ": AddToQueue(); break;
                 }
             }
         }
