@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         YouTube Results
 // @namespace    http://tampermonkey.net/
-// @version      1.8.1
+// @version      1.8.2
 // @description  Utilities to use in YouTube
 // @author       LeonAM
 // @match        https://www.youtube.com/*
@@ -225,7 +225,12 @@
         }
 
         // Hotkeys for video pages
-        if (window.location.href.includes("watch")) {
+        if (url.pathname === "/watch") {
+            if (!ctrl && !alt && !shift) {
+                switch (e.code) {
+                    case "KeyQ": AddToQueue(document.querySelector("ytd-compact-video-renderer:hover")); break;
+                }
+            }
             // CTRL + ALT
             if (ctrl && alt && !shift) {
                 switch (e.code) {

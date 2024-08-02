@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.8.2] - 01-08-2024
+
+### Modificado
+
+- Agregar video a la cola desde la lista de videos recomendados en una página de videos.
+
 ## [1.8.1] - 24-07-2024
 
 ### Modificado
