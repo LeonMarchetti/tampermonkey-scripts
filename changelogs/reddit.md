@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.7.1] - 03-08-2024
+
+### Modificado
+
+- `hidePostsLikeThis` ahora apreta también el botón "Ocultar" para esconder el post.
+
 ## [1.7.0] - 24-07-2024
 
 ### Agregado

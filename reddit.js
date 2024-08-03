@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Reddit
 // @namespace    http://tampermonkey.net/
-// @version      1.7.0
+// @version      1.7.1
 // @description  Utilities for Reddit.com
 // @author       LeonAM
 // @match        https://www.reddit.com/*
@@ -151,10 +151,14 @@
      * Triggers the "Hide posts like this" in Reddit's home feed when cursor is hovering a post
      */
     function hidePostsLikeThis() {
+        const SHOW_LESS_LABEL = "Mostrar menos publicaciones como esta";
+        const HIDE_LABEL = "Ocultar";
+
         let menu = document.querySelector("article:hover shreddit-post-overflow-menu");
-        let hideButton = menu.shadowRoot.querySelector(`li`).children[0];
-        if (hideButton.innerText.includes("Mostrar menos publicaciones como esta")) {
-            hideButton.click();
+        let menuItems = Array.from(menu.shadowRoot.querySelectorAll(`li`));
+        for (let label of [SHOW_LESS_LABEL, HIDE_LABEL]) {
+            let button = menuItems.find(li => li.innerText.includes(label));
+            button = button?.children[0].click();
         }
     }
 
