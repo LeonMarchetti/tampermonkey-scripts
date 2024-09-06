@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         YouTube Results
 // @namespace    http://tampermonkey.net/
-// @version      1.8.2
+// @version      1.9.0
 // @description  Utilities to use in YouTube
 // @author       LeonAM
 // @match        https://www.youtube.com/*
@@ -139,7 +139,7 @@
             .querySelector("h1.ytd-video-primary-info-renderer")
             .textContent;
 
-        const result = `${channelName},${videoId},${videoTitle}`;
+        const result = `${channelName},${videoId},"${videoTitle}"`;
         console.log(result);
         alert(result);
     }
@@ -173,6 +173,36 @@
                 document.querySelector("ytd-menu-service-item-renderer").click();
             }, 100);
         }
+    }
+
+    /** Gets the video/s of the current page to work on */
+    function getVideo() {
+        let videos = Array.from(document.getElementsByTagName("video"));
+
+        if (videos.length == 0) return null;
+
+        for (let video of videos) {
+            if (video.style.length > 0) {
+                return video;
+            }
+        }
+        return videos[0];
+    }
+
+    /**
+     * Forward or backward the video by `delta_t` seconds
+     *
+     * @param {number} delta_t
+     */
+    function forwardVideo(delta_t) {
+        let video = getVideo();
+
+        if (!video) throw "Video not found";
+
+        let action = (delta_t > 0) ? `Forward ${delta_t} seconds`
+            : `Backward ${delta_t * -1} seconds`;
+
+        video.currentTime += delta_t;
     }
 
     // Tampermonkey popup menu commands
@@ -246,6 +276,16 @@
             if (!ctrl && !alt && !shift) {
                 switch (e.code) {
                     case "KeyQ": AddToQueue(document.querySelector("ytd-rich-item-renderer:hover")); break;
+                }
+            }
+        }
+
+        // Hotkeys for Shorts
+        if (url.pathname.startsWith("/shorts/")) {
+            if (!ctrl && !alt && !shift) {
+                switch (e.code) {
+                    case "ArrowLeft": forwardVideo(-10); break;
+                    case "ArrowRight": forwardVideo(10); break;
                 }
             }
         }

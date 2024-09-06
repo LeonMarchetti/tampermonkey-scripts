@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.9.0] - 05-09-2024
+
+### Agregado
+
+- Adelantar o atrasar el video 10 segundos con las flechas de izquierda y derecha en un video de
+  Shorts. Usé la función `getVideo` de **Videos**.
+
 ## [1.8.2] - 01-08-2024
 
 ### Modificado
