@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         YouTube Results
 // @namespace    http://tampermonkey.net/
-// @version      1.9.0
+// @version      1.9.1
 // @description  Utilities to use in YouTube
 // @author       LeonAM
 // @match        https://www.youtube.com/*
@@ -284,8 +284,10 @@
         if (url.pathname.startsWith("/shorts/")) {
             if (!ctrl && !alt && !shift) {
                 switch (e.code) {
-                    case "ArrowLeft": forwardVideo(-10); break;
-                    case "ArrowRight": forwardVideo(10); break;
+                    case "ArrowLeft": forwardVideo(-5); break;
+                    case "ArrowRight": forwardVideo(5); break;
+                    case "KeyJ": forwardVideo(-10); break;
+                    case "KeyL": forwardVideo(10); break;
                 }
             }
         }

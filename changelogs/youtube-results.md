@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.9.1] - 28-10-2024
+
+### Modificado
+
+- Modifiqué los atajos de teclado para los shorts para mover el tiempo del video en 5 y 10 segundos.
+
 ## [1.9.0] - 05-09-2024
 
 ### Agregado
