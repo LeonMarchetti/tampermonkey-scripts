@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         YouTube Results
 // @namespace    http://tampermonkey.net/
-// @version      1.9.1
+// @version      1.9.2
 // @description  Utilities to use in YouTube
 // @author       LeonAM
 // @match        https://www.youtube.com/*
@@ -169,6 +169,10 @@
         if (hoverVideo) {
             hoverVideo.querySelector("#button").click();
 
+            // Debug info of video
+            let videoLink = hoverVideo.querySelector("#video-title-link");
+            console.debug(`Add to queue: '${videoLink.href}': '${videoLink.innerText}'`);
+
             setTimeout(() => {
                 document.querySelector("ytd-menu-service-item-renderer").click();
             }, 100);
@@ -271,8 +275,7 @@
             }
         }
 
-        // Hotkeys for subscription feed
-        if (url.pathname === "/feed/subscriptions") {
+        if (url.pathname === "/feed/subscriptions" || url.pathname.startsWith("/@")) {
             if (!ctrl && !alt && !shift) {
                 switch (e.code) {
                     case "KeyQ": AddToQueue(document.querySelector("ytd-rich-item-renderer:hover")); break;

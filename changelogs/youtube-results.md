@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.9.2] - 28-10-2024
+
+### Agregado
+
+- Hotkey Q para agregar videos a la cola en la página de un canal
+- Mensaje de loggeo en `AddQueue`
+
 ## [1.9.1] - 28-10-2024
 
 ### Modificado
