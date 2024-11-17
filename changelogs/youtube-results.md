@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.9.3] - 17-11-2024
+
+### Borrado
+
+- Loggeo de `AddQueue` debido a que la estructura de nodos del video cambia entre páginas entonces
+  puede causar que no se ejecuté debido a una excepción de elemento no encontrado
+
 ## [1.9.2] - 28-10-2024
 
 ### Agregado

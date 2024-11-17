@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         YouTube Results
 // @namespace    http://tampermonkey.net/
-// @version      1.9.2
+// @version      1.9.3
 // @description  Utilities to use in YouTube
 // @author       LeonAM
 // @match        https://www.youtube.com/*
@@ -168,10 +168,6 @@
     function AddToQueue(hoverVideo) {
         if (hoverVideo) {
             hoverVideo.querySelector("#button").click();
-
-            // Debug info of video
-            let videoLink = hoverVideo.querySelector("#video-title-link");
-            console.debug(`Add to queue: '${videoLink.href}': '${videoLink.innerText}'`);
 
             setTimeout(() => {
                 document.querySelector("ytd-menu-service-item-renderer").click();
