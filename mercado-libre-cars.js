@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Mercado Libre Cars
 // @namespace    http://tampermonkey.net/
-// @version      1.0.1
+// @version      1.0.2
 // @description  To use in searches of cars in Mercado Libre
 // @author       LeonAM
 // @match        https://autos.mercadolibre.com.ar/*
@@ -22,6 +22,7 @@
     const CURRENCY_PESO_SYMBOL = "$";
     const DOLLAR_VALUE_URL = "https://mercados.ambito.com//dolar/informal/variacion";
     const MODIFIED_CLASS_NAME = "mlc_modifiedValue";
+    const MODIFIED_ORIGINAL_VALUE = "mlc_originalValue";
 
     GM_addStyle(`
         .${MODIFIED_CLASS_NAME} {
@@ -57,10 +58,25 @@
      */
     function swapCurrency(span, dollarValue) {
         let currencySpan = span.childNodes[0];
-		if (currencySpan.textContent == CURRENCY_PESO_SYMBOL) {
+
+        if (currencySpan.classList.contains(MODIFIED_CLASS_NAME)) {
+            // Set spans text to original value
+            let amountSpan = span.childNodes[1];
+
+            amountSpan.textContent = amountSpan.getAttribute(MODIFIED_ORIGINAL_VALUE);
+            currencySpan.textContent = currencySpan.getAttribute(MODIFIED_ORIGINAL_VALUE);
+
+            currencySpan.classList.remove(MODIFIED_CLASS_NAME);
+            amountSpan.classList.remove(MODIFIED_CLASS_NAME);
+
+        } else if (currencySpan.textContent == CURRENCY_PESO_SYMBOL) {
             let amountSpan = span.childNodes[1];
             let amount = Number(amountSpan.textContent.replaceAll(".", ""));
             let dollarAmount = Math.round(amount / dollarValue);
+
+            // Backup original value
+            amountSpan.setAttribute(MODIFIED_ORIGINAL_VALUE, amountSpan.textContent);
+            currencySpan.setAttribute(MODIFIED_ORIGINAL_VALUE, currencySpan.textContent);
 
             currencySpan.textContent = CURRENCY_DOLLAR_SYMBOL;
             amountSpan.textContent = dollarAmount.toLocaleString();
@@ -80,8 +96,6 @@
         document.querySelectorAll(`span.${CLASS_NAME_MATCH}`)
             .forEach(span => swapCurrency(span, dollarValue));
     }
-
-    getDollarValue(startSwapCurrency);
 
     document.addEventListener("keyup", e => {
         if (e.ctrlKey && e.key == "e") {

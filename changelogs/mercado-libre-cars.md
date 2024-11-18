@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.0.2] - 18-11-2024
+
+### Agregado
+
+- Ahora `swapCurrency` alterna entre pesos y dólares
+
 ## [1.0.1] - 02-02-2024
 
 ### Agregado
