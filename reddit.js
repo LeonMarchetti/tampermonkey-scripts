@@ -1,12 +1,13 @@
 // ==UserScript==
 // @name         Reddit
 // @namespace    http://tampermonkey.net/
-// @version      1.7.1
+// @version      1.8.0
 // @description  Utilities for Reddit.com
 // @author       LeonAM
 // @match        https://www.reddit.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=reddit.com
 // @grant        GM_registerMenuCommand
+// @grant        GM_info
 // @grant        GM_addStyle
 // @grant        GM_getValue
 // @grant        GM_setValue
@@ -14,6 +15,10 @@
 
 (function() {
     'use strict';
+
+    console.info(`Running UserScript "${GM_info.script.name}"`);
+
+    var url = new URL(window.location.href);
 
     // Remove blurring from spoiler posts' search
     GM_addStyle(`
@@ -184,6 +189,15 @@
         }
     }
 
+    /**
+     * Hides the right sidebar in a media-type post search
+     */
+    function HideMediaSidebar() {
+        console.debug("Hidden right sidebar");
+        document.getElementById("main-content").style.display = "contents";
+        document.getElementById("right-sidebar-container").style.display = "none";
+    }
+
     GM_registerMenuCommand("Start Crosspost", StartCrosspost);
     GM_registerMenuCommand("Sort by New", () => switchSortOrder("new"));
     GM_registerMenuCommand("Switch Subreddit", StartSwitchSubreddit);
@@ -206,4 +220,8 @@
             }
         }
     });
+
+    if (url.searchParams.get("type") === "media") {
+        HideMediaSidebar();
+    }
 })();

@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.8.0] - 19-11-2024
+
+### Agregado
+
+- Función `HideMediaSidebar` para ocultar la barra lateral cuando se buscan posts en la pestaña
+  "Multimedia". También tiene que editar el valor de `display` del contenedor de imágenes.
+
 ## [1.7.1] - 03-08-2024
 
 ### Modificado
