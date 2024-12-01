@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Reddit
 // @namespace    http://tampermonkey.net/
-// @version      1.8.0
+// @version      1.9.0
 // @description  Utilities for Reddit.com
 // @author       LeonAM
 // @match        https://www.reddit.com/*
@@ -13,7 +13,7 @@
 // @grant        GM_setValue
 // ==/UserScript==
 
-(function() {
+(function () {
     'use strict';
 
     console.info(`Running UserScript "${GM_info.script.name}"`);
@@ -198,6 +198,17 @@
         document.getElementById("right-sidebar-container").style.display = "none";
     }
 
+    /**
+     * Cleans Reddit's image viewer of unnecessary elements
+     */
+    function CleanMediaPage() {
+        document.querySelector("post-bottom-bar").style.display = "none";
+
+        let img = document.querySelector("zoomable-img");
+        img.style.height = "calc(100vh - 4rem)";
+        img.style.padding = "0";
+    }
+
     GM_registerMenuCommand("Start Crosspost", StartCrosspost);
     GM_registerMenuCommand("Sort by New", () => switchSortOrder("new"));
     GM_registerMenuCommand("Switch Subreddit", StartSwitchSubreddit);
@@ -212,7 +223,7 @@
         }
 
         if (e.altKey && !e.ctrlKey && !e.shiftKey) {
-            switch(e.code) {
+            switch (e.code) {
                 case "KeyC": StartCrosspost(); break;
                 case "KeyN": switchSortOrder("new"); break;
                 case "KeyR": StartSwitchSubreddit(); break;
@@ -223,5 +234,10 @@
 
     if (url.searchParams.get("type") === "media") {
         HideMediaSidebar();
+    }
+
+    // Reddit's image viewer
+    if (url.pathname === "/media") {
+        CleanMediaPage();
     }
 })();

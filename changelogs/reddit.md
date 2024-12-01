@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.9.0] - 30-11-2024
+
+### Agregado
+
+- Función `CleanMediaPage` para sacar los elementos innecesarios del visor de imágenes de Reddit como la barra inferior.
+
 ## [1.8.0] - 19-11-2024
 
 ### Agregado
