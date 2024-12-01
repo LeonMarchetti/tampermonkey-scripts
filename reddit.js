@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Reddit
 // @namespace    http://tampermonkey.net/
-// @version      2.0.0
+// @version      2.0.1
 // @description  Utilities for Reddit.com
 // @author       LeonAM
 // @match        https://www.reddit.com/*
@@ -227,7 +227,9 @@
      * Cleans Reddit's image viewer of unnecessary elements
      */
     function CleanMediaPage() {
-        document.querySelector("post-bottom-bar").style.display = "none";
+        let postBottomBar = document.querySelector(`faceplate-tracker[noun="image"]`).nextElementSibling;
+        postBottomBar.style.display = "none";
+        console.debug(postBottomBar);
 
         let img = document.querySelector("zoomable-img");
         img.style.height = "calc(100vh - 4rem)";

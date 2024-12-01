@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.1] - 01-12-2024
+
+### Arreglado
+
+- En `CleanMediaPage` cambié la query para obtener la barra inferior para que no falle cuando la
+  imagen no redirige a un post, ahora busca el elemento de la imagen y devuelve el elemento hermano.
+
 ## [2.0.0] - 01-12-2024
 
 ### Agregado
