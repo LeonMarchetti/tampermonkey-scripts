@@ -1,11 +1,12 @@
 // ==UserScript==
 // @name         Reddit
 // @namespace    http://tampermonkey.net/
-// @version      2.0.1
+// @version      2.0.2
 // @description  Utilities for Reddit.com
 // @author       LeonAM
 // @match        https://www.reddit.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=reddit.com
+// @require      https://cdn.rawgit.com/LeonMarchetti/tampermonkey-scripts/refs/heads/master/lib/pageChangeInterval.js
 // @grant        GM_registerMenuCommand
 // @grant        GM_info
 // @grant        GM_addStyle
@@ -19,28 +20,22 @@
     console.info(`Running UserScript "${GM_info.script.name}"`);
 
     // Page change detector
-    var currentPage = "";
-    setInterval(() => {
-        if (currentPage != location.href) {
-            currentPage = location.href;
-            let url = new URL(currentPage);
-
-            if (url.searchParams.get("type") === "media") {
-                let mediaPageInterval = setInterval(() => {
-                    // Waits until it loads the multimedia tab's contents. Otherwise it tries
-                    // hiding the bar before it appears
-                    if (document.getElementById("search-results-page-tab-media").tagName === "BUTTON") {
-                        clearInterval(mediaPageInterval);
-                        HideMediaSidebar();
-                    }
-                }, 500);
-            }
-
-            if (url.pathname === "/media") {
-                CleanMediaPage();
-            }
+    setPageChangeInterval((url) => {
+        if (url.searchParams.get("type") === "media") {
+            let mediaPageInterval = setInterval(() => {
+                // Waits until it loads the multimedia tab's contents. Otherwise it tries
+                // hiding the bar before it appears
+                if (document.getElementById("search-results-page-tab-media").tagName === "BUTTON") {
+                    clearInterval(mediaPageInterval);
+                    HideMediaSidebar();
+                }
+            }, 500);
         }
-    }, 500);
+
+        if (url.pathname === "/media") {
+            CleanMediaPage();
+        }
+    });
 
     // Remove blurring from spoiler posts' search
     GM_addStyle(`

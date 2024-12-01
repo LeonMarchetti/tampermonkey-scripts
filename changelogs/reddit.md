@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.2] - 01-12-2024
+
+### Modificado
+
+- Reemplacé el código del detector de cambios de la URL por el uso de la liberería propia
+  **pageChangeInterval**
+
 ## [2.0.1] - 01-12-2024
 
 ### Arreglado
