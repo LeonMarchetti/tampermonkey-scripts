@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.0.0] - 01-12-2024
+
+### Agregado
+
+- Interval para detectar el cambio de página y ejecutar las funciones para modificar la página según la ruta
+
 ## [1.9.0] - 30-11-2024
 
 ### Agregado

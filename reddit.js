@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Reddit
 // @namespace    http://tampermonkey.net/
-// @version      1.9.0
+// @version      2.0.0
 // @description  Utilities for Reddit.com
 // @author       LeonAM
 // @match        https://www.reddit.com/*
@@ -18,7 +18,29 @@
 
     console.info(`Running UserScript "${GM_info.script.name}"`);
 
-    var url = new URL(window.location.href);
+    // Page change detector
+    var currentPage = "";
+    setInterval(() => {
+        if (currentPage != location.href) {
+            currentPage = location.href;
+            let url = new URL(currentPage);
+
+            if (url.searchParams.get("type") === "media") {
+                let mediaPageInterval = setInterval(() => {
+                    // Waits until it loads the multimedia tab's contents. Otherwise it tries
+                    // hiding the bar before it appears
+                    if (document.getElementById("search-results-page-tab-media").tagName === "BUTTON") {
+                        clearInterval(mediaPageInterval);
+                        HideMediaSidebar();
+                    }
+                }, 500);
+            }
+
+            if (url.pathname === "/media") {
+                CleanMediaPage();
+            }
+        }
+    }, 500);
 
     // Remove blurring from spoiler posts' search
     GM_addStyle(`
@@ -195,7 +217,10 @@
     function HideMediaSidebar() {
         console.debug("Hidden right sidebar");
         document.getElementById("main-content").style.display = "contents";
-        document.getElementById("right-sidebar-container").style.display = "none";
+
+        let rightSidebar = document.getElementById("right-sidebar-container");
+        rightSidebar.style.display = "none";
+        console.debug(rightSidebar);
     }
 
     /**
@@ -231,13 +256,4 @@
             }
         }
     });
-
-    if (url.searchParams.get("type") === "media") {
-        HideMediaSidebar();
-    }
-
-    // Reddit's image viewer
-    if (url.pathname === "/media") {
-        CleanMediaPage();
-    }
 })();
