@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.9.4] - 20-12-2024
+
+### Cambiado
+
+- Cambié los atajos del orden de las búsquedas a `Alt+N` para fecha de subida y `Alt+B` para número
+  de visualizaciones
+
 ## [1.9.3] - 17-11-2024
 
 ### Borrado

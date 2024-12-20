@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         YouTube Results
 // @namespace    http://tampermonkey.net/
-// @version      1.9.3
+// @version      1.9.4
 // @description  Utilities to use in YouTube
 // @author       LeonAM
 // @match        https://www.youtube.com/*
@@ -229,14 +229,12 @@
                 }
             }
 
-            // CTRL + ALT
-            if (ctrl && alt && !shift) {
+            // ALT
+            if (!ctrl && alt && !shift) {
                 switch (e.code) {
-                    case "Numpad1":
-                    case "Digit1":
+                    case "KeyN":
                         changeSortOrder_fecsub(); break; // Upload date
-                    case "Numpad2":
-                    case "Digit2":
+                    case "KeyB":
                         changeSortOrder_numvis(); break; // Amount of visits
                 }
             }
