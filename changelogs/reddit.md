@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.0] - 21-12-2024
+
+### Agregado
+
+- Función `browseGallery` para moverse entre las imágenes de un post con galería de imágenes usando
+  las flechas
+
 ## [2.0.2] - 01-12-2024
 
 ### Modificado

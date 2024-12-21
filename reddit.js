@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Reddit
 // @namespace    http://tampermonkey.net/
-// @version      2.0.2
+// @version      2.1.0
 // @description  Utilities for Reddit.com
 // @author       LeonAM
 // @match        https://www.reddit.com/*
@@ -231,6 +231,27 @@
         img.style.padding = "0";
     }
 
+    /**
+     * Browses a image gallery, with the next and previous buttons
+     *
+     * @param {boolean} prev If wanting to browse to the previous image, to the next if false
+     */
+    function browseGallery(prev = true) {
+        let locationMatch = window.location.href.match(/reddit\.com\/(?:r|user)\/\w+\/comments/);
+        if (!locationMatch) {
+            return;
+        }
+
+        let slot = prev ? "prev" : "next";
+        document
+            .querySelectorAll(`gallery-carousel`)
+            .forEach(gallery => {
+                gallery?.shadowRoot
+                    .querySelector(`[slot="${slot}Button"]`)
+                    .click();
+            });
+    }
+
     GM_registerMenuCommand("Start Crosspost", StartCrosspost);
     GM_registerMenuCommand("Sort by New", () => switchSortOrder("new"));
     GM_registerMenuCommand("Switch Subreddit", StartSwitchSubreddit);
@@ -241,6 +262,8 @@
         if (!e.altKey && !e.ctrlKey && !e.shiftKey && e.originalTarget.tagName !== "INPUT") {
             switch (e.code) {
                 case "KeyH": HideCommand(); break;
+                case "ArrowLeft": browseGallery(); break;
+                case "ArrowRight": browseGallery(false); break;
             }
         }
 
