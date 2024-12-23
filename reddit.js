@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Reddit
 // @namespace    http://tampermonkey.net/
-// @version      2.1.0
+// @version      2.2.0
 // @description  Utilities for Reddit.com
 // @author       LeonAM
 // @match        https://www.reddit.com/*
@@ -19,9 +19,55 @@
 
     console.info(`Running UserScript "${GM_info.script.name}"`);
 
+    /**
+     * Object with methods for site's location
+     */
+    const locator = {
+        getLocation() {
+            return new URL(window.location.href);
+        },
+
+        getPath() {
+            return this.getLocation().pathname;
+        },
+
+        getSubreddit() {
+            let match = this.getPath().match(/\/r\/(\w+)\//);
+            return match[1];
+        },
+
+        isRoot() {
+            return this.getPath() === "/";
+        },
+
+        isSubreddit() {
+            return this.getPath().match(/\/r\/(\w+)\/(?:\w+\/)?$/);
+        },
+
+        isPost() {
+            return this.getPath().match(/\/(?:r|user)\/\w+\/comments\//);
+        },
+
+        getPostId() {
+            return this.getPath().match(/\/(?:r|user)\/\w+\/comments\/(\w*)/)[1];
+        },
+
+        isSearch() {
+            return this.getPath().match(/\/search\//);
+        },
+
+        isMediaSearch() {
+            return this.getLocation().searchParams.get("type") === "media";
+        },
+
+        isMediaPage() {
+            return this.getPath() === "/media";
+        }
+    };
+
     // Page change detector
     setPageChangeInterval((url) => {
-        if (url.searchParams.get("type") === "media") {
+        if (locator.isMediaSearch()) {
             let mediaPageInterval = setInterval(() => {
                 // Waits until it loads the multimedia tab's contents. Otherwise it tries
                 // hiding the bar before it appears
@@ -32,7 +78,7 @@
             }, 500);
         }
 
-        if (url.pathname === "/media") {
+        if (locator.isMediaPage()) {
             CleanMediaPage();
         }
     });
@@ -58,19 +104,20 @@
     /**
      * Switches the community or search result's posts sort order
      *
+     * @param {boolean} isSubreddit If current page has a subreddit
+     * @param {boolean} isSearch If current page is a post search
      * @param {string} order Post's order criteria
      */
-    function switchSortOrder(order) {
-        let url = new URL(window.location.href);
-
-        if (window.location.href.match(/reddit\.com\/r\/\w+\/(?:\w+\/)?$/)) {
+    function switchSortOrder(isSubreddit, isSearch, order) {
+        if (isSubreddit) {
             window.location.href = window.location.href + order + "/";
             return;
         }
 
-        if (url.pathname.match(/\/search\//)) {
+        if (isSearch) {
+            let url = new URL(window.location.href);
             if (url.searchParams.has("sort", order)) {
-                throw "Search is already sorted by new";
+                showError("Search is already sorted by new");
             }
             url.searchParams.set("sort", order);
             window.location.href = url.href;
@@ -82,14 +129,14 @@
 
     /**
      * Redirects from a post page to the crosspost to a community
+     *
+     * @param {string} postId Id of post to be crossposted
      */
-    function StartCrosspost() {
-        let locationMatch = window.location.href.match(/reddit\.com\/(?:r|user)\/\w+\/comments\/(\w*)/);
-        if (!locationMatch) {
+    function StartCrosspost(postId) {
+        if (!postId) {
             showError("Not in Reddit post");
         }
 
-        let postId = locationMatch[1];
         let crosspostTarget = GM_getValue("crosspostTarget", null);
         if (!crosspostTarget) {
             crosspostTarget = selectCrosspostTarget();
@@ -101,7 +148,7 @@
     /**
      * Switches current post search page's subreddit, keeping current search's parameters
      *
-     * @param {string} name Destiny subreddit's name
+     * @param {string} name Target subreddit's name
      */
     function switchSubreddit(name) {
         let subredditSearchMatch = window.location.href.match(/reddit\.com\/r\/\w+\/search\/(.*)/);
@@ -109,14 +156,18 @@
         window.location.href = `https://reddit.com/r/${name}/search/${searchQuery}`;
     }
 
-    /** Prompts for a subreddit name to switch to */
-    function StartSwitchSubreddit() {
-        let subredditSearchMatch = window.location.href.match(/reddit\.com\/r\/(\w+)\/search\//);
-        if (!subredditSearchMatch) {
+    /**
+     * Prompts for a subreddit name to switch to
+     *
+     * @param {boolean} isSearch If current page is a post search
+     * @param {string} currentSubreddit Current subreddit's name
+     */
+    function StartSwitchSubreddit(isSearch, currentSubreddit) {
+        if (!isSearch) {
             showError("Not at a subreddit's post search page");
         }
 
-        let subreddit = prompt("Input destiny subreddit's name", subredditSearchMatch[1]);
+        let subreddit = prompt("Input target subreddit's name", currentSubreddit);
         if (subreddit) {
             switchSubreddit(subreddit);
         }
@@ -196,12 +247,14 @@
 
     /**
      * Implements functions for hiding elements with hotkey
+     *
+     * @param {boolean} isRoot If current page is the site's root
+     * @param {boolean} isPost If current page is a post
      */
-    function HideCommand() {
-        let url = new URL(window.location.href);
-        if (url.pathname === "/") {
+    function HideCommand(isRoot, isPost) {
+        if (isRoot) {
             hidePostsLikeThis();
-        } else if (url.pathname.includes("/comments/")) {
+        } else if (isPost) {
             hideCommentSubthread();
         }
     }
@@ -234,11 +287,11 @@
     /**
      * Browses a image gallery, with the next and previous buttons
      *
+     * @param {boolean} enabled If on correct page to run this function
      * @param {boolean} prev If wanting to browse to the previous image, to the next if false
      */
-    function browseGallery(prev = true) {
-        let locationMatch = window.location.href.match(/reddit\.com\/(?:r|user)\/\w+\/comments/);
-        if (!locationMatch) {
+    function browseGallery(enabled, prev = true) {
+        if (!enabled) {
             return;
         }
 
@@ -252,26 +305,26 @@
             });
     }
 
-    GM_registerMenuCommand("Start Crosspost", StartCrosspost);
-    GM_registerMenuCommand("Sort by New", () => switchSortOrder("new"));
-    GM_registerMenuCommand("Switch Subreddit", StartSwitchSubreddit);
+    GM_registerMenuCommand("Start Crosspost", () => StartCrosspost(locator.getPostId()));
+    GM_registerMenuCommand("Sort by New", () => switchSortOrder(locator.isSubreddit(), locator.isSearch(), "new"));
+    GM_registerMenuCommand("Switch Subreddit", () => StartSwitchSubreddit(locator.isSearch(), locator.getSubreddit()));
     GM_registerMenuCommand("Select crosspost target", selectCrosspostTarget);
     GM_registerMenuCommand("Search by new", searchNew);
 
     document.addEventListener("keyup", e => {
         if (!e.altKey && !e.ctrlKey && !e.shiftKey && e.originalTarget.tagName !== "INPUT") {
             switch (e.code) {
-                case "KeyH": HideCommand(); break;
-                case "ArrowLeft": browseGallery(); break;
-                case "ArrowRight": browseGallery(false); break;
+                case "KeyH": HideCommand(locator.isRoot(), locator.isPost()); break;
+                case "ArrowLeft": browseGallery(locator.isPost()); break;
+                case "ArrowRight": browseGallery(locator.isPost(), false); break;
             }
         }
 
         if (e.altKey && !e.ctrlKey && !e.shiftKey) {
             switch (e.code) {
-                case "KeyC": StartCrosspost(); break;
-                case "KeyN": switchSortOrder("new"); break;
-                case "KeyR": StartSwitchSubreddit(); break;
+                case "KeyC": StartCrosspost(locator.getPostId()); break;
+                case "KeyN": switchSortOrder(locator.isSubreddit(), locator.isSearch(), "new"); break;
+                case "KeyR": StartSwitchSubreddit(locator.isSearch(), locator.getSubreddit()); break;
                 case "KeyS": searchNew(); break;
             }
         }

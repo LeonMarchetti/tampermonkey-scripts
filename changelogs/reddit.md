@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.0] - 22-12-2024
+
+### Agregado
+
+- Objeto `locator` con métodos para determinar la información de la página actual y usarlos en las
+  funciones
+
 ## [2.1.0] - 21-12-2024
 
 ### Agregado
