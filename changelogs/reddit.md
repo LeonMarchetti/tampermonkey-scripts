@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.1] - 22-12-2024
+
+### Modificado
+
+- Cambié `isSubreddit` por `isSubredditHome` para identificar la página que corresponde al home de
+  un subreddit
+
 ## [2.2.0] - 22-12-2024
 
 ### Agregado

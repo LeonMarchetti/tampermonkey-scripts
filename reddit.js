@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Reddit
 // @namespace    http://tampermonkey.net/
-// @version      2.2.0
+// @version      2.2.1
 // @description  Utilities for Reddit.com
 // @author       LeonAM
 // @match        https://www.reddit.com/*
@@ -40,8 +40,8 @@
             return this.getPath() === "/";
         },
 
-        isSubreddit() {
-            return this.getPath().match(/\/r\/(\w+)\/(?:\w+\/)?$/);
+        isSubredditHome() {
+            return this.getLocation().href.match(/\/r\/(\w+)\/(?:\w+\/)?$/);
         },
 
         isPost() {
@@ -306,7 +306,7 @@
     }
 
     GM_registerMenuCommand("Start Crosspost", () => StartCrosspost(locator.getPostId()));
-    GM_registerMenuCommand("Sort by New", () => switchSortOrder(locator.isSubreddit(), locator.isSearch(), "new"));
+    GM_registerMenuCommand("Sort by New", () => switchSortOrder(locator.isSubredditHome(), locator.isSearch(), "new"));
     GM_registerMenuCommand("Switch Subreddit", () => StartSwitchSubreddit(locator.isSearch(), locator.getSubreddit()));
     GM_registerMenuCommand("Select crosspost target", selectCrosspostTarget);
     GM_registerMenuCommand("Search by new", searchNew);
@@ -323,7 +323,7 @@
         if (e.altKey && !e.ctrlKey && !e.shiftKey) {
             switch (e.code) {
                 case "KeyC": StartCrosspost(locator.getPostId()); break;
-                case "KeyN": switchSortOrder(locator.isSubreddit(), locator.isSearch(), "new"); break;
+                case "KeyN": switchSortOrder(locator.isSubredditHome(), locator.isSearch(), "new"); break;
                 case "KeyR": StartSwitchSubreddit(locator.isSearch(), locator.getSubreddit()); break;
                 case "KeyS": searchNew(); break;
             }
