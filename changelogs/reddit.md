@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.2.2] - 22-12-2024
+
+### Borrado
+
+- Función `locator.isPost`, reemplazado por `locator.getPostId`
+
 ## [2.2.1] - 22-12-2024
 
 ### Modificado

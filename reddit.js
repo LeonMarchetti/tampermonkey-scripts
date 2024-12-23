@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Reddit
 // @namespace    http://tampermonkey.net/
-// @version      2.2.1
+// @version      2.2.2
 // @description  Utilities for Reddit.com
 // @author       LeonAM
 // @match        https://www.reddit.com/*
@@ -42,10 +42,6 @@
 
         isSubredditHome() {
             return this.getLocation().href.match(/\/r\/(\w+)\/(?:\w+\/)?$/);
-        },
-
-        isPost() {
-            return this.getPath().match(/\/(?:r|user)\/\w+\/comments\//);
         },
 
         getPostId() {
@@ -314,9 +310,9 @@
     document.addEventListener("keyup", e => {
         if (!e.altKey && !e.ctrlKey && !e.shiftKey && e.originalTarget.tagName !== "INPUT") {
             switch (e.code) {
-                case "KeyH": HideCommand(locator.isRoot(), locator.isPost()); break;
-                case "ArrowLeft": browseGallery(locator.isPost()); break;
-                case "ArrowRight": browseGallery(locator.isPost(), false); break;
+                case "KeyH": HideCommand(locator.isRoot(), locator.getPostId()); break;
+                case "ArrowLeft": browseGallery(locator.getPostId()); break;
+                case "ArrowRight": browseGallery(locator.getPostId(), false); break;
             }
         }
 
