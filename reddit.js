@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Reddit
 // @namespace    http://tampermonkey.net/
-// @version      2.2.2
+// @version      2.2.3
 // @description  Utilities for Reddit.com
 // @author       LeonAM
 // @match        https://www.reddit.com/*
@@ -45,7 +45,8 @@
         },
 
         getPostId() {
-            return this.getPath().match(/\/(?:r|user)\/\w+\/comments\/(\w*)/)[1];
+            let postMatch = this.getPath().match(/\/(?:r|user)\/\w+\/comments\/(\w*)/);
+            return postMatch ? postMatch[1] : null;
         },
 
         isSearch() {

@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.3] - 23-12-2024
+
+### Arreglado
+
+- La función `getPostId` que fallaba si no estaba en un post por tratar de acceder al primer match
+  del regex sin comprobar primero que no sea nulo
+
 ## [2.2.2] - 22-12-2024
 
 ### Borrado
