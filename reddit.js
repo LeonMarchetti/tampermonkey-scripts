@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Reddit
 // @namespace    http://tampermonkey.net/
-// @version      2.2.3
+// @version      2.2.4
 // @description  Utilities for Reddit.com
 // @author       LeonAM
 // @match        https://www.reddit.com/*
@@ -261,7 +261,7 @@
      */
     function HideMediaSidebar() {
         console.debug("Hidden right sidebar");
-        document.getElementById("main-content").style.display = "contents";
+        document.querySelector("main").style.display = "contents";
 
         let rightSidebar = document.getElementById("right-sidebar-container");
         rightSidebar.style.display = "none";

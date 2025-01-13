@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.4] - 13-01-2025
+
+### Arreglado
+
+- Cambió la estructura de la búsqueda tipo media, ahora el contenedor se identifica con `main` en
+  lugar de `#main-content`
+
 ## [2.2.3] - 23-12-2024
 
 ### Arreglado
