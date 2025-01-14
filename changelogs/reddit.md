@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.6] - 14-01-2025
+
+### Modificado
+
+- Ahora `browseGallery` navega una galería que esté debajo del cursor del mouse si no se detecta
+  un post por identificador
+
 ## [2.2.5] - 14-01-2025
 
 ### Arreglado

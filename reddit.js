@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Reddit
 // @namespace    http://tampermonkey.net/
-// @version      2.2.5
+// @version      2.2.6
 // @description  Utilities for Reddit.com
 // @author       LeonAM
 // @match        https://www.reddit.com/*
@@ -284,19 +284,19 @@
     /**
      * Browses a image gallery, with the next and previous buttons
      *
-     * @param {string | null} postId If on correct page to run this function on the post's carousel gallery
+     * @param {string | null} postId If on correct page to run this function on the post's carousel
+     * gallery, otherwise on carousel under mouse cursor
      * @param {boolean} prev If wanting to browse to the previous image, to the next if false
      */
     function browseGallery(postId, prev = true) {
-        if (!postId) {
-            return;
-        }
+        let carousel = postId ? document.querySelector(`gallery-carousel[post-id="t3_${postId}"]`)
+            : document.querySelector(`gallery-carousel:hover`);
 
         let slot = prev ? "prev" : "next";
-        document.querySelector(`gallery-carousel[post-id="t3_${postId}"]`)
-                ?.shadowRoot
-                .querySelector(`[slot="${slot}Button"]`)
-                .click();
+        carousel
+            ?.shadowRoot
+            .querySelector(`[slot="${slot}Button"]`)
+            .click();
     }
 
     GM_registerMenuCommand("Start Crosspost", () => StartCrosspost(locator.getPostId()));
