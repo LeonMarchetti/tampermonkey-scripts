@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         YouTube Results
 // @namespace    http://tampermonkey.net/
-// @version      1.9.4
+// @version      1.9.5
 // @description  Utilities to use in YouTube
 // @author       LeonAM
 // @match        https://www.youtube.com/*
@@ -35,6 +35,27 @@
         "FECSUB": "CAI%253D",
         "NUMVIS": "CAMSAhAB",
         "PUNTUA": "CAESAhAB",
+    };
+
+    /**
+     * Object with methods for site's location
+     */
+    const locator = {
+        getLocation() {
+            return new URL(window.location.href);
+        },
+
+        isChannelVideosList() {
+            return this.getLocation().pathname.match(/\/@.+\/videos/);
+        },
+
+        isChannelProfile() {
+            return this.getLocation().pathname.match(/\/@(.+)(?:\/featured)?/);
+        },
+
+        isSubscriptionsPage() {
+            return this.getLocation().pathname === "/feed/subscriptions";
+        },
     };
 
     /**
@@ -269,10 +290,18 @@
             }
         }
 
-        if (url.pathname === "/feed/subscriptions" || url.pathname.startsWith("/@")) {
+        if (locator.isChannelVideosList() || locator.isSubscriptionsPage()) {
             if (!ctrl && !alt && !shift) {
                 switch (e.code) {
                     case "KeyQ": AddToQueue(document.querySelector("ytd-rich-item-renderer:hover")); break;
+                }
+            }
+        }
+
+        if (locator.isChannelProfile()) {
+            if (!ctrl && !alt && !shift) {
+                switch (e.code) {
+                    case "KeyQ": AddToQueue(document.querySelector("ytd-grid-video-renderer:hover")); break;
                 }
             }
         }

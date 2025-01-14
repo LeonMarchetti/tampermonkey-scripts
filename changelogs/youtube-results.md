@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.9.5] - 14-01-2025
+
+### Agregado
+
+- Objeto `locator` para determinar la página dentro del sitio
+
+### Arreglado
+
+- `AddToQueue` ahora agrega los videos del perfil de un canal
+
 ## [1.9.4] - 20-12-2024
 
 ### Cambiado
