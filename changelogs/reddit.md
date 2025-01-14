@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.5] - 14-01-2025
+
+### Arreglado
+
+- Ahora `browseGallery` determina correctamente el elemento `<gallery-carousel>` que va a ser
+  navegado con las flechas sin navegar en todas, usando el identificador del post
+
 ## [2.2.4] - 13-01-2025
 
 ### Arreglado
