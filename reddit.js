@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Reddit
 // @namespace    http://tampermonkey.net/
-// @version      2.3.0
+// @version      2.3.1
 // @description  Utilities for Reddit.com
 // @author       LeonAM
 // @match        https://www.reddit.com/*
@@ -64,17 +64,6 @@
 
     // Page change detector
     setPageChangeInterval((url) => {
-        if (locator.isMediaSearch()) {
-            let mediaPageInterval = setInterval(() => {
-                // Waits until it loads the multimedia tab's contents. Otherwise it tries
-                // hiding the bar before it appears
-                if (document.getElementById("search-results-page-tab-media").tagName === "BUTTON") {
-                    clearInterval(mediaPageInterval);
-                    HideMediaSidebar();
-                }
-            }, 500);
-        }
-
         if (locator.isMediaPage()) {
             CleanMediaPage();
         }
@@ -86,6 +75,10 @@
         }
 
         article shreddit-post[recommendation-source] { filter: blur(5px) }
+
+        /* Hide right sidebar in multimedia search */
+        div[data-faceplate-tracking-context] main { display: contents }
+        #right-sidebar-container { display: none }
     `.trim());
 
     /**
@@ -255,18 +248,6 @@
         } else if (isPost) {
             hideCommentSubthread();
         }
-    }
-
-    /**
-     * Hides the right sidebar in a media-type post search
-     */
-    function HideMediaSidebar() {
-        console.debug("Hidden right sidebar");
-        document.querySelector("main").style.display = "contents";
-
-        let rightSidebar = document.getElementById("right-sidebar-container");
-        rightSidebar.style.display = "none";
-        console.debug(rightSidebar);
     }
 
     /**

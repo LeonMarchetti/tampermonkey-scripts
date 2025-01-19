@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.3.1] - 19-01-2025
+
+### Modificado
+
+- Se usan reglas CSS para ocultar la barra lateral derecha y rellenar el ancho con los contenidos
+  del contenedor principal en lugar de un interval. Las reglas se aplican al elemento `<main>` y
+  a `#right-sidebar-container`
+
+### Borrado
+
+- Función `HideMediaSidebar`, ya que no es necesario por las nuevas reglas de CSS
+- El interval para `HideMediaSidebar`
+
 ## [2.3.0] - 19-01-2025
 
 ### Agregado
