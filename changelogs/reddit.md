@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.3.0] - 19-01-2025
+
+### Agregado
+
+- Efecto de difuminado en los posts recomendados de la página principal, aplicando el CSS
+  `filter: blur(5px)` en los elementos `article shreddit-post` con el atributo setteado
+  `recommendation-source`
+
 ## [2.2.6] - 14-01-2025
 
 ### Modificado

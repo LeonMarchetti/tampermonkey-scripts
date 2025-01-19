@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Reddit
 // @namespace    http://tampermonkey.net/
-// @version      2.2.6
+// @version      2.3.0
 // @description  Utilities for Reddit.com
 // @author       LeonAM
 // @match        https://www.reddit.com/*
@@ -80,11 +80,12 @@
         }
     });
 
-    // Remove blurring from spoiler posts' search
     GM_addStyle(`
         .thumbnail-blur {
             filter: none !important;
         }
+
+        article shreddit-post[recommendation-source] { filter: blur(5px) }
     `.trim());
 
     /**
