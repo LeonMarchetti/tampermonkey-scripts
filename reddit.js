@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Reddit
 // @namespace    http://tampermonkey.net/
-// @version      2.3.1
+// @version      2.3.2
 // @description  Utilities for Reddit.com
 // @author       LeonAM
 // @match        https://www.reddit.com/*
@@ -76,9 +76,9 @@
 
         article shreddit-post[recommendation-source] { filter: blur(5px) }
 
-        /* Hide right sidebar in multimedia search */
-        div[data-faceplate-tracking-context] main { display: contents }
-        #right-sidebar-container { display: none }
+        /* Hide right sidebar in posts search */
+        shreddit-app[pagetype="search_results"] main { display: contents }
+        shreddit-app[pagetype="search_results"] #right-sidebar-container { display: none }
     `.trim());
 
     /**

@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.3.2] - 23-01-2025
+
+### Modificado
+
+- Para ocultar la barra lateral derecha uso el selector CSS que matche con el elemento HTML
+  `<shreddit-app>` con el `pageType` igual a `"search_results"`
+
 ## [2.3.1] - 19-01-2025
 
 ### Modificado
