@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Reddit
 // @namespace    http://tampermonkey.net/
-// @version      2.3.2
+// @version      2.3.3
 // @description  Utilities for Reddit.com
 // @author       LeonAM
 // @match        https://www.reddit.com/*
@@ -33,7 +33,12 @@
 
         getSubreddit() {
             let match = this.getPath().match(/\/r\/(\w+)\//);
-            return match[1];
+            return match ? match[1] : null;
+        },
+
+        getUser() {
+            let match = this.getPath(/\/user\/(\w+)\//).match()
+            return match ? match[1] : null;
         },
 
         isRoot() {
@@ -186,29 +191,25 @@
      * Starts a search with the results' order as "New"
      */
     function searchNew() {
-        let url = new URL(window.location.href);
-        let path = url.pathname.split("/");
-        let defaultQuery = url.searchParams.get("q") ?? "";
-
-        // In subreddit or user
-        if (["r", "user"].includes(path[1])) {
-            let searchQuery = prompt("Search", defaultQuery);
-            if (searchQuery) {
-                window.location.href = `https://reddit.com/${path[1]}/${path[2]}/search/?q=${searchQuery}&sort=new`;
-            }
+        let searchQuery = prompt("Search", locator.getLocation().searchParams.get("q") ?? "");
+        if (!searchQuery) {
             return;
         }
 
-        // In global search
-        if (path[1] == "search") {
-            let searchQuery = prompt("Search", defaultQuery);
-            if (searchQuery) {
-                window.location.href = `https://reddit.com/search/?q=${searchQuery}&sort=new`;
+        let subPath = "";
+
+        // In subreddit or user, global search by default
+        let subreddit = locator.getSubreddit();
+        if (subreddit) {
+            subPath = "r/" + subreddit;
+        } else {
+            let user = locator.getUser();
+            if (user) {
+                subPath = "user/" + user;
             }
-            return;
         }
 
-        showError("Not in Reddit site");
+        window.location.href = `https://reddit.com/${subPath}/search/?q=${searchQuery}&type=media`;
     }
 
     /**

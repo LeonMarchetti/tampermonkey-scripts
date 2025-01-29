@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.3.3] - 29-01-2025
+
+### Modificado
+
+- En `searchNew` modifiqué la función para que funcione en la página principal y refactoricé para
+  que haga una búsqueda multimedia
+
 ## [2.3.2] - 23-01-2025
 
 ### Modificado
