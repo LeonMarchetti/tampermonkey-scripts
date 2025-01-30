@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.4.0] - 30-01-2025
+
+### Agregado
+
+- Estilos para las fechas de los posts publicados en el día de la ejecución del script, que indican
+  hace cuanto fueron publicados pero en el HTML se indica el timestamp y uso la fecha de hoy para
+  armar la regla CSS, matcheando los elementos con `time[datetime^="${todayDate}"]`
+
 ## [2.3.3] - 29-01-2025
 
 ### Modificado

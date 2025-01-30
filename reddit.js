@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Reddit
 // @namespace    http://tampermonkey.net/
-// @version      2.3.3
+// @version      2.4.0
 // @description  Utilities for Reddit.com
 // @author       LeonAM
 // @match        https://www.reddit.com/*
@@ -74,6 +74,8 @@
         }
     });
 
+    let todayDate = (new Date).toISOString().split("T")[0];
+
     GM_addStyle(`
         .thumbnail-blur {
             filter: none !important;
@@ -84,6 +86,15 @@
         /* Hide right sidebar in posts search */
         shreddit-app[pagetype="search_results"] main { display: contents }
         shreddit-app[pagetype="search_results"] #right-sidebar-container { display: none }
+
+        time[datetime^="${todayDate}"]
+        {
+            background-color: yellow;
+            border: 1px solid;
+            border-radius: 5px;
+            color: black;
+            font-weight: 700;
+        }
     `.trim());
 
     /**
