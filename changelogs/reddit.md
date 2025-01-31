@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.4.1] - 30-01-2025
+
+### Arreglado
+
+- La fecha generada al principio lo hacía con el huso horario de UTC, le resté 3 horas para que use
+  la hora local
+
 ## [2.4.0] - 30-01-2025
 
 ### Agregado

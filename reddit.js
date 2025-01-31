@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Reddit
 // @namespace    http://tampermonkey.net/
-// @version      2.4.0
+// @version      2.4.1
 // @description  Utilities for Reddit.com
 // @author       LeonAM
 // @match        https://www.reddit.com/*
@@ -74,7 +74,11 @@
         }
     });
 
-    let todayDate = (new Date).toISOString().split("T")[0];
+    /** Get today's date. Accounts for local timezone */
+    let todayDate = (new Date);
+    todayDate.setHours(todayDate.getHours() - 3);
+    /** Date string for CSS rule's selector */
+    let timestamp = todayDate.toISOString().split("T")[0];
 
     GM_addStyle(`
         .thumbnail-blur {
@@ -87,7 +91,7 @@
         shreddit-app[pagetype="search_results"] main { display: contents }
         shreddit-app[pagetype="search_results"] #right-sidebar-container { display: none }
 
-        time[datetime^="${todayDate}"]
+        time[datetime^="${timestamp}"]
         {
             background-color: yellow;
             border: 1px solid;
