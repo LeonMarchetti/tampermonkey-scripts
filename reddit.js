@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Reddit
 // @namespace    http://tampermonkey.net/
-// @version      2.4.2
+// @version      2.4.3
 // @description  Utilities for Reddit.com
 // @author       LeonAM
 // @match        https://www.reddit.com/*
@@ -146,6 +146,10 @@
     function StartCrosspost(postId) {
         if (!postId) {
             showError("Not in Reddit post");
+        }
+
+        if (document.querySelector(`shreddit-post`).postType === "video") {
+            showError("Video post can't be crossposted to private subreddit");
         }
 
         let crosspostTarget = GM_getValue("crosspostTarget", null);

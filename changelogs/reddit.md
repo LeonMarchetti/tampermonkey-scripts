@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.4.3] - 11-03-2025
+
+### Agregado
+
+- `StartCrosspost` verifica si el post a repostear no es un video y devuelve error en caso contrario, debido a que no se permite hacer crosspost de un video a un subreddit privado. Se utiliza la propiedad `post-type` del elemento `shreddit-post` que puede tener los valores `video` o `link`, entre otros.
+
 ## [2.4.2] - 11-03-2025
 
 ### Modificado
