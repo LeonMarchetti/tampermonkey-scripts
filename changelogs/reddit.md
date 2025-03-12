@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.4.2] - 11-03-2025
+
+### Modificado
+
+- `searchNew` hace una búsqueda tipo multimedia con orden de posts por fecha.
+- `searchNew` muestra el nombre del subreddit en el prompt.
+
 ## [2.4.1] - 30-01-2025
 
 ### Arreglado

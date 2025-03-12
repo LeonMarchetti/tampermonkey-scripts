@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Reddit
 // @namespace    http://tampermonkey.net/
-// @version      2.4.1
+// @version      2.4.2
 // @description  Utilities for Reddit.com
 // @author       LeonAM
 // @match        https://www.reddit.com/*
@@ -206,7 +206,9 @@
      * Starts a search with the results' order as "New"
      */
     function searchNew() {
-        let searchQuery = prompt("Search", locator.getLocation().searchParams.get("q") ?? "");
+        let subreddit = locator.getSubreddit();
+        let searchQuery = prompt(subreddit ? `Search at r/${subreddit}` : "Search",
+            locator.getLocation().searchParams.get("q") ?? "");
         if (!searchQuery) {
             return;
         }
@@ -214,7 +216,6 @@
         let subPath = "";
 
         // In subreddit or user, global search by default
-        let subreddit = locator.getSubreddit();
         if (subreddit) {
             subPath = "r/" + subreddit;
         } else {
@@ -224,7 +225,7 @@
             }
         }
 
-        window.location.href = `https://reddit.com/${subPath}/search/?q=${searchQuery}&type=media`;
+        window.location.href = `https://reddit.com/${subPath}/search/?q=${searchQuery}&type=media&sort=new`;
     }
 
     /**
