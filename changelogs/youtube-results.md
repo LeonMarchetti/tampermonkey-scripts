@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.9.6] - 30-03-2025
+
+### Arreglado
+
+- Arreglado el selector de `AddToQueue` que hacía reproducir el video cuando se realizaba la acción
+  sobre un video en la lista de suscripciones
+
 ## [1.9.5] - 14-01-2025
 
 ### Agregado
