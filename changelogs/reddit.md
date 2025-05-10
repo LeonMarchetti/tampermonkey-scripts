@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.4.4] - 10-05-2025
+
+### Agregado
+
+- Regla CSS para ocultar la imagen en la barra lateral derecha de los subs. Uso la regla `#right-sidebar-container img.h-auto`
+
 ## [2.4.3] - 11-03-2025
 
 ### Agregado

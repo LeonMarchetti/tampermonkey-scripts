@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Reddit
 // @namespace    http://tampermonkey.net/
-// @version      2.4.3
+// @version      2.4.4
 // @description  Utilities for Reddit.com
 // @author       LeonAM
 // @match        https://www.reddit.com/*
@@ -98,6 +98,12 @@
             border-radius: 5px;
             color: black;
             font-weight: 700;
+        }
+
+        /* Hide picture in right sidebar */
+        #right-sidebar-container img.h-auto
+        {
+            display: none;
         }
     `.trim());
 
