@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.5.0] - 10-05-2025
+
+### Agregado
+
+- Agregué el highlight para las fechas de ayer de color naranja
+- Moví todo lo relacionado a su propia función `highlightDates`
+
 ## [2.4.4] - 10-05-2025
 
 ### Agregado

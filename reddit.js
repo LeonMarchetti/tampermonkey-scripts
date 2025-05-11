@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Reddit
 // @namespace    http://tampermonkey.net/
-// @version      2.4.4
+// @version      2.5.0
 // @description  Utilities for Reddit.com
 // @author       LeonAM
 // @match        https://www.reddit.com/*
@@ -74,12 +74,6 @@
         }
     });
 
-    /** Get today's date. Accounts for local timezone */
-    let todayDate = (new Date);
-    todayDate.setHours(todayDate.getHours() - 3);
-    /** Date string for CSS rule's selector */
-    let timestamp = todayDate.toISOString().split("T")[0];
-
     GM_addStyle(`
         .thumbnail-blur {
             filter: none !important;
@@ -90,15 +84,6 @@
         /* Hide right sidebar in posts search */
         shreddit-app[pagetype="search_results"] main { display: contents }
         shreddit-app[pagetype="search_results"] #right-sidebar-container { display: none }
-
-        time[datetime^="${timestamp}"]
-        {
-            background-color: yellow;
-            border: 1px solid;
-            border-radius: 5px;
-            color: black;
-            font-weight: 700;
-        }
 
         /* Hide picture in right sidebar */
         #right-sidebar-container img.h-auto
@@ -307,6 +292,48 @@
             .querySelector(`[slot="${slot}Button"]`)
             .click();
     }
+
+    /** Higlight today's and yesterday's dates of posts */
+    function highlightDates() {
+        /** Get today's date. Accounts for local timezone */
+        let todayDate = (new Date);
+        todayDate.setHours(todayDate.getHours() - 3);
+        /** Today's date string for CSS rule's selector */
+        let todayTimestamp = todayDate.toISOString().split("T")[0];
+        console.debug(`todayTimestamp = "${todayTimestamp}"`);
+
+        /** Get yesterday's date */
+        let yesterdayDate = (new Date);
+        yesterdayDate.setHours(yesterdayDate.getHours() - 3);
+        yesterdayDate.setDate(yesterdayDate.getDate() - 1);
+        /** Yesterday's date string for CSS rule's selector */
+        let yesterdayTimestamp = yesterdayDate.toISOString().split("T")[0];
+        console.debug(`yesterdayTimestamp = "${yesterdayTimestamp}"`);
+
+        GM_addStyle(`
+            /* Highlight dates from today */
+            time[datetime^="${todayTimestamp}"]
+            {
+                background-color: yellow;
+                border: 1px solid;
+                border-radius: 5px;
+                color: black;
+                font-weight: 700;
+            }
+
+            /* Highlight dates from yesterday */
+            time[datetime^="${yesterdayTimestamp}"]
+            {
+                background-color: orange;
+                border: 1px solid;
+                border-radius: 5px;
+                color: black;
+                font-weight: 700;
+            }
+        `);
+    }
+
+    highlightDates();
 
     GM_registerMenuCommand("Start Crosspost", () => StartCrosspost(locator.getPostId()));
     GM_registerMenuCommand("Sort by New", () => switchSortOrder(locator.isSubredditHome(), locator.isSearch(), "new"));
