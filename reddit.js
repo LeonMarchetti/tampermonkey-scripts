@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Reddit
 // @namespace    http://tampermonkey.net/
-// @version      2.5.0
+// @version      2.6.0
 // @description  Utilities for Reddit.com
 // @author       LeonAM
 // @match        https://www.reddit.com/*
@@ -72,6 +72,8 @@
         if (locator.isMediaPage()) {
             CleanMediaPage();
         }
+
+        dismissPostBlur();
     });
 
     GM_addStyle(`
@@ -332,6 +334,29 @@
             }
         `);
     }
+
+    /**
+     * Dismiss blurring of posts in searches by clicking the button in the post
+     *
+     * Checks for page type and starts an interval in community and search pages. Uses the session
+     * storage to store the interval index and use it to clear it when unused.
+     */
+    function dismissPostBlur() {
+        if (locator.isSearch() || locator.isSubredditHome()) {
+            let blurInterval = setInterval(() => {
+                Array.from(document.querySelectorAll(`shreddit-blurred-container`))
+                    .forEach(container => {
+                        if (container.shadowRoot.querySelector(".blurred")) {
+                            container.shadowRoot.children[0].click();
+                        }
+                    });
+            }, 500);
+            sessionStorage.setItem("BLUR_INTERVAL", blurInterval);
+        } else {
+            clearInterval(sessionStorage.getItem("BLUR_INTERVAL"));
+        }
+    }
+
 
     highlightDates();
 

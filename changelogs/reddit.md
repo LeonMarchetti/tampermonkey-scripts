@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.6.0] - 06-06-2025
+
+### Agregado
+
+- Función `dismissPostBlur` que inicia un intervalo para hacer clic en todos los post con blur.
+  Usa el selector `shreddit-blur-container` y hace clic en el primer descendiente con clase
+  `.blurred`.
+
 ## [2.5.0] - 10-05-2025
 
 ### Agregado
