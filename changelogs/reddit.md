@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.6.1] - 07-06-2025
+
+### Arreglado
+
+- En búsquedas multimedia al auto clickearse los posts ocultos se cambiaba de página. Agregué una
+  llamada a `locator.isMediaSearch` para excluirlos
+
 ## [2.6.0] - 06-06-2025
 
 ### Agregado

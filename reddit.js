@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Reddit
 // @namespace    http://tampermonkey.net/
-// @version      2.6.0
+// @version      2.6.1
 // @description  Utilities for Reddit.com
 // @author       LeonAM
 // @match        https://www.reddit.com/*
@@ -342,7 +342,7 @@
      * storage to store the interval index and use it to clear it when unused.
      */
     function dismissPostBlur() {
-        if (locator.isSearch() || locator.isSubredditHome()) {
+        if (!locator.isMediaSearch() && (locator.isSearch() || locator.isSubredditHome())) {
             let blurInterval = setInterval(() => {
                 Array.from(document.querySelectorAll(`shreddit-blurred-container`))
                     .forEach(container => {
