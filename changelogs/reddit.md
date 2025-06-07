@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.7.0] - 07-06-2025
+
+### Agregado
+
+- Ahora `StartCrosspost` permite iniciar un crosspost en una imagen abierta en una página de
+  búsqueda en una pestaña nueva. Determina el tipo de página con
+  `document.querySelector("shreddit-app").pageType` y abre una nueva pestaña con `window.open`
+
 ## [2.6.1] - 07-06-2025
 
 ### Arreglado

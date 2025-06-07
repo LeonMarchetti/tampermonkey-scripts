@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Reddit
 // @namespace    http://tampermonkey.net/
-// @version      2.6.1
+// @version      2.7.0
 // @description  Utilities for Reddit.com
 // @author       LeonAM
 // @match        https://www.reddit.com/*
@@ -134,6 +134,9 @@
     /**
      * Redirects from a post page to the crosspost to a community
      *
+     * If current page is a post then it opens the crosspost page on the same tab. If it is a
+     * search with a image open then it opens a new tab
+     *
      * @param {string} postId Id of post to be crossposted
      */
     function StartCrosspost(postId) {
@@ -150,7 +153,16 @@
             crosspostTarget = selectCrosspostTarget();
         }
 
-        window.location.href = `https://www.reddit.com/r/${crosspostTarget}/submit?source_id=t3_${postId}`;
+        let crosspostURL = `https://www.reddit.com/r/${crosspostTarget}/submit?source_id=t3_${postId}`;
+
+        // Determines where to open the crosspost page, same page if on post or new tab if on search
+        switch (document.querySelector(`shreddit-app`).pageType) {
+            case "community":
+                window.open(crosspostURL, "_blank");
+                break;
+            case "post_detail":
+                window.location.href = crosspostURL;
+        }
     }
 
     /**
