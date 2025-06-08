@@ -1,5 +1,19 @@
 # Changelog
 
+## [2.8.0] - 08-06-2025
+
+### Agregado
+
+- Función `OpenImage` para abrir la imagen original del post actual. Puede abrirla en la pestaña
+  actual o en una nueva. Se diferencia entre posts de imagenes simples con `"zoomable-img img"` y
+  de galerías con `"li[style*='visibility: visible'] img"` para obtener el URL de la imagen.
+  - Puede abrir GIFs con `"source"`
+  - En una página de búsqueda se obtiene la imagen abierta en el lightbox usando
+    `"#shreddit-media-lightbox"`
+  - Se configuró el atajo `ALT+I` para abrir en la misma pestaña y `ALT+SHIFT+I` en una nueva
+  - Al tratar de hacer lo mismo con videos usando `"video"` se abre una nueva pestaña pero el navegador
+    me manda a guardar el video en el disco
+
 ## [2.7.0] - 07-06-2025
 
 ### Agregado

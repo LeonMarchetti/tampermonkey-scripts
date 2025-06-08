@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Reddit
 // @namespace    http://tampermonkey.net/
-// @version      2.7.0
+// @version      2.8.0
 // @description  Utilities for Reddit.com
 // @author       LeonAM
 // @match        https://www.reddit.com/*
@@ -369,6 +369,30 @@
         }
     }
 
+    /**
+     * Opens the original image of the current post
+     *
+     * Currently doesn't work on videos
+     *
+     * @param {boolean} newTab Open image in a new tab, default false
+     */
+    function OpenImage(newTab = false) {
+        let lightbox = ["community", "home"].includes(document.querySelector("shreddit-app").pageType) ? "#shreddit-media-lightbox " : "";
+        let imgElement = document.querySelector(`${lightbox}li[style*="visibility: visible"] img`) ??
+            document.querySelector(`${lightbox}zoomable-img img`) ??
+            document.querySelector(`${lightbox}source`);
+
+        if (!imgElement) {
+            showError("No image to open found");
+        }
+
+        if (newTab) {
+            window.open(imgElement.src, "_blank");
+        } else {
+            window.location.href = imgElement.src;
+        }
+    }
+
 
     highlightDates();
 
@@ -390,9 +414,17 @@
         if (e.altKey && !e.ctrlKey && !e.shiftKey) {
             switch (e.code) {
                 case "KeyC": StartCrosspost(locator.getPostId()); break;
+                case "KeyI": OpenImage(); break;
                 case "KeyN": switchSortOrder(locator.isSubredditHome(), locator.isSearch(), "new"); break;
                 case "KeyR": StartSwitchSubreddit(locator.isSearch(), locator.getSubreddit()); break;
                 case "KeyS": searchNew(); break;
+            }
+        }
+
+        // ALT + SHIFT
+        if (e.altKey && !e.ctrlKey && e.shiftKey) {
+            switch (e.code) {
+                case "KeyI": OpenImage(true); break;
             }
         }
     });
