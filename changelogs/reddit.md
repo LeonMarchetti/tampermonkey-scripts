@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.8.1] - 05-07-2025
+
+### Modificado
+
+- En `StartSwitchSubreddit` ahora se puede cambiar a una búsqueda global sin subreddit específico
+  Se cambió el regex para detectar los parámetors de búsqueda para matchear con un path sin
+  subreddit: `/reddit\.com(?:\/r\/\w+)?\/search\/(.*)/`
+
 ## [2.8.0] - 08-06-2025
 
 ### Agregado

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Reddit
 // @namespace    http://tampermonkey.net/
-// @version      2.8.0
+// @version      2.8.1
 // @description  Utilities for Reddit.com
 // @author       LeonAM
 // @match        https://www.reddit.com/*
@@ -168,12 +168,13 @@
     /**
      * Switches current post search page's subreddit, keeping current search's parameters
      *
-     * @param {string} name Target subreddit's name
+     * @param {string?} name Target subreddit's name
      */
     function switchSubreddit(name) {
-        let subredditSearchMatch = window.location.href.match(/reddit\.com\/r\/\w+\/search\/(.*)/);
+        let subredditSearchMatch = window.location.href.match(/reddit\.com(?:\/r\/\w+)?\/search\/(.*)/);
         let searchQuery = subredditSearchMatch[1];
-        window.location.href = `https://reddit.com/r/${name}/search/${searchQuery}`;
+        let subredditPath = name ? ("r/" + name) : "";
+        window.location.href = `https://reddit.com/${subredditPath}/search/${searchQuery}`;
     }
 
     /**
@@ -187,10 +188,8 @@
             showError("Not at a subreddit's post search page");
         }
 
-        let subreddit = prompt("Input target subreddit's name", currentSubreddit);
-        if (subreddit) {
-            switchSubreddit(subreddit);
-        }
+        let subreddit = prompt("Input target subreddit's name", currentSubreddit ?? "");
+        switchSubreddit(subreddit);
     }
 
     /**
