@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.8.2] - 06-07-2025
+
+### Modificado
+
+- En `StartSwitchSubreddit` ahora se puede cambiar de subreddit desde el feed principal o de un
+  subreddit. Uso las funciones de `URL` para determinar la nueva ruta. El nuevo regex es
+  `/(?:\/r\/\w+)?/`
+
 ## [2.8.1] - 05-07-2025
 
 ### Modificado

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Reddit
 // @namespace    http://tampermonkey.net/
-// @version      2.8.1
+// @version      2.8.2
 // @description  Utilities for Reddit.com
 // @author       LeonAM
 // @match        https://www.reddit.com/*
@@ -171,20 +171,18 @@
      * @param {string?} name Target subreddit's name
      */
     function switchSubreddit(name) {
-        let subredditSearchMatch = window.location.href.match(/reddit\.com(?:\/r\/\w+)?\/search\/(.*)/);
-        let searchQuery = subredditSearchMatch[1];
-        let subredditPath = name ? ("r/" + name) : "";
-        window.location.href = `https://reddit.com/${subredditPath}/search/${searchQuery}`;
+        let location = new URL(window.location.href);
+        let subredditPath = location.pathname.replace(/(?:\/r\/\w+)?/, (name ? `/r/${name}` : "/"));
+        window.location.href = "https://reddit.com" + subredditPath + location.search;
     }
 
     /**
      * Prompts for a subreddit name to switch to
      *
-     * @param {boolean} isSearch If current page is a post search
      * @param {string} currentSubreddit Current subreddit's name
      */
-    function StartSwitchSubreddit(isSearch, currentSubreddit) {
-        if (!isSearch) {
+    function StartSwitchSubreddit(currentSubreddit) {
+        if (!(locator.isSearch() || locator.isRoot() || locator.isSubredditHome())) {
             showError("Not at a subreddit's post search page");
         }
 
@@ -397,7 +395,7 @@
 
     GM_registerMenuCommand("Start Crosspost", () => StartCrosspost(locator.getPostId()));
     GM_registerMenuCommand("Sort by New", () => switchSortOrder(locator.isSubredditHome(), locator.isSearch(), "new"));
-    GM_registerMenuCommand("Switch Subreddit", () => StartSwitchSubreddit(locator.isSearch(), locator.getSubreddit()));
+    GM_registerMenuCommand("Switch Subreddit", () => StartSwitchSubreddit(locator.getSubreddit()));
     GM_registerMenuCommand("Select crosspost target", selectCrosspostTarget);
     GM_registerMenuCommand("Search by new", searchNew);
 
@@ -415,7 +413,7 @@
                 case "KeyC": StartCrosspost(locator.getPostId()); break;
                 case "KeyI": OpenImage(); break;
                 case "KeyN": switchSortOrder(locator.isSubredditHome(), locator.isSearch(), "new"); break;
-                case "KeyR": StartSwitchSubreddit(locator.isSearch(), locator.getSubreddit()); break;
+                case "KeyR": StartSwitchSubreddit(locator.getSubreddit()); break;
                 case "KeyS": searchNew(); break;
             }
         }
