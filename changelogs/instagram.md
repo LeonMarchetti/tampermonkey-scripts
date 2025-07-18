@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.2.0] - 18-07-2025
+
+### Eliminado
+
+- Eliminé los estilos CSS
+
 ## [1.1.0] - 29-01-2025
 
 ### Agregado

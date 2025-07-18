@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Instagram
 // @namespace    http://tampermonkey.net/
-// @version      1.1.0
+// @version      1.2.0
 // @description  Utilities for Instagram
 // @author       LeonAM
 // @match        https://www.instagram.com/*
@@ -15,25 +15,6 @@
     'use strict';
 
     console.info(`Running UserScript "${GM_info.script.name}"`);
-
-    // Styles
-    GM_addStyle(`
-        main > div
-        {
-            max-width: 100% !important;
-        }
-
-        main > :nth-child(1) > :nth-child(2) > :nth-child(1) > :nth-child(1)
-        {
-            flex-direction: row !important;
-            flex-wrap: wrap;
-        }
-
-        main > :nth-child(1) > :nth-child(2) > :nth-child(1) > :nth-child(1) > div
-        {
-            width: 33%;
-        }
-    `);
 
     /**
      * Mutes all posts sounds
