@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.9.0] - 19-07-2025
+
+### Eliminado
+
+- Eliminé la llamada a `GM_addStyle` porque puse las modificaciones a estilos CSS aparte
+
 ## [2.8.2] - 06-07-2025
 
 ### Modificado

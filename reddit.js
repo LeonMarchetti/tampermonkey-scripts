@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Reddit
 // @namespace    http://tampermonkey.net/
-// @version      2.8.2
+// @version      2.9.0
 // @description  Utilities for Reddit.com
 // @author       LeonAM
 // @match        https://www.reddit.com/*
@@ -75,24 +75,6 @@
 
         dismissPostBlur();
     });
-
-    GM_addStyle(`
-        .thumbnail-blur {
-            filter: none !important;
-        }
-
-        article shreddit-post[recommendation-source] { filter: blur(5px) }
-
-        /* Hide right sidebar in posts search */
-        shreddit-app[pagetype="search_results"] main { display: contents }
-        shreddit-app[pagetype="search_results"] #right-sidebar-container { display: none }
-
-        /* Hide picture in right sidebar */
-        #right-sidebar-container img.h-auto
-        {
-            display: none;
-        }
-    `.trim());
 
     /**
      * Shows an alert and throws an Exception
@@ -358,7 +340,7 @@
                         if (container.shadowRoot.querySelector(".blurred")) {
                             container.shadowRoot.children[0].click();
                         }
-                    });
+                });
             }, 500);
             sessionStorage.setItem("BLUR_INTERVAL", blurInterval);
         } else {
