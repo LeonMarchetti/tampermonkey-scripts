@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Mangago
 // @namespace    http://tampermonkey.net/
-// @version      1.2.1
+// @version      1.3.0
 // @description  Utilities for Mangago
 // @author       LeonAM
 // @match        https://www.mangago.me/*
@@ -86,12 +86,51 @@
         window.location.href = document.querySelector(`img#page${pageIndex}`).src;
     }
 
+    /**
+     * The `AutocompleteBookmarkDescription` class is designed to automatically fill in the manga
+     * bookmark description (e.g. in a textarea with `id="note"`) with the current chapter number,
+     * such as `"Ch.123"`. This helps users keep track of the last read chapter without manually
+     * typing it.
+     */
+    class AutocompleteBookmarkDescription {
+        /**
+         * Sets up a repeating timer to run the `autocomplete()` method every 500 milliseconds.
+         * This keeps checking for the presence of the description `textarea`.
+         */
+        constructor() {
+            this.currentTextarea = null;
+            setInterval(this.autocomplete.bind(this), 500);
+        }
+
+        /**
+         * Automatically fills in the `#note` textarea (used for bookmark descriptions) with the
+         * current chapter number.
+         *
+         * External Dependency:
+         * - `unsafeWindow.current_chapter`: A global variable. It should hold the current chapter
+         * number as a string or number.
+         */
+        autocomplete() {
+            let descriptionTextarea = document.querySelector("#note");
+            if (descriptionTextarea) {
+                if (this.currentTextarea != descriptionTextarea) {
+                    descriptionTextarea.value = "Ch." + unsafeWindow.current_chapter;
+                    this.currentTextarea = descriptionTextarea;
+                }
+            } else {
+                this.currentTextarea = null;
+            }
+        }
+    }
+
     if (checkMangaChapter(false)) {
         setFullPageHeight(GM_getValue(FULL_PAGE_HEIGHT_KEY, false));
     }
 
     GM_registerMenuCommand("Open Image", openImage);
     GM_registerMenuCommand("Toggle full height", togglePageHeight);
+
+    new AutocompleteBookmarkDescription();
 
     document.addEventListener("keyup", e => {
         if (e.altKey && e.ctrlKey && !e.shiftKey) {

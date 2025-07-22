@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.3.0] - 22-07-2025
+
+### Agregado
+
+- Clase `AutocompleteBookmarkDescription` diseñada para completar automáticamente la descripción de
+  un marcador de manga (en un textarea con `id="note"`) con el número del capítulo actual, como
+  "Ch.123"
+
 ## [1.2.1] - 09-05-2024
 
 ### Arreglado
