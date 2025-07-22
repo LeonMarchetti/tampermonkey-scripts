@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.1] - 22-07-2025
+
+### Modificado
+
+- Cambié la implementación de `AutocompleteBookmarkDescription` para usar **MutationObserver** en
+  lugar de `setInterval`, por ser más eficiente
+
 ## [1.3.0] - 22-07-2025
 
 ### Agregado

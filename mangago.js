@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Mangago
 // @namespace    http://tampermonkey.net/
-// @version      1.3.0
+// @version      1.3.1
 // @description  Utilities for Mangago
 // @author       LeonAM
 // @match        https://www.mangago.me/*
@@ -87,38 +87,71 @@
     }
 
     /**
-     * The `AutocompleteBookmarkDescription` class is designed to automatically fill in the manga
-     * bookmark description (e.g. in a textarea with `id="note"`) with the current chapter number,
-     * such as `"Ch.123"`. This helps users keep track of the last read chapter without manually
-     * typing it.
+     * This class observes the DOM for the appearance of a textarea with ID "note"
+     * (used on Mangago.me for bookmark descriptions). When the textarea appears,
+     * it automatically fills it with the current chapter number (e.g., "Ch.57"),
+     * using the global variable `unsafeWindow.current_chapter`.
+     *
+     * It uses MutationObserver instead of setInterval for better performance and efficiency.
      */
     class AutocompleteBookmarkDescription {
-        /**
-         * Sets up a repeating timer to run the `autocomplete()` method every 500 milliseconds.
-         * This keeps checking for the presence of the description `textarea`.
-         */
         constructor() {
+            /**
+             * @property {HTMLElement|null} currentTextarea
+             * Keeps track of the last textarea that was auto-filled, to avoid re-writing unnecessarily.
+             */
             this.currentTextarea = null;
-            setInterval(this.autocomplete.bind(this), 500);
+
+            /**
+             * @property {MutationObserver} observer
+             * Watches the DOM for when the bookmark textarea (#note) appears.
+             */
+            this.observer = new MutationObserver(this.handleMutations.bind(this));
+
+            // Start observing the DOM for dynamic elements
+            this.observeDOM();
         }
 
         /**
-         * Automatically fills in the `#note` textarea (used for bookmark descriptions) with the
-         * current chapter number.
-         *
-         * External Dependency:
-         * - `unsafeWindow.current_chapter`: A global variable. It should hold the current chapter
-         * number as a string or number.
+         * Starts observing the DOM body for added elements.
+         * Uses subtree: true to catch deeply nested elements.
          */
-        autocomplete() {
-            let descriptionTextarea = document.querySelector("#note");
-            if (descriptionTextarea) {
-                if (this.currentTextarea != descriptionTextarea) {
-                    descriptionTextarea.value = "Ch." + unsafeWindow.current_chapter;
-                    this.currentTextarea = descriptionTextarea;
+        observeDOM() {
+            const config = { childList: true, subtree: true };
+            this.observer.observe(document.body, config);
+        }
+
+        /**
+         * Callback triggered when new nodes are added to the DOM.
+         * Looks for a textarea with ID "note" and fills it if not already done.
+         *
+         * @param {MutationRecord[]} mutationsList - List of detected DOM changes.
+         */
+        handleMutations(mutationsList) {
+            for (let mutation of mutationsList) {
+                for (let node of mutation.addedNodes) {
+                    if (node.nodeType === 1) { // Element node
+                        const textarea = node.querySelector?.("#note") ||
+                              (node.id === "note" ? node : null);
+                        if (textarea) {
+                            this.autocomplete(textarea);
+                            return; // Only process the first match
+                        }
+                    }
                 }
-            } else {
-                this.currentTextarea = null;
+            }
+        }
+
+        /**
+         * Writes the chapter number into the textarea, if not already processed.
+         *
+         * @param {HTMLTextAreaElement} textarea - The bookmark description field.
+         */
+        autocomplete(textarea) {
+            if (this.currentTextarea !== textarea) {
+                const chapter = unsafeWindow?.current_chapter || "???";
+                textarea.value = "Ch." + chapter;
+                this.currentTextarea = textarea;
             }
         }
     }
