@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Mangago
 // @namespace    http://tampermonkey.net/
-// @version      1.3.1
+// @version      1.3.2
 // @description  Utilities for Mangago
 // @author       LeonAM
 // @match        https://www.mangago.me/*
@@ -149,8 +149,9 @@
          */
         autocomplete(textarea) {
             if (this.currentTextarea !== textarea) {
-                const chapter = unsafeWindow?.current_chapter || "???";
-                textarea.value = "Ch." + chapter;
+                if (unsafeWindow?.chapter_name) {
+                    textarea.value = unsafeWindow.chapter_name;
+                }
                 this.currentTextarea = textarea;
             }
         }

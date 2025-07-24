@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.3.2] - 24-07-2025
+
+### Arreglado
+
+- En `autocomplete()` ahora agarro el título del capítulo con la variable global `chapter_name` en
+  lugar de `current_chapter` porque éste no refleja el número del capítulo según la numeración del
+  manga.
+- Además uso la variable como condición para no modificar la descripción si es nulo/vacío.
+
 ## [1.3.1] - 22-07-2025
 
 ### Modificado
