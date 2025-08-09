@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.1] - 09-08-2025
+
+### Arreglado
+
+- Arreglé el regex que matchea con el link `wa.me/` para que detecte el código de país:
+  `/^(?:549)?(2323|11)/`
+
 ## [1.3.0] - 02-08-2025
 
 ### Agregado

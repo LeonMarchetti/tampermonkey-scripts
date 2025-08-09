@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Instagram
 // @namespace    http://tampermonkey.net/
-// @version      1.3.0
+// @version      1.3.1
 // @description  Utilities for Instagram
 // @author       LeonAM
 // @match        https://www.instagram.com/*
@@ -57,7 +57,7 @@
         if (link) {
             if (link.startsWith("wa.me")) {
                 // WhatsApp number
-                whatsapp = link.replace("wa.me/", "").replace(/^(2323|11)/, "$1 ");
+                whatsapp = link.replace("wa.me/", "").replace(/^(?:549)?(2323|11)/, "$1 ");
             } else {
                 website = link.replace(" y 1 más", "");
             }
