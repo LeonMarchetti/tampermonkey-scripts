@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.9.7] - 18-08-2025
+
+### Modificado
+
+- Cambié el código para cuando se está en la página inicial de Youtube y ahora se usa un interval
+  para cambiarse automáticamente a la página de suscripciones. Uso el selector `"[title='Suscripciones']"` para detectar la presencia del enlace.
+
 ## [1.9.6] - 30-03-2025
 
 ### Arreglado

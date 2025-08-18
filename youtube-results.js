@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         YouTube Results
 // @namespace    http://tampermonkey.net/
-// @version      1.9.6
+// @version      1.9.7
 // @description  Utilities to use in YouTube
 // @author       LeonAM
 // @match        https://www.youtube.com/*
@@ -17,11 +17,16 @@
 
     /*
      * Since now Youtube won't show recommendations without history enabled, the script will
-     * automatically change to the Subscritions' feed
+     * automatically change to the Subscriptions' feed
      */
     if (window.location.href == "https://www.youtube.com/") {
-        window.location.href = "https://www.youtube.com/feed/subscriptions";
-        return;
+        var subscriptionsInterval = setInterval(() => {
+            let subscriptionsLink = document.querySelector("[title='Suscripciones']");
+            if (subscriptionsLink) {
+                subscriptionsLink.click();
+                clearInterval(subscriptionsInterval);
+            }
+        }, 500);
     }
 
     /**
