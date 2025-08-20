@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         TvTropes
+// @name         TV Tropes Edits
 // @namespace    http://tampermonkey.net/
 // @version      1.0.1
 // @description  Script for TV Tropes
