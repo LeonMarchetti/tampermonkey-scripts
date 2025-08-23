@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.4.0] - 23-08-2025
+
+### Agregado
+
+- Función `GetIDNote` para devolver un string con el identificador de una cuenta en formato `IG: ${id}`
+
 ## [1.3.1] - 09-08-2025
 
 ### Arreglado

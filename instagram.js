@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Instagram
 // @namespace    http://tampermonkey.net/
-// @version      1.3.1
+// @version      1.4.0
 // @description  Utilities for Instagram
 // @author       LeonAM
 // @match        https://www.instagram.com/*
@@ -15,13 +15,6 @@
     'use strict';
 
     console.info(`Running UserScript "${GM_info.script.name}"`);
-
-    /**
-     * Mutes all posts sounds
-     */
-    function ToggleMute() {
-        document.querySelector(`[aria-label="Activar o desactivar audio"]`).click();
-    }
 
     /**
      * Builds the account summary in CSV format with:
@@ -72,14 +65,13 @@
         console.debug(accountSummary);
     }
 
-    document.addEventListener("keyup", e => {
-        if (!e.altKey && !e.ctrlKey && !e.shiftKey && e.originalTarget.tagName !== "INPUT") {
-            switch (e.code) {
-                case "KeyM": ToggleMute(); break;
-            }
-        }
-    });
+    /** Returns acccount's id in custom format */
+    function GetIDNote() {
+        let idNote = "IG: " + document.querySelector("h2")?.innerText;
+        alert(idNote);
+        console.debug(idNote);
+    }
 
-    GM_registerMenuCommand("Mute", ToggleMute);
     GM_registerMenuCommand("Get Summary", GetSummary);
+    GM_registerMenuCommand("Get ID Note", GetIDNote);
 })();
