@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.9.1] - 05-09-2025
+
+### Arreglado
+
+- Ahora `browseGallery` detecta el post activo usando las teclas `J` y `K` y si es una galería navega las imágenes. Usa `document.activeElement`.
+
 ## [2.9.0] - 19-07-2025
 
 ### Eliminado

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Reddit
 // @namespace    http://tampermonkey.net/
-// @version      2.9.0
+// @version      2.9.1
 // @description  Utilities for Reddit.com
 // @author       LeonAM
 // @match        https://www.reddit.com/*
@@ -276,7 +276,8 @@
      * @param {boolean} prev If wanting to browse to the previous image, to the next if false
      */
     function browseGallery(postId, prev = true) {
-        let carousel = postId ? document.querySelector(`gallery-carousel[post-id="t3_${postId}"]`)
+        let carousel = document.activeElement ? document.activeElement.parentElement.querySelector("gallery-carousel")
+            : postId ? document.querySelector(`gallery-carousel[post-id="t3_${postId}"]`)
             : document.querySelector(`gallery-carousel:hover`);
 
         let slot = prev ? "prev" : "next";
