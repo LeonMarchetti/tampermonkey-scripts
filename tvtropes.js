@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TV Tropes
 // @namespace    http://tampermonkey.net/
-// @version      1.0.0
+// @version      1.0.1
 // @description  TV Tropes utilities
 // @author       LeonAM
 // @match        https://tvtropes.org/pmwiki/*
@@ -30,20 +30,33 @@
         });
     }
 
+    /**
+     * Add toggle control with listener and append to target element
+     *
+     * @param {string} title
+     * @param {Function} clickListener
+     * @param {Element} targetContainer
+     */
+    function makeToggleButton(title, clickListener, targetContainer) {
+        let checkbox = document.createElement("div");
+        checkbox.title = title;
+        checkbox.classList.add("display-toggle");
+        checkbox.addEventListener("click", clickListener);
+        targetContainer.appendChild(checkbox);
+        return checkbox;
+    }
+
     /** Add toggle control to the header bar to toggle images visibility */
     function addImageToggle() {
-        let checkbox = document.createElement("div");
-        checkbox.title = "Toggle images visibility";
-        checkbox.classList.add("display-toggle");
+        let checkbox = makeToggleButton("Toggle images visibility",
+            function() {
+                this.classList.toggle("active");
+                toggleImagesVisibility(checkbox.classList.contains("active"));
+            },
+            document.getElementById(HEADER_BAR_ID));
         if (DEFAULT_VISIBILITY) {
             checkbox.classList.add("active");
         }
-        checkbox.addEventListener("click", function() {
-            checkbox.classList.toggle("active");
-            toggleImagesVisibility(checkbox.classList.contains("active"));
-        });
-
-        document.getElementById(HEADER_BAR_ID).appendChild(checkbox);
     }
 
     toggleImagesVisibility(DEFAULT_VISIBILITY);
