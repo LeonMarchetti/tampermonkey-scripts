@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.9.3] - 19-09-2025
+
+### Arreglado
+
+- En `StartSwitchSubreddit` arreglé el uso del resultado del prompt para que cuando se cancele el
+  prompt no se rediriga al feed principal por mal manejo del null.
+
 ## [2.9.2] - 18-09-2025
 
 ### Arreglado

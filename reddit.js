@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Reddit
 // @namespace    http://tampermonkey.net/
-// @version      2.9.2
+// @version      2.9.3
 // @description  Utilities for Reddit.com
 // @author       LeonAM
 // @match        https://www.reddit.com/*
@@ -169,7 +169,9 @@
         }
 
         let subreddit = prompt("Input target subreddit's name", currentSubreddit ?? "");
-        switchSubreddit(subreddit);
+        if (subreddit !== null) {
+            switchSubreddit(subreddit);
+        }
     }
 
     /**
