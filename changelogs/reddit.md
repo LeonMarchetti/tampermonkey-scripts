@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.9.2] - 18-09-2025
+
+### Arreglado
+
+- El selector del carousel, porque no respondía cuando se mostraba la pantalla completa de las
+  imágenes de la galería mientras se navegaba los posts con las teclas J/K. Ahora se prioriza la
+  galería de pantalla completa.
+
 ## [2.9.1] - 05-09-2025
 
 ### Arreglado
