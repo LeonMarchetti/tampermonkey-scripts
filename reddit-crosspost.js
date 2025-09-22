@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Reddit Crosspost
 // @namespace    http://tampermonkey.net/
-// @version      1.0.0
+// @version      1.1.0
 // @description  Utilities for crosspost page
 // @author       LeonAM
 // @match        https://www.reddit.com/r/community/submit/*
@@ -58,16 +58,28 @@
         dialog.showModal();
     }
 
+    /** Build final title string from values */
+    function buildResult(values) {
+        return (
+            (values.author ? `(by ${values.author}) ` : "") +
+            (values.characters ? `(${values.characters}) ` : "") +
+            (values.source ? `[${values.source}]` : "")
+        ).trim();
+    }
+
     /** On dialog submit build the new title and edit the textarea */
     function onApplyTitle(event) {
         event.preventDefault();
         const values = Object.fromEntries(new FormData(this).entries());
-
-        let result = (values.author ? `(by ${values.author}) ` : "")
-            + (values.characters ? `(${values.characters}) ` : "")
-            + (values.source ? `[${values.source}]` : "");
+        let result = buildResult(values);
         submitted = true;
         dialog.close(result.trim());
+    }
+
+    /** Update preview live */
+    function updatePreview(values) {
+        const current = getCurrentTitle()?.value || "";
+        preview.value = `${current} ${buildResult(values)}`.trim();
     }
 
     /**
@@ -82,6 +94,11 @@
             input.style.border = "1px solid #FFFFFF33";
             input.style.borderRadius = "1.25rem";
             input.style.flex = "1";
+            input.addEventListener("input", () => {
+                const values = Object.fromEntries(new FormData(input.form).entries());
+                updatePreview(values);
+            });
+
             let label = document.createElement("label");
             label.append(text);
             label.for = name;
@@ -100,6 +117,10 @@
         closeButton.classList.add("button-medium", "button-secondary");
         closeButton.style.flex = "1";
         closeButton.style.marginInline = "50px";
+        closeButton.addEventListener("click", event => {
+            event.preventDefault();
+            dialog.close();
+        });
 
         let applyButton = document.createElement("button");
         applyButton.append("Aplicar");
@@ -107,7 +128,6 @@
         applyButton.classList.add("button-medium", "button-primary");
         applyButton.style.flex = "1";
         applyButton.style.marginInline = "50px";
-        // applyButton.addEventListener("click", onApplyTitle);
 
         let buttonRow = document.createElement("div");
         buttonRow.style.display = "flex";
