@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.1] - 04-10-2025
+
+### Arreglado
+
+- Cuando se abría el dialog en búsqueda multimedia en un post no se tomaba el parámetro de
+  ordenamiento `sort`
+
 ## [1.0.0] - 04-10-2025
 
 Creación del script

@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Reddit Search
 // @namespace    http://tampermonkey.net/
-// @version      1.0.0
-// @description  Search dialog for Reddit
+// @version      1.0.1
+// @description  Trigger search dialog
 // @author       LeonAM
 // @match        https://www.reddit.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=reddit.com
@@ -255,7 +255,7 @@
             form.sort.value = getParam("sort");
             form.text.value = textParam;
         } else {
-            form.sort.value = getURL().pathname.split("/")[3];
+            form.sort.value = getParam("sort") ?? getURL().pathname.split("/")[3];
         }
 
         let subredditMatch = getURL().pathname.match(/\/r\/(\w+)\//);
