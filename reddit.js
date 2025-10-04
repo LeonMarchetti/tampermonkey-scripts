@@ -1,14 +1,13 @@
 // ==UserScript==
 // @name         Reddit
 // @namespace    http://tampermonkey.net/
-// @version      2.9.3
+// @version      2.10.0
 // @description  Utilities for Reddit.com
 // @author       LeonAM
 // @match        https://www.reddit.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=reddit.com
 // @require      https://cdn.rawgit.com/LeonMarchetti/tampermonkey-scripts/refs/heads/master/lib/pageChangeInterval.js
 // @grant        GM_registerMenuCommand
-// @grant        GM_info
 // @grant        GM_addStyle
 // @grant        GM_getValue
 // @grant        GM_setValue
@@ -17,7 +16,7 @@
 (function () {
     'use strict';
 
-    console.info(`Running UserScript "${GM_info.script.name}"`);
+    console.info(`Running UserScript "Reddit"`);
 
     /**
      * Object with methods for site's location
@@ -148,33 +147,6 @@
     }
 
     /**
-     * Switches current post search page's subreddit, keeping current search's parameters
-     *
-     * @param {string?} name Target subreddit's name
-     */
-    function switchSubreddit(name) {
-        let location = new URL(window.location.href);
-        let subredditPath = location.pathname.replace(/(?:\/r\/\w+)?/, (name ? `/r/${name}` : "/"));
-        window.location.href = "https://reddit.com" + subredditPath + location.search;
-    }
-
-    /**
-     * Prompts for a subreddit name to switch to
-     *
-     * @param {string} currentSubreddit Current subreddit's name
-     */
-    function StartSwitchSubreddit(currentSubreddit) {
-        if (!(locator.isSearch() || locator.isRoot() || locator.isSubredditHome())) {
-            showError("Not at a subreddit's post search page");
-        }
-
-        let subreddit = prompt("Input target subreddit's name", currentSubreddit ?? "");
-        if (subreddit !== null) {
-            switchSubreddit(subreddit);
-        }
-    }
-
-    /**
      * Prompts for a subreddit name
      *
      * @returns Subreddit name
@@ -190,32 +162,6 @@
 
         GM_setValue("crosspostTarget", crosspostTarget);
         return crosspostTarget;
-    }
-
-    /**
-     * Starts a search with the results' order as "New"
-     */
-    function searchNew() {
-        let subreddit = locator.getSubreddit();
-        let searchQuery = prompt(subreddit ? `Search at r/${subreddit}` : "Search",
-            locator.getLocation().searchParams.get("q") ?? "");
-        if (!searchQuery) {
-            return;
-        }
-
-        let subPath = "";
-
-        // In subreddit or user, global search by default
-        if (subreddit) {
-            subPath = "r/" + subreddit;
-        } else {
-            let user = locator.getUser();
-            if (user) {
-                subPath = "user/" + user;
-            }
-        }
-
-        window.location.href = `https://reddit.com/${subPath}/search/?q=${searchQuery}&type=media&sort=new`;
     }
 
     /**
@@ -399,8 +345,6 @@
                 case "KeyC": StartCrosspost(locator.getPostId()); break;
                 case "KeyI": OpenImage(); break;
                 case "KeyN": switchSortOrder(locator.isSubredditHome(), locator.isSearch(), "new"); break;
-                case "KeyR": StartSwitchSubreddit(locator.getSubreddit()); break;
-                case "KeyS": searchNew(); break;
             }
         }
 

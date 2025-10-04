@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.10.0] - 04-10-2025
+
+### Eliminado
+
+- Función para cambiar de subreddit, ahora lo hace el script "Reddit Search" con un dialog
+- Función para hacer búsquedas multimedia ordenados por nuevo, ídem
+- Uso de `GM_info` para el loggeo del script
+
 ## [2.9.3] - 19-09-2025
 
 ### Arreglado
