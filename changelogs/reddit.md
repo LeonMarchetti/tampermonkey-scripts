@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.10.1] - 04-10-2025
+
+### Eliminado
+
+- Faltaba borrar la llamada a `searchNew` con `GM_registerMenuCommand`
+
 ## [2.10.0] - 04-10-2025
 
 ### Eliminado
