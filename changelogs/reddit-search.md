@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.3] - 05-10-2025
+
+### Modificado
+
+- Ahora al abrir el dialog se selecciona automáticamente todo el texto del input en foco con
+  `.select()`
+
 ## [1.0.2] - 04-10-2025
 
 ### Arreglado

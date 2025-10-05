@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Reddit Search
 // @namespace    http://tampermonkey.net/
-// @version      1.0.2
+// @version      1.0.3
 // @description  Trigger search dialog
 // @author       LeonAM
 // @match        https://www.reddit.com/*
@@ -272,6 +272,7 @@
         dialog.showModal();
         if (params.focus) {
             form[params.focus].focus();
+            form[params.focus].select();
         }
     }
 
