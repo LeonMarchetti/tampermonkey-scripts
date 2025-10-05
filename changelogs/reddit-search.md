@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.2] - 04-10-2025
+
+### Arreglado
+
+- Cuando se abría el dialog en subreddit multimedia en un post no se tomaba el parámetro de
+  ordenamiento `sort`, faltaba comprobar si `getParam("sort")` era un string vacío además de `null`
+
 ## [1.0.1] - 04-10-2025
 
 ### Arreglado
