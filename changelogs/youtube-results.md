@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.10.0] - 09-10-2025
+
+### Modificado
+
+- Ahora `AddToQueue` acepta los selectores de los elementos como parámetros, con valores por
+  defecto:
+  - `menuSelector`, por defecto `"button"`
+  - `addToQueueSelector`, por defecto `"yt-list-item-view-model"`
+- Para los videos ahora se usa el selector `"yt-lockup-view-model:hover"`
+
 ## [1.9.7] - 18-08-2025
 
 ### Modificado

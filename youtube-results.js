@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         YouTube Results
 // @namespace    http://tampermonkey.net/
-// @version      1.9.7
+// @version      1.10.0
 // @description  Utilities to use in YouTube
 // @author       LeonAM
 // @match        https://www.youtube.com/*
@@ -190,13 +190,18 @@
      * Adds current video under cursor to queue
      *
      * @param {Element?} hoverVideo Video to add to queue
+     * @param {string} menuSelector DOM selector for menu button
+     * @param {string} addToQueueSelector DOM selector for "Add to Queue" menu button
      */
-    function AddToQueue(hoverVideo) {
+    function AddToQueue(hoverVideo,
+                        menuSelector = "button",
+                        addToQueueSelector = "yt-list-item-view-model"
+    ) {
         if (hoverVideo) {
-            hoverVideo.querySelector(`[aria-label="Menú de acciones"]`).click();
+            hoverVideo.querySelector(menuSelector).click();
 
             setTimeout(() => {
-                document.querySelector("ytd-menu-service-item-renderer").click();
+                document.querySelector(addToQueueSelector).click();
             }, 100);
         }
     }
@@ -251,7 +256,11 @@
         if (url.pathname === "/results") {
             if (!ctrl && !alt && !shift) {
                 switch (e.code) {
-                    case "KeyQ": AddToQueue(document.querySelector("ytd-video-renderer:hover")); break;
+                    case "KeyQ":
+                        AddToQueue(document.querySelector("ytd-video-renderer:hover"),
+                                   "button",
+                                   "ytd-menu-service-item-renderer");
+                        break;
                 }
             }
 
@@ -282,7 +291,7 @@
         if (url.pathname === "/watch") {
             if (!ctrl && !alt && !shift) {
                 switch (e.code) {
-                    case "KeyQ": AddToQueue(document.querySelector("ytd-compact-video-renderer:hover")); break;
+                    case "KeyQ": AddToQueue(document.querySelector("yt-lockup-view-model:hover")); break;
                 }
             }
             // CTRL + ALT
@@ -295,10 +304,26 @@
             }
         }
 
-        if (locator.isChannelVideosList() || locator.isSubscriptionsPage()) {
+        // User's subscriptions list
+        if (locator.isSubscriptionsPage()) {
             if (!ctrl && !alt && !shift) {
                 switch (e.code) {
-                    case "KeyQ": AddToQueue(document.querySelector("ytd-rich-item-renderer:hover")); break;
+                    case "KeyQ":
+                        AddToQueue(document.querySelector("ytd-rich-item-renderer:hover"));
+                        break;
+                }
+            }
+        }
+
+        // Channel's videos
+        if (locator.isChannelVideosList()) {
+            if (!ctrl && !alt && !shift) {
+                switch (e.code) {
+                    case "KeyQ":
+                        AddToQueue(document.querySelector("ytd-rich-item-renderer:hover"),
+                                   "button",
+                                   "ytd-menu-service-item-renderer");
+                        break;
                 }
             }
         }
