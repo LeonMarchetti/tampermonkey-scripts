@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.0.1] - 31-10-2025
+
+### Arreglado
+
+- Ahora el índice del formato de fecha es **4** en lugar de 3: `[role='menuitem']:nth-child(4)`
+
 ## [1.0.0] - 24-08-2025
 
 Creación del script

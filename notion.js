@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Notion
 // @namespace    http://tampermonkey.net/
-// @version      1.0.0
+// @version      1.0.1
 // @description  Utilities for Notion
 // @author       LeonAM
 // @match        https://www.notion.so/*
@@ -23,7 +23,7 @@
         document.querySelector("[role='dialog'] :nth-child(3)>[role='button']:nth-child(1)")
             .click()
         let interval = setInterval(() => {
-            let dmyButton = document.querySelector("[role='menuitem']:nth-child(3)");
+            let dmyButton = document.querySelector("[role='menuitem']:nth-child(4)");
             if (dmyButton) {
                 dmyButton.click();
                 setTimeout(() => {
