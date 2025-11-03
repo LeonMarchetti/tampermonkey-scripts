@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Reddit
 // @namespace    http://tampermonkey.net/
-// @version      2.10.2
+// @version      2.10.3
 // @description  Utilities for Reddit.com
 // @author       LeonAM
 // @match        https://www.reddit.com/*
@@ -328,7 +328,6 @@
 
     GM_registerMenuCommand("Start Crosspost", () => StartCrosspost(locator.getPostId()));
     GM_registerMenuCommand("Sort by New", () => switchSortOrder(locator.isFeed(), locator.isSearch(), "new"));
-    GM_registerMenuCommand("Switch Subreddit", () => StartSwitchSubreddit(locator.getSubreddit()));
     GM_registerMenuCommand("Select crosspost target", selectCrosspostTarget);
 
     document.addEventListener("keyup", e => {

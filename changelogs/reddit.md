@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.10.3] - 03-11-2025
+
+### Eliminado
+
+- Faltaba borrar una referencia a `StartSwitchSubreddit` de la versión `2.10.0`.
+
 ## [2.10.2] - 03-11-2025
 
 ### Arreglado
