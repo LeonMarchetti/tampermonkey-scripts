@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.10.2] - 03-11-2025
+
+### Arreglado
+
+- En `isFeed` no coincidía un feed filtrado por un flair tipo
+  `https://www.reddit.com/r/<subreddit>/?f=flair_name%3A%22<Flair>%22`. Se modificó la función para
+  comprobar que la ruta después de `/r/subreddit` sea un string de la lista:
+  `["", "/", "best/", "hot/", "new/", "top/"]`, que incluye los tipos de ordenamientos de posts.
+
+### Modificado
+
+- Se modificó el nombre del método `locator.isSubredditHome` a `locator.isFeed`.
+
 ## [2.10.1] - 04-10-2025
 
 ### Eliminado

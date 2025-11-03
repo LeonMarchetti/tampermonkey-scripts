@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Reddit
 // @namespace    http://tampermonkey.net/
-// @version      2.10.1
+// @version      2.10.2
 // @description  Utilities for Reddit.com
 // @author       LeonAM
 // @match        https://www.reddit.com/*
@@ -44,8 +44,9 @@
             return this.getPath() === "/";
         },
 
-        isSubredditHome() {
-            return this.getLocation().href.match(/\/r\/(\w+)\/(?:\w+\/)?$/);
+        isFeed() {
+            return ["", "/", "best/", "hot/", "new/", "top/"].includes(
+                this.getPath().replace(/^\/r\/\w+\//, ""));
         },
 
         getPostId() {
@@ -283,7 +284,7 @@
      * storage to store the interval index and use it to clear it when unused.
      */
     function dismissPostBlur() {
-        if (!locator.isMediaSearch() && (locator.isSearch() || locator.isSubredditHome())) {
+        if (!locator.isMediaSearch() && (locator.isSearch() || locator.isFeed())) {
             let blurInterval = setInterval(() => {
                 Array.from(document.querySelectorAll(`shreddit-blurred-container`))
                     .forEach(container => {
@@ -326,7 +327,7 @@
     highlightDates();
 
     GM_registerMenuCommand("Start Crosspost", () => StartCrosspost(locator.getPostId()));
-    GM_registerMenuCommand("Sort by New", () => switchSortOrder(locator.isSubredditHome(), locator.isSearch(), "new"));
+    GM_registerMenuCommand("Sort by New", () => switchSortOrder(locator.isFeed(), locator.isSearch(), "new"));
     GM_registerMenuCommand("Switch Subreddit", () => StartSwitchSubreddit(locator.getSubreddit()));
     GM_registerMenuCommand("Select crosspost target", selectCrosspostTarget);
 
@@ -343,7 +344,7 @@
             switch (e.code) {
                 case "KeyC": StartCrosspost(locator.getPostId()); break;
                 case "KeyI": OpenImage(); break;
-                case "KeyN": switchSortOrder(locator.isSubredditHome(), locator.isSearch(), "new"); break;
+                case "KeyN": switchSortOrder(locator.isFeed(), locator.isSearch(), "new"); break;
             }
         }
 
