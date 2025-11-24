@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Mangago
 // @namespace    http://tampermonkey.net/
-// @version      1.3.2
+// @version      1.4.0
 // @description  Utilities for Mangago
 // @author       LeonAM
 // @match        https://www.mangago.me/*
@@ -17,6 +17,7 @@
     'use strict';
 
     console.info(`Running UserScript "${GM_info.script.name}"`);
+    GM_addStyle("@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css')");
 
     const PAGE_SELECTOR = "[id^=page]:not(#page-mainer,#pagenavigation)";
     const FULL_PAGE_HEIGHT_KEY = "fullPageHeight";
@@ -155,6 +156,63 @@
                 this.currentTextarea = textarea;
             }
         }
+    }
+
+    /**
+     * Fetches the URL of the photo's source in manga
+     * 
+     * @param {string} url URL of the photo in the album. Should match pattern: `\/home\/photo\/[0-9]+\/`
+     * @returns {Promise<string>} Promise of the URL of the source image
+     */
+    async function fetchAlbumPhotoSource(url) {
+        // Validate the URL format for an album photo
+        if (!/\/home\/photo\/\d+\//.test(url)) {
+            throw new Error("Invalid album photo URL");
+        }
+
+        try {
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error(`Response status: ${response.status}`);
+            }
+
+            const html = await response.text();
+            const page = new DOMParser().parseFromString(html, "text/html");
+
+            // Use the parsed page to find the source link
+            const sourceLinkElement = [...page.querySelectorAll(".article .content")]
+                .filter(div => div.innerText.includes("Source"))[0]?.children[0];
+
+            if (!sourceLinkElement || !sourceLinkElement.href) {
+                throw new Error("Source link not found in the page.");
+            }
+
+            return sourceLinkElement.href;
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    }
+
+    /** Adds manga page sources for photos in albums as links below description */
+    function addPageSourceLink() {
+        const pages = document.querySelectorAll(".photo_wrap");
+        [...pages].forEach(div => {
+            fetchAlbumPhotoSource(div.children[0].href)  // Should match `a.photolst_photo`
+                .then(result => {
+                    const icon = document.createElement("i");
+                    icon.classList.add("fas", "fa-image");
+                    const link = document.createElement("a");
+                    link.href = result;
+                    link.append(icon);
+                    div.children[1].append(link);  // Should match `div.pl.albumlst_descri`
+                });
+        });
+    }
+
+    // If page is an album
+    if (window.location.href.match(/www\.mangago\.me\/home\/(album|mangaphoto)\//)) {
+        addPageSourceLink();
     }
 
     if (checkMangaChapter(false)) {

@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.4.0] - 24-11-2025
+
+### Agregado
+
+- En los álbums, agregar un botón (ícono imagen) con un enlace para cada foto de un album que
+  redirige a la página del manga correspondiente
+  - La URL coincide con la ruta `/home/(album|mangaphoto)` para los álbums y las listas de imágenes
+    guardadas de los mangas
+  - **DOM**
+    - `.photo_wrap`: Contenedor de la foto
+    - `.photo_wrap :nth-child(1)` o `a.photolst_photo`: Enlace a la página del manga
+    - `.photo_wrap :nth-child(2)` o `div.pl.albumlst_descri`: Descripción de la foto guardada, para
+      agregar el botón
+- Importación de los recursos CSS de Font Awesome versión `7.0.1`
+
 ## [1.3.2] - 24-07-2025
 
 ### Arreglado
