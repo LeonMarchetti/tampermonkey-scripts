@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.1] - 23-12-2025
+
+### Modificado
+
+* Ahora al crear la nueva pestaña el navegador no cambia a la nueva pestaña usando la API de GM con
+  `GM_openInTab`
+
 ## [1.0.0] - 13-12-2025
 
 Creación del script

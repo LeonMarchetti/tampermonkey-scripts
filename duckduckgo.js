@@ -1,11 +1,13 @@
 // ==UserScript==
 // @name         DuckDuckGo
 // @namespace    http://tampermonkey.net/
-// @version      1.0.0
+// @version      1.0.1
 // @description  Utilities for DuckDuckGo
 // @author       LeonAM
 // @match        https://duckduckgo.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=duckduckgo.com
+// @grant        GM_openInTab
+// @noframes
 // ==/UserScript==
 
 (function () {
@@ -36,7 +38,7 @@
             return;
         }
 
-        unsafeWindow.open(image.src, "_blank");
+        GM_openInTab(image.src, true);
     }
 
     /**
