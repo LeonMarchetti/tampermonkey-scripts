@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.1.0] - 25-01-2026
+
+### Agregado
+
+- Función `getSubredditSuggestions` para obtener sugerencias sobre subreddits en la búsqueda
+  haciendo una petición a la API de Reddit
+  - URL: `https://www.reddit.com/svc/shreddit/search-typeahead`, con el parámetro `query`
+  - La petición devuelve un resultado en HTML donde las sugerencias se seleccionan con:
+    `"div > [data-type='search-dropdown-item-label-text']"` y filtrando los resultados de subreddits
+    que empiezan con `"r/"`
+  - Copilot generó el contenedor con la lista de sugerencias que aparece cuando se escribe el nombre
+  - Copilot agregó los listeners para las flechas de arriba y abajo para seleccionar la sugerencia
+  - Al presionar Enter en una sugerencia se cambia de página inmediatamente pero se puede
+    seleccionar con el mouse
+
 ## [1.0.3] - 05-10-2025
 
 ### Modificado
