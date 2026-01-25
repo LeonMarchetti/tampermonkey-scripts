@@ -52,6 +52,66 @@
         return new URL(window.location.href);
     }
 
+    /** 
+     * Fetch subreddit suggestions from Reddit
+     * @param {string} query Text to search suggestions for
+     * @param {HTMLElement} container Element to display suggestions in
+     */
+    function getSubredditSuggestions(query, container) {
+        if (!query || query.length < 2) {
+            container.innerHTML = "";
+            return;
+        }
+        
+        fetch("https://www.reddit.com/svc/shreddit/search-typeahead?query=" + encodeURIComponent(query))
+            .then(r => r.text())
+            .then(html => {
+                const doc = (new DOMParser()).parseFromString(html, "text/html");
+
+                /** @var {string[]} List of feeds suggestions */
+                const suggestions = [...doc.querySelectorAll("div > [data-type='search-dropdown-item-label-text']")]
+                    .map(el => el.textContent)
+                    .filter(sug => sug.startsWith("r/"))
+                    .map(sug => sug.slice(2));
+                
+                // Display suggestions
+                container.innerHTML = "";
+                if (suggestions.length > 0) {
+                    const ul = document.createElement("ul");
+                    ul.style.border = "1px solid #FFFFFF33";
+                    ul.style.borderRadius = "0.5rem";
+                    ul.style.margin = "5px 0";
+                    ul.style.maxHeight = "200px";
+                    ul.style.overflowY = "auto";
+                    ul.style.listStyle = "none";
+                    ul.style.padding = "0";
+                    
+                    suggestions.forEach(suggestion => {
+                        const li = document.createElement("li");
+                        li.textContent = suggestion;
+                        li.style.padding = "8px 12px";
+                        li.style.cursor = "pointer";
+                        li.style.borderBottom = "1px solid #FFFFFF22";
+                        li.addEventListener("click", () => {
+                            document.querySelector("input[name='subreddit']").value = suggestion;
+                            container.innerHTML = "";
+                            const values = Object.fromEntries(new FormData(document.querySelector("form")).entries());
+                            updatePreview(values);
+                        });
+                        li.addEventListener("mouseover", () => {
+                            li.style.backgroundColor = "#FFFFFF11";
+                        });
+                        li.addEventListener("mouseout", () => {
+                            li.style.backgroundColor = "transparent";
+                        });
+                        ul.append(li);
+                    });
+                    container.append(ul);
+                }
+            })
+            .catch(console.error);
+    }
+
     /** Builds combobox for search's sort order */
     function buildCombo(name, text, options) {
         // Combobox for selecting the search's sort order
@@ -160,9 +220,18 @@
             input.style.border = "1px solid #FFFFFF33";
             input.style.borderRadius = "1.25rem";
             input.style.flex = "1";
+            
+            // Container for suggestions
+            let suggestionsContainer = document.createElement("div");
+            
             input.addEventListener("input", () => {
                 const values = Object.fromEntries(new FormData(input.form).entries());
                 updatePreview(values);
+                
+                // Show suggestions for subreddit input
+                if (name === "subreddit") {
+                    getSubredditSuggestions(input.value, suggestionsContainer);
+                }
             });
 
             let label = document.createElement("label");
@@ -172,9 +241,19 @@
             label.style.width = "100px";
 
             let inputContainer = document.createElement("div");
-            inputContainer.append(label, input);
             inputContainer.style.display = "flex";
             inputContainer.style.marginBottom = "10px";
+            
+            // Add suggestions container for subreddit input
+            if (name === "subreddit") {
+                let wrapper = document.createElement("div");
+                wrapper.style.flex = "1";
+                wrapper.append(input, suggestionsContainer);
+                inputContainer.append(label, wrapper);
+            } else {
+                inputContainer.append(label, input);
+            }
+            
             return inputContainer;
         }
 
