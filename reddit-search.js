@@ -223,6 +223,7 @@
             
             // Container for suggestions
             let suggestionsContainer = document.createElement("div");
+            let selectedSuggestionIndex = -1;
             
             input.addEventListener("input", () => {
                 const values = Object.fromEntries(new FormData(input.form).entries());
@@ -230,9 +231,40 @@
                 
                 // Show suggestions for subreddit input
                 if (name === "subreddit") {
+                    selectedSuggestionIndex = -1;
                     getSubredditSuggestions(input.value, suggestionsContainer);
                 }
             });
+
+            input.addEventListener("keydown", (e) => {
+                if (name !== "subreddit") return;
+                
+                const items = suggestionsContainer.querySelectorAll("li");
+                if (items.length === 0) return;
+                
+                if (e.key === "ArrowDown") {
+                    e.preventDefault();
+                    selectedSuggestionIndex = Math.min(selectedSuggestionIndex + 1, items.length - 1);
+                    updateSuggestionHighlight(items);
+                } else if (e.key === "ArrowUp") {
+                    e.preventDefault();
+                    selectedSuggestionIndex = Math.max(selectedSuggestionIndex - 1, -1);
+                    updateSuggestionHighlight(items);
+                } else if (e.key === "Enter" && selectedSuggestionIndex >= 0) {
+                    e.preventDefault();
+                    items[selectedSuggestionIndex].click();
+                }
+            });
+
+            function updateSuggestionHighlight(items) {
+                items.forEach((item, index) => {
+                    if (index === selectedSuggestionIndex) {
+                        item.style.backgroundColor = "#FFFFFF22";
+                    } else {
+                        item.style.backgroundColor = "transparent";
+                    }
+                });
+            }
 
             let label = document.createElement("label");
             label.append(text);
