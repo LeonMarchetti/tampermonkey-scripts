@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Reddit Search
 // @namespace    http://tampermonkey.net/
-// @version      1.0.3
+// @version      1.1.0
 // @description  Trigger search dialog
 // @author       LeonAM
 // @match        https://www.reddit.com/*
