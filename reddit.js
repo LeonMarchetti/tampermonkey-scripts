@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Reddit
 // @namespace    http://tampermonkey.net/
-// @version      2.11.0
+// @version      2.11.1
 // @description  Utilities for Reddit.com
 // @author       LeonAM
 // @match        https://www.reddit.com/*
@@ -308,7 +308,7 @@
         // Remove size modifiers from preview URLs
         const url = new URL(src);
         if (url.host === "preview.redd.it") {
-            return "https://i.redd.it/" + url.pathname.match(/\w+\.png/)[0];
+            return "https://i.redd.it/" + url.pathname.match(/\w*\.(gif|png)/) [0];
         }
         return src;
     }

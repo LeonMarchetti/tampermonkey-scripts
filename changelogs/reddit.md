@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.11.1] - 03-02-2026
+
+### Arreglado
+
+- Ahora `formatPreviewSrc` coincide con los GIFs
+
 ## [2.11.0] - 02-02-2026
 
 ### Agregado
