@@ -1,5 +1,14 @@
 # Changelog
 
+## [2.11.0] - 02-02-2026
+
+### Agregado
+
+- Función `formatPreviewSrc` para las imágenes que provengan del host `preview.redd.it` y cambiarlas
+  por la versión original de `i.redd.it`. Detecta el nombre del archivo a partir del string que
+  viene inmediatamente antes de la extensión de imágen
+  - Por ahora no maneja errores y solo detecta la extensión `.png`
+
 ## [2.10.3] - 03-11-2025
 
 ### Eliminado

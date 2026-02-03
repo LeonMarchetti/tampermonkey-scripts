@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Reddit
 // @namespace    http://tampermonkey.net/
-// @version      2.10.3
+// @version      2.11.0
 // @description  Utilities for Reddit.com
 // @author       LeonAM
 // @match        https://www.reddit.com/*
@@ -300,6 +300,20 @@
     }
 
     /**
+     * Gets the original image source from a preview URL
+     * @param {string} src Image source
+     * @returns URL from i.redd.it if source is from preview, return original if not
+     */
+    function formatPreviewSrc(src) {
+        // Remove size modifiers from preview URLs
+        const url = new URL(src);
+        if (url.host === "preview.redd.it") {
+            return "https://i.redd.it/" + url.pathname.match(/\w+\.png/)[0];
+        }
+        return src;
+    }
+
+    /**
      * Opens the original image of the current post
      *
      * Currently doesn't work on videos
@@ -316,10 +330,12 @@
             showError("No image to open found");
         }
 
+        const imgSource = formatPreviewSrc(imgElement.src);
+
         if (newTab) {
-            window.open(imgElement.src, "_blank");
+            window.open(imgSource, "_blank");
         } else {
-            window.location.href = imgElement.src;
+            window.location.href = imgSource;
         }
     }
 
