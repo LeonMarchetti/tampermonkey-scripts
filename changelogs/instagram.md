@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.1] - 10-02-2026
+
+### Arreglado
+
+* Se arregló el selector para obtener el nombre descriptivo de la cuenta para obtener el resumen:
+  `header section:nth-child(2) > div > div:nth-child(2)`
+
 ## [1.4.0] - 23-08-2025
 
 ### Agregado

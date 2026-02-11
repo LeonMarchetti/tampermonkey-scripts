@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Instagram
 // @namespace    http://tampermonkey.net/
-// @version      1.4.0
+// @version      1.4.1
 // @description  Utilities for Instagram
 // @author       LeonAM
 // @match        https://www.instagram.com/*
@@ -34,7 +34,7 @@
      */
     function getAccountSummary() {
         let id = document.querySelector("h2")?.innerText;
-        let name = document.querySelector("header :nth-child(4) > div > div > span")?.innerText;
+        let name = document.querySelector("header section:nth-child(2) > div > div:nth-child(2)")?.innerText;
         let notes = document.querySelector("header :nth-child(4) > div > div:nth-child(3)")?.innerText || "";
         let address = document.querySelector("h1")?.innerText.replace(/,.*/, "") || "";
         let whatsapp = "";
