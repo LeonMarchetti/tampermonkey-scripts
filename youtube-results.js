@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         YouTube Results
 // @namespace    http://tampermonkey.net/
-// @version      1.10.0
+// @version      1.10.1
 // @description  Utilities to use in YouTube
 // @author       LeonAM
 // @match        https://www.youtube.com/*
@@ -191,18 +191,27 @@
      *
      * @param {Element?} hoverVideo Video to add to queue
      * @param {string} menuSelector DOM selector for menu button
-     * @param {string} addToQueueSelector DOM selector for "Add to Queue" menu button
+     * @param {string|null} addToQueueSelector DOM selector for "Add to Queue" menu button
      */
     function AddToQueue(hoverVideo,
                         menuSelector = "button",
                         addToQueueSelector = "yt-list-item-view-model"
     ) {
         if (hoverVideo) {
-            hoverVideo.querySelector(menuSelector).click();
+            const menuButton = hoverVideo.querySelector(menuSelector);
+            console.debug("[1] hoverVideo: ", hoverVideo);
+            console.debug(`[1] Menu selector: "${menuSelector}"`);
+            console.debug(`[1] Click: "${menuButton.textContent.trim()}"`, menuButton);
+            menuButton.click();
 
-            setTimeout(() => {
-                document.querySelector(addToQueueSelector).click();
-            }, 100);
+            if (addToQueueSelector) {
+                setTimeout(() => {
+                    const menuItem = document.querySelector(addToQueueSelector);
+                    console.debug(`[2] Selector: "${addToQueueSelector}"`);
+                    console.debug("[2] Click:", menuItem);
+                    menuItem.click();
+                }, 100);
+            }
         }
     }
 
@@ -291,7 +300,13 @@
         if (url.pathname === "/watch") {
             if (!ctrl && !alt && !shift) {
                 switch (e.code) {
-                    case "KeyQ": AddToQueue(document.querySelector("yt-lockup-view-model:hover")); break;
+                    /* Feb-26: Simulates a click to the "Add to queue" button above the video's
+                     * preview image in the right sidebar, second argument is null as it doesn't
+                     * require waiting for the menu to open. */
+                    case "KeyQ": AddToQueue(document.querySelector("yt-lockup-view-model:hover"),
+                            "[aria-label='Añadir a la cola']",
+                            null);
+                        break;
                 }
             }
             // CTRL + ALT

@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.10.1] - 14-02-2026
+
+### Arreglado
+
+- `AddToQueue` no andaba en `/watch` porque seleccionaba el botón de agregar a "Ver
+  más tarde" en lugar del botón del menú, ahora simula el click al botón de "Agregar a la cola" que
+  está sobre la vista previa del video.
+  - Ahora el tercer argumento puede ser `null` para no activar el timeout, en `/watch` no es
+    necesario porque el botón de "Agregar a la cola" está sobre la vista previa del video y no hay
+    que abrir el menú.
+  - Nuevo selector para `/watch`: Usa el Aria label del botón: `[aria-label='Añadir a la cola']`
+
 ## [1.10.0] - 09-10-2025
 
 ### Modificado
