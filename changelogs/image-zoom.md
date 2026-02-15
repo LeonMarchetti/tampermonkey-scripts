@@ -1,6 +1,15 @@
 # Changelog
 
-## [Unreleased]
+## [2.0.0] - 15-02-2026
+
+### Modificado
+
+- Nueva versión: hecho con Chat GPT
+- Animación suave
+- Modificación del tamaño de la imagen usando `.style.width` para actualizar el layout y el
+  scrolling correctamente en lugar de `transform`
+- Se arregla el bug que no permite scrollear hacia el tope de una imagen después de aumentar el
+  zoom
 
 ## [1.7.0] - 16-07-2022
 
