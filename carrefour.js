@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Carrefour
 // @namespace    http://tampermonkey.net/
-// @version      1.0.0
+// @version      1.1.0
 // @description  Utilities for Carrefour Argentina
 // @author       LeonAM
 // @match        https://www.carrefour.com.ar/*
@@ -22,18 +22,20 @@
     const CLASS_DISCOUNT_ELEMENT = "valtech-carrefourar-product-price-0-x-sellingPrice--hasListPrice";
     const CLASS_DISCOUNT_LABEL = "valtech-carrefourar-rates-0-x-summaryScore";
 
+    var cache = {
+        priceText: null,
+        discountElement: null
+    };
+
     /**
      * Adds the price after applying all discounts below the original price
      */
     function addDiscountPrice() {
-        const interval = setInterval(() => {
+        setInterval(() => {
             const priceContainer = document.querySelector(CONTAINER_SELECTOR);
             if (!priceContainer) {
-                console.error("Price container not found");
                 return;
             }
-
-            clearInterval(interval);
 
             const priceElement = priceContainer.querySelector(PRICE_SELECTOR);
             if (!priceElement) {
@@ -42,6 +44,10 @@
             }
 
             const priceText = priceElement.textContent.trim();
+            if (priceText === cache.priceText) {
+                return;
+            }
+            cache.priceText = priceText;
             const match = priceText.match(/[\d,.]+/);
             if (!match) return;
 
@@ -50,17 +56,29 @@
 
             const discountedPrice = priceValue * (1 - DISCOUNT / 100);
             const discountValue = discountedPrice.toLocaleString('es-AR');
-            const discountElement = document.createElement('div');
-            discountElement.classList.add(CLASS_DISCOUNT_ELEMENT)
+
+            var discountElement;
+            if (cache.discountElement && cache.discountElement.isConnected) {
+                discountElement = cache.discountElement;
+            } else {
+                discountElement = document.createElement('div');
+                discountElement.classList.add(CLASS_DISCOUNT_ELEMENT)
+
+                const discountLabel = document.createElement("p");
+                discountLabel.classList.add(CLASS_DISCOUNT_LABEL);
+                discountLabel.textContent = `MP ${DISCOUNT}% off`;
+
+                priceContainer.appendChild(discountLabel);
+                priceContainer.appendChild(discountElement);
+
+                cache.discountElement = discountElement;
+            }
+
             discountElement.textContent = `$ ${discountValue}`;
 
-            const discountLabel = document.createElement("p");
-            discountLabel.classList.add(CLASS_DISCOUNT_LABEL);
-            discountLabel.textContent = `MP ${DISCOUNT}% off`;
-
-            priceContainer.appendChild(discountLabel);
-            priceContainer.appendChild(discountElement);
+            // Debug Output
             console.debug("discountElement: ", discountElement);
+            console.debug(`Price: ${priceValue} => ${discountedPrice}`);
         }, 100);
     }
 
