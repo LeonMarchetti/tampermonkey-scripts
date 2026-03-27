@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.1.0] - 27-03-2026
+
+### Agregado
+
+- Se agrega un enlace a "Followed Pages" en la barra de acciones en la parte superior de la página
+  - Selector del enlace si existe: `.link-watchList a[href="/pmwiki/awl.php"]'`
+  - Selector de la barra de acciones a donde agregar el enlace: `.actions-wrapper #top_main_list`
+  - En la página de "New Edits", el enlace aparece oculto abajo de la barra de acciones, se arregla
+    si le quito el margen de la derecha.
+
 ## [1.0.1] - 27-08-2025
 
 ### Modificado
