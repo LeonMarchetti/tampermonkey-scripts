@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.0.2] - 29-03-2026
+
+### Agregado
+
+* Loggeo del nombre del script, que faltaba.
+
+### Arreglado
+
+* Ahora se seleccionan las vistas previas de las imágenes con `.mD_7N7b1a7ZoGbPdjYtp`, se elige la
+  segunda imagen encontrada y si tiene una imagen como elemento hermano entonces se usa esa para
+  mostrar sino la imagen encontrada al principio, que es cuando la imagen original está disponible.
+
 ## [1.0.1] - 23-12-2025
 
 ### Modificado

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DuckDuckGo
 // @namespace    http://tampermonkey.net/
-// @version      1.0.1
+// @version      1.0.2
 // @description  Utilities for DuckDuckGo
 // @author       LeonAM
 // @match        https://duckduckgo.com/*
@@ -13,9 +13,12 @@
 (function () {
     'use strict';
 
+    console.info(`Running UserScript "DuckDuckGo"`);
+
     const CONTAINER_SELECTOR = ".WRx_xSx51EXkymGmPRNJ";
     const BUTTON_ID = "ddg-open-image-btn";
-    const IMAGES_SELECTOR = ".d1fekHMv2WPYZzgPAV7b";
+    /** Selector for the preview image in the open dialog */
+    const IMAGES_PREVIEW_SELECTOR = ".mD_7N7b1a7ZoGbPdjYtp";
 
     const SVG_PICTURE = `
 <svg viewBox="0 0 24 24" width="18" height="18"
@@ -28,16 +31,12 @@
 
     /** Opens the current preview image in a new tab */
     function openImage() {
-        const imagesList = document.querySelectorAll(IMAGES_SELECTOR);
-        let image;
-
-        if (imagesList.length >= 2) {
-            image = imagesList[imagesList.length === 2 ? 0 : 1];
-        } else {
-            console.error("Could not detect image", imagesList);
-            return;
-        }
-
+        const imagesList = document.querySelectorAll(IMAGES_PREVIEW_SELECTOR);
+        /** @type {HTMLImageElement} */
+        const previewImage = imagesList[imagesList.length === 2 ? 0 : 1];
+        // In case of the first image of the results it uses the index "0"
+        /** @type {HTMLImageElement} */
+        const image = previewImage.nextSibling ?? previewImage;
         GM_openInTab(image.src, true);
     }
 
