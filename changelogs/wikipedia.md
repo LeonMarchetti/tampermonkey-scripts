@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.1.2] - 08-04-2026
+
+### Eliminado
+
+- Excepción del error cuando no se encuentra el cotenedor para `highlightWords`
+
 ## [1.1.1] - 08-04-2026
 
 ### Agregado

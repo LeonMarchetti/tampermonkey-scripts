@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Wikipedia
 // @namespace    http://tampermonkey.net/
-// @version      1.1.1
+// @version      1.1.2
 // @description  try to take over the world!
 // @author       LeonAM
 // @match        https://es.wikipedia.org/*
@@ -31,7 +31,7 @@
     function highlightWords() {
         let root = document.getElementById("main-cur");
         if (!root)
-            throw new Error("Root element not found (id=\"main-cur\")");
+            return;
 
         Array.from(root.querySelectorAll("li")).forEach(li => {
             if (HIGHLIGHT_WORDS.some(word => li.innerText.includes(word))) {
