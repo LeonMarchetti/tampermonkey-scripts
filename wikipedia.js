@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Wikipedia
 // @namespace    http://tampermonkey.net/
-// @version      1.1.0
+// @version      1.1.1
 // @description  try to take over the world!
 // @author       LeonAM
 // @match        https://es.wikipedia.org/*
@@ -11,6 +11,8 @@
 
 (function() {
     'use strict';
+
+    console.info(`Running script "Wikipedia"`);
 
     /** Highlight CSS class name for highlighting */
     const HIGHLIGHT_THEME = "tm_highlight";

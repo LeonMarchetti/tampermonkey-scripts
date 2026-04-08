@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.1.1] - 08-04-2026
+
+### Agregado
+
+- Loggeo del nombre del script
+
 ## [1.1.0] - 08-04-2026
 
 ### Agregado
