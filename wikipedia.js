@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Wikipedia
 // @namespace    http://tampermonkey.net/
-// @version      1.0.0
+// @version      1.1.0
 // @description  try to take over the world!
 // @author       LeonAM
 // @match        https://es.wikipedia.org/*
@@ -38,5 +38,21 @@
         });
     }
 
+    /** Adds the random page link to the header bar */
+    function addRandomLink() {
+        const span = document.createElement("span");
+        span.textContent = "Random";
+        const link = document.createElement("a");
+        link.href = "https://es.wikipedia.org/wiki/Especial:Aleatoria";
+        const item = document.createElement("li");
+        item.className = "user-links-collapsible-item mw-list-item user-links-collapsible-item";
+        const container = document.querySelector("#p-vector-user-menu-overflow .vector-menu-content-list");
+
+        link.appendChild(span);
+        item.appendChild(link);
+        container.insertBefore(item, container.firstChild);
+    }
+
+    addRandomLink();
     highlightWords();
 })();
