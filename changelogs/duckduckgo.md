@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.3] - 16-04-2026
+
+### Arreglado
+
+* Ahora obtengo las clases par el botón nuevo usando al primer elemento del contenedor; agregando
+  las clases manualmente fallaba
+
 ## [1.0.2] - 29-03-2026
 
 ### Agregado

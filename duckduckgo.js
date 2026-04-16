@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DuckDuckGo
 // @namespace    http://tampermonkey.net/
-// @version      1.0.2
+// @version      1.0.3
 // @description  Utilities for DuckDuckGo
 // @author       LeonAM
 // @match        https://duckduckgo.com/*
@@ -53,17 +53,14 @@
         btn.id = BUTTON_ID;
         btn.type = "button";
 
-        btn.classList.add(
-            "VxuWnm3couqnzN7fT7SO", "uuIDnYC4qmyFk5dsXOhr",
-            "Uz2BykKBXbObF11W1_5T", "ffON2NH02oMAcqyoh2UU",
-            "vcOFkrrvuSYp7xsAur2Y", "q7VhSk71XgyB1xYfeChb",
-            "kYheVVecSlvJdWHcWzJs", "ACez7bVvgYxZ9w0qR8ne"
-        );
+        btn.className = container.firstChild.className;
 
         btn.insertAdjacentHTML("afterbegin", SVG_PICTURE);
         btn.addEventListener("click", callback);
 
         container.prepend(btn);
+
+        console.debug(btn);
     }
 
     /** Tries to create the button by querying the DOM */
