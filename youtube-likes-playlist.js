@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Youtube Likes Playlist
 // @namespace    http://tampermonkey.net/
-// @version      1.1.0
+// @version      1.2.0
 // @description  Utilities for the video likes playlist for Youtube
 // @author       LeonAM
 // @match        https://www.youtube.com/playlist?list=LL
@@ -106,6 +106,17 @@ function getVideosList() {
 
     const title = "YouTube Likes Playlist";
 
+    /**
+     * List of videos to insert in the table
+     * @type {{i: number, name: string}[]}
+     */
+    var videos = [];
+    /**
+     * Table content for adding rows 
+     * @type {HTMLTableSectionElement}
+     */
+    var tbody;
+
     console.info(`Running Userscript "Youtube Likes Playlist"`);
 
     /**
@@ -116,14 +127,44 @@ function getVideosList() {
      * @returns {{i: number, name: string}[]}
      */
     function getList() {
-        const videos = getVideosList();
+        videos = getVideosList();
         if (videos.length === 0) {
             throw new Error("Empty video list");
         }
 
+        videos = videos.map((v, i) => ({ i: i + 1, name: v["Name"] }));
         return videos
-            .map((v, i) => ({ i: i + 1, name: v["Name"] }))
             .filter(o => (o.i % 100 === 0 || o.i === videos.length));
+    }
+
+    function buildRow(videoInfo) {
+        const row = document.createElement("tr");
+        const numberCell = document.createElement("td");
+        const videoCell = document.createElement("td");
+        const buttonCell = document.createElement("td");
+
+        numberCell.textContent = videoInfo.i;
+        videoCell.textContent = videoInfo.name;
+
+        const button = document.createElement("button");
+        button.textContent = "Action";
+        button.dataset.index = videoInfo.i;
+        button.addEventListener("click", e => {
+            const currRow = e.target.parentNode.parentNode;
+            const prevRow = currRow.previousSibling;
+            const prevIndex = (prevRow === null) ? 0
+                : Number(prevRow.children[2].children[0].dataset.index);
+            const newIndex = Math.round((e.target.dataset.index - prevIndex)/2) + prevIndex - 1;
+            tbody.insertBefore(buildRow(videos[newIndex]), currRow);
+        });
+
+        buttonCell.appendChild(button);
+
+        row.appendChild(numberCell);
+        row.appendChild(videoCell);
+        row.appendChild(buttonCell);
+
+        return row;
     }
 
     /**
@@ -134,33 +175,23 @@ function getVideosList() {
     function buildTable(list) {
         const table = document.createElement("table");
         const thead = document.createElement("thead");
-        const tbody = document.createElement("tbody");
+        tbody = document.createElement("tbody");
 
         const headerRow = document.createElement("tr");
         const numberCell = document.createElement("th");
         const videoCell = document.createElement("th");
+        const buttonCell = document.createElement("th");
 
         numberCell.textContent = "N°";
         videoCell.textContent = "Video";
 
         headerRow.appendChild(numberCell);
         headerRow.appendChild(videoCell);
+        headerRow.appendChild(buttonCell);
 
         thead.appendChild(headerRow);
 
-        list.forEach(video => {
-            const row = document.createElement("tr");
-            const numberCell = document.createElement("td");
-            const videoCell = document.createElement("td");
-
-            numberCell.textContent = video.i;
-            videoCell.textContent = video.name;
-
-            row.appendChild(numberCell);
-            row.appendChild(videoCell);
-
-            tbody.appendChild(row);
-        });
+        list.forEach(video => tbody.appendChild(buildRow(video)));
 
         table.appendChild(thead);
         table.appendChild(tbody);
