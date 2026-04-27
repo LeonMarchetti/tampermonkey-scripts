@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Youtube Likes Playlist
 // @namespace    http://tampermonkey.net/
-// @version      1.2.0
+// @version      1.3.0
 // @description  Utilities for the video likes playlist for Youtube
 // @author       LeonAM
 // @match        https://www.youtube.com/playlist?list=LL
@@ -84,6 +84,11 @@ function getVideosList() {
             background-color: lightgray;
             font-weight: bold;
         }
+
+        #ypl_modal button {
+            background: none;
+            border: none;
+        }
     `);
 
     const tableStyles = `
@@ -137,6 +142,17 @@ function getVideosList() {
             .filter(o => (o.i % 100 === 0 || o.i === videos.length));
     }
 
+    function createArrow() {
+        const arrowIcon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        arrowIcon.setAttribute("viewBox", "0 0 24 24");
+        arrowIcon.setAttribute("width", "24px");
+        arrowIcon.setAttribute("height", "24px");
+        const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        path.setAttribute("d", "M5.293 15.207a1 1 0 001.414 0L12 9.914l5.293 5.293a1 1 0 001.414-1.414L12 7.086l-6.707 6.707a1 1 0 000 1.414Z");
+        arrowIcon.appendChild(path);
+        return arrowIcon;
+    }
+
     function buildRow(videoInfo) {
         const row = document.createElement("tr");
         const numberCell = document.createElement("td");
@@ -147,17 +163,19 @@ function getVideosList() {
         videoCell.textContent = videoInfo.name;
 
         const button = document.createElement("button");
-        button.textContent = "Action";
         button.dataset.index = videoInfo.i;
         button.addEventListener("click", e => {
-            const currRow = e.target.parentNode.parentNode;
+            // e.currentTarget is <button> with the index number
+            const currBtn = e.currentTarget;
+            const currRow = currBtn.parentNode.parentNode;
             const prevRow = currRow.previousSibling;
             const prevIndex = (prevRow === null) ? 0
                 : Number(prevRow.children[2].children[0].dataset.index);
-            const newIndex = Math.round((e.target.dataset.index - prevIndex)/2) + prevIndex - 1;
+            const newIndex = Math.round((currBtn.dataset.index - prevIndex)/2) + prevIndex - 1;
             tbody.insertBefore(buildRow(videos[newIndex]), currRow);
         });
 
+        button.appendChild(createArrow());
         buttonCell.appendChild(button);
 
         row.appendChild(numberCell);
