@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Reddit Search
 // @namespace    http://tampermonkey.net/
-// @version      1.1.0
+// @version      1.2.0
 // @description  Trigger search dialog
 // @author       LeonAM
 // @match        https://www.reddit.com/*
@@ -168,7 +168,10 @@
         event.preventDefault();
         const values = Object.fromEntries(new FormData(this).entries());
         submitted = true;
+        const newTab = dialog.dataset.newtab === "true";  // store whether user requested new tab in dialog.dataset.newtab (set by keydown)
+        delete dialog.dataset.newtab;  // clear flag so subsequent uses default to false
         dialog.close(buildResult(values));
+        dialog._openInNewTab = newTab;
     }
 
     /** Update preview live */
@@ -315,7 +318,9 @@
             // Trigger submit event on pressing the "Enter" key
             if (event.key === "Enter") {
                 event.preventDefault();
-                form.dispatchEvent(new Event("submit"));
+                const wantNewTab = event.ctrlKey || event.metaKey;  // Ctrl or Meta as modifier to open in new tab
+                dialog.dataset.newtab = wantNewTab ? "true" : "false";
+                form.dispatchEvent(new Event("submit", { bubbles: true, cancelable: true }));
             }
         });
         return form;
@@ -324,9 +329,15 @@
     /** Get result value from dialog and edit title */
     function onDialogClose(event) {
         if (dialog.returnValue && submitted && !(window.location.href == dialog.returnValue)) {
-            window.location.href = dialog.returnValue;
+            if (dialog._openInNewTab) {
+                window.open(dialog.returnValue, "_blank");
+                delete dialog._openInNewTab;
+            } else {
+                window.location.href = dialog.returnValue;
+            }
         }
         submitted = false;
+        delete dialog.dataset.newtab;  // ensure any leftover flag is cleared
     }
 
     /** Add dialog to DOM to make it available */

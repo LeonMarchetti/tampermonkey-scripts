@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.2.0] - 08-05-2026
+
+### Agregado
+
+- Opción de abrir resultados en una nueva pestaña presionando Ctrl o Meta al presionar Enter.
+
 ## [1.1.0] - 25-01-2026
 
 ### Agregado
