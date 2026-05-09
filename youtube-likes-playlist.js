@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Youtube Likes Playlist
 // @namespace    http://tampermonkey.net/
-// @version      1.3.0
+// @version      1.4.0
 // @description  Utilities for the video likes playlist for Youtube
 // @author       LeonAM
 // @match        https://www.youtube.com/playlist?list=LL
@@ -233,6 +233,40 @@ function getVideosList() {
         document.getElementById("ypl_modal").style.display = "block";
     }
 
+    /**
+     * Adds the button to show the playlist videos list to the container at the playlist header
+     * container
+     *
+     * Uses an interval to check the presence of the buttons' container
+     */
+    function addShowListButton() {
+        const containerInterval = setInterval(() => {
+            const container = document.querySelector("ytd-menu-renderer.ytd-playlist-header-renderer");
+            if (!container) return;
+            clearInterval(containerInterval);
+
+            const playlistIcon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+            playlistIcon.setAttribute("viewBox", "0 0 24 24");
+            playlistIcon.setAttribute("width", "24px");
+            playlistIcon.setAttribute("height", "24px");
+
+            const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+            path.setAttribute("d", "M16 15.395a.5.5 0 01.762-.426L22.5 18.5l-5.738 3.531a.5.5 0 01-.762-.425v-6.212ZM14 19H4a1 1 0 110-2h10v2Zm6-8a1 1 0 110 2H4a1 1 0 110-2h16Zm0-6a1 1 0 110 2H4a1 1 0 010-2h16Z");
+
+            const button = document.createElement("button");
+            button.ariaLabel = "Show playlist items";
+            button.className = "ytSpecButtonShapeNextHost ytSpecButtonShapeNextTonal ytSpecButtonShapeNextOverlay ytSpecButtonShapeNextSizeM ytSpecButtonShapeNextIconButton ytSpecButtonShapeNextEnableBackdropFilterExperiment ytSpecButtonShapeNextIcon";
+            button.style.marginLeft = "1em";
+            button.addEventListener("click", showList);
+
+            // Add to DOM
+            playlistIcon.append(path);
+            button.append(playlistIcon);
+            container.append(button);
+
+            console.debug(container);
+        }, 500);
+    }
 
     /**
      * Builds a modal dialog to show the table
@@ -274,4 +308,6 @@ function getVideosList() {
             }
         }
     });
+
+    addShowListButton();
 })();
